@@ -4,6 +4,6 @@
 
 @layer base{
     body{
-        @apply bg-blue-200 w-screen h-screen
+        @apply bg-blue-100 w-screen h-screen
     }
 }

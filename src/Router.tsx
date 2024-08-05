@@ -1,10 +1,13 @@
 import { Routes, Route } from 'react-router-dom'
 import { Payment } from './pages/payment/Payment'
+import { DefaultLayout } from './layouts/DefaultLayout'
 
 export function Router() {
   return (
     <Routes>
-      <Route path="/payment" element={<Payment />} />
+      <Route path="/" element={<DefaultLayout />}>
+        <Route path="payment" element={<Payment />} />
+      </Route>
     </Routes>
   )
 }
