@@ -15,9 +15,9 @@ export default function BasicSelect({
   label,
 }: SelectProps) {
   return (
-    <Select label={label} value={value} onChange={onChange}>
-      {options.map((option) => (
-        <SelectItem key={option} value={option}>
+    <Select label={label} onChange={onChange} value={value}>
+      {options.map((option, index) => (
+        <SelectItem key={index} value={option}>
           {option}
         </SelectItem>
       ))}
