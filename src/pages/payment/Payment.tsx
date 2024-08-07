@@ -5,14 +5,16 @@ import { PeopleContext } from '../../context/PeopleContext'
 import { segments } from '../../Types'
 
 export function Payment() {
-  const { classroomList, catechistList } = useContext(PeopleContext)
+  const { classroomList, catechistList, catechizingList } =
+    useContext(PeopleContext)
   const [segment, setSegment] = useState<string>()
   const [classroom, setClassroom] = useState<string>('')
   const [catechizing, setCatechizing] = useState<string>('')
   const [filteredClassroom, setFilteredClassroom] = useState<string[]>([])
+  const [filteredCatechizing, setFilteredCatechizing] = useState<string[]>([])
 
   useEffect(() => {
-    function filteredOptions() {
+    function filteredClassroom() {
       if (segment) {
         const filteredClassroomList: string[] = []
 
@@ -23,12 +25,29 @@ export function Payment() {
             )
           }
         })
-        console.log(filteredClassroomList)
         setFilteredClassroom(filteredClassroomList)
       }
     }
-    filteredOptions()
+    filteredClassroom()
   }, [catechistList, classroomList, segment])
+
+  useEffect(() => {
+    function filteredCatechizing() {
+      if (classroom) {
+        const filteredCatechizingList: string[] = []
+        classroomList.forEach((classroom) => {
+          classroom.catechizing.forEach((catechizing) => {
+            filteredCatechizingList.push(
+              catechizingList[Number(catechizing)].name,
+            )
+          })
+        })
+        setFilteredCatechizing(filteredCatechizingList)
+      }
+    }
+
+    filteredCatechizing()
+  }, [catechistList, catechizingList, classroom, classroomList, segment])
 
   return (
     classroomList &&
@@ -59,7 +78,7 @@ export function Payment() {
             value={catechizing}
             onChange={(e) => setCatechizing(e.target.value)}
           >
-            {['1', '2', '3'].map((item) => (
+            {filteredCatechizing.map((item) => (
               <AutocompleteItem key={item} value={item}>
                 {item}
               </AutocompleteItem>

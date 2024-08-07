@@ -16,3 +16,10 @@ export interface classroom {
   segment: string
   classNumber: number
 }
+
+export interface catechizing {
+  id: number
+  name: string
+  responsible: string
+  payment: { installment: number; alreadyPayed: number }
+}

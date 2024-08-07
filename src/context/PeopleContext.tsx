@@ -1,10 +1,11 @@
 import { ReactNode, createContext, useEffect, useState } from 'react'
-import { catechist, classroom } from '../Types'
-import { getCatechists, getClassrooms } from '../services/api'
+import { catechist, catechizing, classroom } from '../Types'
+import { getCatechists, getCatechizings, getClassrooms } from '../services/api'
 
 interface PeopleContextType {
   catechistList: catechist[]
   classroomList: classroom[]
+  catechizingList: catechizing[]
 }
 export const PeopleContext = createContext({} as PeopleContextType)
 
@@ -17,6 +18,7 @@ export function PeopleContextProvider({
 }: PeopleContextProviderProps) {
   const [catechistList, setCatechistList] = useState<catechist[]>([])
   const [classroomList, setClassroomList] = useState<classroom[]>([])
+  const [catechizingList, setCatechizingList] = useState<catechizing[]>([])
 
   useEffect(() => {
     async function fetchCatechists() {
@@ -27,12 +29,19 @@ export function PeopleContextProvider({
       const classroomResponse = await getClassrooms()
       setClassroomList(classroomResponse)
     }
+    async function fetchCatechizing() {
+      const catechizingResponse = await getCatechizings()
+      setCatechizingList(catechizingResponse)
+    }
     fetchCatechists()
     fetchClassroom()
+    fetchCatechizing()
   }, [])
 
   return (
-    <PeopleContext.Provider value={{ catechistList, classroomList }}>
+    <PeopleContext.Provider
+      value={{ catechistList, classroomList, catechizingList }}
+    >
       {children}
     </PeopleContext.Provider>
   )
