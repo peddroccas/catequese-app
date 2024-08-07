@@ -6,7 +6,7 @@ export function DefaultLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="flex-grow">
+      <div className="my-8 flex-grow">
         <Outlet />
       </div>
       <Footer />

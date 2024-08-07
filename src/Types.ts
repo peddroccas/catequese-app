@@ -17,9 +17,19 @@ export interface classroom {
   classNumber: number
 }
 
+export interface payment {
+  installment: [
+    {
+      value: number
+      payedAt: string
+    },
+  ]
+  toBePaid: number
+}
+
 export interface catechizing {
   id: number
   name: string
   responsible: string
-  payment: { installment: number; alreadyPayed: number }
+  payment: payment
 }

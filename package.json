@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@internationalized/date": "^3.5.5",
     "@nextui-org/react": "^2.4.6",
+    "@phosphor-icons/react": "^2.1.7",
+    "@react-aria/i18n": "^3.12.1",
+    "date-fns": "^3.6.0",
     "firebase": "^10.12.5",
     "framer-motion": "^11.3.21",
     "react": "^18.3.1",
