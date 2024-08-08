@@ -12,10 +12,11 @@ import {
 } from '@nextui-org/react'
 import { setPayments } from '../../../services/api'
 import { catechizing } from '../../../Types'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
+import { PeopleContext } from '../../../context/PeopleContext'
 
 interface NewInstallmentModalProps {
   catechizing: catechizing
@@ -28,6 +29,7 @@ export default function NewInstallmentModal({
   onClose,
   catechizing,
 }: NewInstallmentModalProps) {
+  const { onDBUpdate } = useContext(PeopleContext)
   const { onOpenChange } = useDisclosure()
   const [value, setValue] = useState<string>()
   const [payedAt, setPayedAt] = useState<DateValue>()
@@ -38,7 +40,8 @@ export default function NewInstallmentModal({
       'dd/MM/yyyy',
     )
 
-    setPayments(catechizing, Number(value), formattedDate)
+    await setPayments(catechizing, Number(value), formattedDate)
+    onDBUpdate()
   }
   return (
     <Modal

@@ -4,6 +4,6 @@
 
 @layer base{
     body{
-        @apply bg-blue-100 w-screen h-full overflow-x-hidden
+        @apply bg-blue-100 w-screen h-full 
     }
 }

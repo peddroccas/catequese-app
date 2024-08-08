@@ -14,7 +14,7 @@ interface InstallmentProps {
 export function Installment({ paymentData }: InstallmentProps) {
   return (
     <div className="flex w-auto flex-col">
-      <Table>
+      <Table aria-label="this remove devtools warn">
         <TableHeader>
           <TableColumn>PARCELA</TableColumn>
           <TableColumn>VALOR</TableColumn>

@@ -6,6 +6,8 @@ interface PeopleContextType {
   catechistList: catechist[]
   classroomList: classroom[]
   catechizingList: catechizing[]
+  reload: boolean
+  onDBUpdate: () => void
 }
 export const PeopleContext = createContext({} as PeopleContextType)
 
@@ -19,6 +21,7 @@ export function PeopleContextProvider({
   const [catechistList, setCatechistList] = useState<catechist[]>([])
   const [classroomList, setClassroomList] = useState<classroom[]>([])
   const [catechizingList, setCatechizingList] = useState<catechizing[]>([])
+  const [reload, setReload] = useState<boolean>(false)
 
   useEffect(() => {
     async function fetchCatechists() {
@@ -33,14 +36,28 @@ export function PeopleContextProvider({
       const catechizingResponse = await getCatechizings()
       setCatechizingList(catechizingResponse)
     }
-    fetchCatechists()
-    fetchClassroom()
-    fetchCatechizing()
-  }, [])
+    try {
+      fetchCatechists()
+      fetchClassroom()
+      fetchCatechizing()
+    } catch (error) {
+      console.log(error)
+    }
+  }, [reload])
+
+  function onDBUpdate() {
+    setReload(!reload)
+  }
 
   return (
     <PeopleContext.Provider
-      value={{ catechistList, classroomList, catechizingList }}
+      value={{
+        catechistList,
+        classroomList,
+        catechizingList,
+        reload,
+        onDBUpdate,
+      }}
     >
       {children}
     </PeopleContext.Provider>

@@ -8,7 +8,7 @@ import { Plus } from '@phosphor-icons/react'
 import NewInstallmentModal from './components/NewInstallmentModal'
 
 export function Payment() {
-  const { classroomList, catechistList, catechizingList } =
+  const { classroomList, catechistList, catechizingList, reload, onDBUpdate } =
     useContext(PeopleContext)
   const [segment, setSegment] = useState<string>('')
   const [classroom, setClassroom] = useState<string>('')
@@ -71,6 +71,12 @@ export function Payment() {
     filteredCatechizing()
   }, [catechistList, catechizingList, classroom, classroomList, segment])
 
+  useEffect(() => {
+    if (reload) {
+      setCatechizing(catechizingList[catechizing!.id])
+    }
+  }, [catechizing, catechizingList, onDBUpdate, reload])
+
   function handleAddNewInstallment() {
     setIsUserAddingNewInstallment(true)
   }
@@ -83,7 +89,7 @@ export function Payment() {
     classroomList &&
     catechistList && (
       <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
-        <h1 className="text-2xl">Pagamento do carnê</h1>
+        <h1 className="text-2xl">Pagamento do Carnê</h1>
         <form className="flex w-11/12 flex-col gap-4 rounded-xl bg-blue-950 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
           <Select
             label="Segmento"
@@ -118,6 +124,7 @@ export function Payment() {
           <Autocomplete
             label="Catequizando"
             selectedKey={catechizing!.name}
+            defaultSelectedKey={''}
             isClearable={false}
             onSelectionChange={(selected) =>
               setCatechizing(
@@ -137,11 +144,11 @@ export function Payment() {
             ))}
           </Autocomplete>
 
-          <div className="rounded-xl">
-            <header className="flex flex-row items-center justify-between gap-2 pb-2 text-white">
-              <div className="flex flex-row gap-2">
-                <p className="text-2xl font-bold">Parcelas</p>
-                {catechizing?.name && (
+          {catechizing?.name && (
+            <div className="rounded-xl">
+              <header className="flex flex-row items-center justify-between gap-2 pb-2 text-white">
+                <div className="flex flex-row gap-2">
+                  <p className="text-2xl font-bold">Parcelas</p>
                   <Button
                     isIconOnly
                     onClick={handleAddNewInstallment}
@@ -150,14 +157,13 @@ export function Payment() {
                   >
                     <Plus size={22} />
                   </Button>
-                )}
-                <NewInstallmentModal
-                  catechizing={catechizing!}
-                  onClose={handleOnCloseNewInstallmentModal}
-                  open={isUserAddingNewInstallment}
-                />
-              </div>
-              {catechizing?.name && (
+                  <NewInstallmentModal
+                    catechizing={catechizing!}
+                    onClose={handleOnCloseNewInstallmentModal}
+                    open={isUserAddingNewInstallment}
+                  />
+                </div>
+
                 <p
                   className={`${catechizing!.payment.toBePaid === 0 ? 'text-green-600' : 'text-red-600'} rounded-xl bg-white p-1 text-lg font-semibold`}
                 >
@@ -168,14 +174,12 @@ export function Payment() {
                         currency: 'BRL',
                       })}
                 </p>
-              )}
-            </header>
-            {catechizing?.name && (
+              </header>
               <div>
                 <Installment paymentData={catechizing.payment} />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </form>
       </div>
     )
