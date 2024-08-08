@@ -8,7 +8,7 @@ import { Plus } from '@phosphor-icons/react'
 import NewInstallmentModal from './components/NewInstallmentModal'
 
 export function Payment() {
-  const { classroomList, catechistList, catechizingList, reload, onDBUpdate } =
+  const { classroomList, catechistList, catechizingList, reload } =
     useContext(PeopleContext)
   const [segment, setSegment] = useState<string>('')
   const [classroom, setClassroom] = useState<string>('')
@@ -75,7 +75,7 @@ export function Payment() {
     if (reload) {
       setCatechizing(catechizingList[catechizing!.id])
     }
-  }, [catechizing, catechizingList, onDBUpdate, reload])
+  }, [catechizing, catechizingList, reload])
 
   function handleAddNewInstallment() {
     setIsUserAddingNewInstallment(true)

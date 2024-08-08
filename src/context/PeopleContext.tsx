@@ -7,7 +7,7 @@ interface PeopleContextType {
   classroomList: classroom[]
   catechizingList: catechizing[]
   reload: boolean
-  onDBUpdate: () => void
+  onReload: () => void
 }
 export const PeopleContext = createContext({} as PeopleContextType)
 
@@ -37,16 +37,18 @@ export function PeopleContextProvider({
       setCatechizingList(catechizingResponse)
     }
     try {
-      fetchCatechists()
-      fetchClassroom()
-      fetchCatechizing()
+      if (reload || catechistList) {
+        fetchCatechists()
+        fetchClassroom()
+        fetchCatechizing()
+      }
     } catch (error) {
       console.log(error)
     }
-  }, [reload])
+  }, [catechistList, reload])
 
-  function onDBUpdate() {
-    setReload(!reload)
+  function onReload() {
+    setReload(true)
   }
 
   return (
@@ -56,7 +58,7 @@ export function PeopleContextProvider({
         classroomList,
         catechizingList,
         reload,
-        onDBUpdate,
+        onReload,
       }}
     >
       {children}

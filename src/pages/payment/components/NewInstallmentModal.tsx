@@ -29,7 +29,7 @@ export default function NewInstallmentModal({
   onClose,
   catechizing,
 }: NewInstallmentModalProps) {
-  const { onDBUpdate } = useContext(PeopleContext)
+  const { onReload } = useContext(PeopleContext)
   const { onOpenChange } = useDisclosure()
   const [value, setValue] = useState<string>()
   const [payedAt, setPayedAt] = useState<DateValue>()
@@ -41,7 +41,7 @@ export default function NewInstallmentModal({
     )
 
     await setPayments(catechizing, Number(value), formattedDate)
-    onDBUpdate()
+    onReload()
   }
   return (
     <Modal
@@ -92,6 +92,8 @@ export default function NewInstallmentModal({
                 color="primary"
                 onPress={() => {
                   handleOnSubmitNewInstallmentModal()
+                  setValue('')
+                  setPayedAt(undefined)
                   onClose()
                 }}
               >
