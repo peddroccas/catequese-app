@@ -82,9 +82,9 @@ export function Payment() {
   return (
     classroomList &&
     catechistList && (
-      <div className="mt-4 flex flex-grow flex-col items-center justify-center pb-8 pt-4">
+      <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
         <h1 className="text-2xl">Pagamento do carnê</h1>
-        <form className="mt-8 flex flex-col gap-4 rounded-xl bg-blue-950 p-4">
+        <form className="flex w-10/12 flex-col gap-4 rounded-xl bg-blue-950 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
           <Select
             label="Segmento"
             value={segment}

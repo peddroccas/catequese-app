@@ -13,7 +13,7 @@ interface InstallmentProps {
 }
 export function Installment({ paymentData }: InstallmentProps) {
   return (
-    <div className="flex w-fit flex-col">
+    <div className="flex w-auto flex-col">
       <Table>
         <TableHeader>
           <TableColumn>PARCELA</TableColumn>
