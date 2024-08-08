@@ -151,6 +151,7 @@ export function Payment() {
                   <p className="text-2xl font-bold">Parcelas</p>
                   <Button
                     isIconOnly
+                    isDisabled={catechizing.payment.toBePaid === 0}
                     onClick={handleAddNewInstallment}
                     radius="full"
                     size="sm"
