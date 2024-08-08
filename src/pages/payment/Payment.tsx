@@ -118,6 +118,7 @@ export function Payment() {
           <Autocomplete
             label="Catequizando"
             selectedKey={catechizing!.name}
+            isClearable={false}
             onSelectionChange={(selected) =>
               setCatechizing(
                 catechizingList.filter((catechizing) => {
