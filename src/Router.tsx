@@ -1,7 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Payment } from './pages/payment/Payment'
 import { DefaultLayout } from './layouts/DefaultLayout'
-import { Catechizing } from './pages/catechizing/Catechizing'
+import { Catechizings } from './pages/catechizings/Catechizings'
+import { Catechists } from './pages/catechists/Catechists'
+import { Rites } from './pages/rites/Rites'
+import { Classrooms } from './pages/classrooms/Classrooms'
 
 export function Router() {
   return (
@@ -9,7 +12,10 @@ export function Router() {
       <Route path="/" element={<DefaultLayout />}>
         <Route path="" element={<Navigate to={'payment'} />} />
         <Route path="payment" element={<Payment />} />
-        <Route path="catechizing" element={<Catechizing />} />
+        <Route path="catechizing" element={<Catechizings />} />
+        <Route path="catechist" element={<Catechists />} />
+        <Route path="rites" element={<Rites />} />
+        <Route path="classrooms" element={<Classrooms />} />
       </Route>
     </Routes>
   )
