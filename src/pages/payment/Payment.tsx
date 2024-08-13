@@ -90,7 +90,7 @@ export function Payment() {
     catechistList && (
       <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
         <h1 className="text-2xl">Pagamento do Carnê</h1>
-        <form className="flex w-11/12 flex-col gap-4 rounded-xl bg-blue-950 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
+        <form className="bg-bunker-900 flex w-11/12 flex-col gap-4 rounded-xl p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
           <Select
             label="Segmento"
             value={segment}
