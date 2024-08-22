@@ -15,7 +15,7 @@ import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
 import { CatechizingRepository } from '../../../services/repositories/catechizingRepository'
 import { useContext, useState } from 'react'
-import { DataContext } from '../../../contexts/DataContext'
+import { InstallmentContext } from '../../../contexts/InstallmentContext'
 
 interface NewInstallmentModalProps {
   catechizing: string
@@ -28,7 +28,7 @@ export default function NewInstallmentModal({
   onClose,
   catechizing,
 }: NewInstallmentModalProps) {
-  const { throwDataUpdate } = useContext(DataContext)
+  const { throwInstallmentUpdate } = useContext(InstallmentContext)
   const { onOpenChange } = useDisclosure()
   const [value, setValue] = useState<string>()
   const [payedAt, setPayedAt] = useState<DateValue>()
@@ -43,7 +43,7 @@ export default function NewInstallmentModal({
       value: Number(value),
     })
 
-    throwDataUpdate()
+    throwInstallmentUpdate()
   }
   return (
     <Modal

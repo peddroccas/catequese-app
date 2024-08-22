@@ -7,10 +7,11 @@ import NewInstallmentModal from './components/NewInstallmentModal'
 import { ClassroomRepository } from '../../services/repositories/classroomRepository'
 import { Installment } from './components/Installment'
 import { CatechizingRepository } from '../../services/repositories/catechizingRepository'
-import { DataContext } from '../../contexts/DataContext'
+import { InstallmentContext } from '../../contexts/InstallmentContext'
 
 export function Payment() {
-  const { throwDataHasAlreadyUpdated, hasDbUpdate } = useContext(DataContext)
+  const { throwInstallmentHasAlreadyUpdated, hasInstallmentUpdate } =
+    useContext(InstallmentContext)
   const [segment, setSegment] = useState<string>('')
   const [classroom, setClassroom] = useState<string>('')
   const [catechizing, setCatechizing] = useState<string>('')
@@ -49,16 +50,16 @@ export function Payment() {
   // Consulta carnê do catequizando
   useEffect(() => {
     async function getPaymentsByCatechizing() {
-      if (catechizing && hasDbUpdate) {
+      if (catechizing || hasInstallmentUpdate) {
         const payment =
           await CatechizingRepository.getPaymentsByCatechizing(catechizing)
 
         setPayment(payment)
-        throwDataHasAlreadyUpdated()
+        throwInstallmentHasAlreadyUpdated()
       }
     }
     getPaymentsByCatechizing()
-  }, [catechizing, hasDbUpdate, throwDataHasAlreadyUpdated])
+  }, [catechizing, hasInstallmentUpdate, throwInstallmentHasAlreadyUpdated])
 
   function handleAddNewInstallment() {
     setIsUserAddingNewInstallment(true)
