@@ -14,7 +14,8 @@ import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
 import { CatechizingRepository } from '../../../services/repositories/catechizingRepository'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { DataContext } from '../../../contexts/DataContext'
 
 interface NewInstallmentModalProps {
   catechizing: string
@@ -27,6 +28,7 @@ export default function NewInstallmentModal({
   onClose,
   catechizing,
 }: NewInstallmentModalProps) {
+  const { throwDataUpdate } = useContext(DataContext)
   const { onOpenChange } = useDisclosure()
   const [value, setValue] = useState<string>()
   const [payedAt, setPayedAt] = useState<DateValue>()
@@ -40,6 +42,8 @@ export default function NewInstallmentModal({
       payedAt: new Date(formattedDate),
       value: Number(value),
     })
+
+    throwDataUpdate()
   }
   return (
     <Modal

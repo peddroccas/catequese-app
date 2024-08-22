@@ -1,5 +1,5 @@
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Select from '../../components/Select'
 import { payment } from '../../Types'
 import { Plus } from '@phosphor-icons/react'
@@ -7,8 +7,10 @@ import NewInstallmentModal from './components/NewInstallmentModal'
 import { ClassroomRepository } from '../../services/repositories/classroomRepository'
 import { Installment } from './components/Installment'
 import { CatechizingRepository } from '../../services/repositories/catechizingRepository'
+import { DataContext } from '../../contexts/DataContext'
 
 export function Payment() {
+  const { throwDataHasAlreadyUpdated, hasDbUpdate } = useContext(DataContext)
   const [segment, setSegment] = useState<string>('')
   const [classroom, setClassroom] = useState<string>('')
   const [catechizing, setCatechizing] = useState<string>('')
@@ -47,15 +49,16 @@ export function Payment() {
   // Consulta carnê do catequizando
   useEffect(() => {
     async function getPaymentsByCatechizing() {
-      if (catechizing) {
+      if (catechizing && hasDbUpdate) {
         const payment =
           await CatechizingRepository.getPaymentsByCatechizing(catechizing)
 
         setPayment(payment)
+        throwDataHasAlreadyUpdated()
       }
     }
     getPaymentsByCatechizing()
-  }, [catechizing])
+  }, [catechizing, hasDbUpdate, throwDataHasAlreadyUpdated])
 
   function handleAddNewInstallment() {
     setIsUserAddingNewInstallment(true)

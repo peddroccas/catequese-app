@@ -1,10 +1,13 @@
 import { BrowserRouter } from 'react-router-dom'
 import { Router } from './Router'
+import { DataProvider } from './contexts/DataContext'
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <DataProvider>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </DataProvider>
   )
 }
