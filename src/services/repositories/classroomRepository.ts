@@ -11,7 +11,7 @@ export type segment =
 export class ClassroomRepository {
   static async getClassroomNames(segment: string): Promise<string[]> {
     return api
-      .get(`/classrooms/names/${encodeURI(segment)}`)
+      .get(`/classrooms/names/${encodeURIComponent(segment)}`)
       .then((response) => {
         return response.data
       })
@@ -25,7 +25,7 @@ export class ClassroomRepository {
     classroomName: string,
   ): Promise<string[]> {
     return api
-      .get(`/catechizings/${classroomName}`)
+      .get(`/catechizings/${encodeURIComponent(classroomName)}`)
       .then((response) => {
         return response.data
       })

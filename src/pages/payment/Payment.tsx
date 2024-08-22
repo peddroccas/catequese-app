@@ -27,7 +27,6 @@ export function Payment() {
         const classroomNamesResponse =
           await ClassroomRepository.getClassroomNames(segment)
         setClassroomsBySegment(classroomNamesResponse)
-        setClassroom('')
       }
     }
     getClassroomNames()
@@ -51,6 +50,7 @@ export function Payment() {
       if (catechizing) {
         const payment =
           await CatechizingRepository.getPaymentsByCatechizing(catechizing)
+
         setPayment(payment)
       }
     }

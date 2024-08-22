@@ -10,11 +10,11 @@ import {
   useDisclosure,
   DateValue,
 } from '@nextui-org/react'
-import { catechizing } from '../../../Types'
-import { useContext, useState } from 'react'
 import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
+import { CatechizingRepository } from '../../../services/repositories/catechizingRepository'
+import { useState } from 'react'
 
 interface NewInstallmentModalProps {
   catechizing: string
@@ -36,6 +36,10 @@ export default function NewInstallmentModal({
       payedAt!.toDate(getLocalTimeZone()),
       'dd/MM/yyyy',
     )
+    await CatechizingRepository.addNewInstallment(catechizing, {
+      payedAt: new Date(formattedDate),
+      value: Number(value),
+    })
   }
   return (
     <Modal
