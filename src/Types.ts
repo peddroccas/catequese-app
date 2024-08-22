@@ -18,13 +18,14 @@ export interface classroom {
 }
 
 export interface payment {
-  installment: [
-    {
-      value: number
-      payedAt: string
-    },
-  ]
+  id: string
   toBePaid: number
+  installments: {
+    id: string
+    payedAt: Date
+    value: number
+    payment_id: string
+  }[]
 }
 
 export interface catechizing {

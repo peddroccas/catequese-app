@@ -1,81 +1,61 @@
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Select from '../../components/Select'
-import { PeopleContext } from '../../context/PeopleContext'
-import { catechizing, classroom } from '../../Types'
-import { Installment } from './components/Installment'
+import { payment } from '../../Types'
 import { Plus } from '@phosphor-icons/react'
 import NewInstallmentModal from './components/NewInstallmentModal'
+import { ClassroomRepository } from '../../services/repositories/classroomRepository'
+import { Installment } from './components/Installment'
+import { CatechizingRepository } from '../../services/repositories/catechizingRepository'
 
 export function Payment() {
-  const { classroomList, catechistList, catechizingList, reload } =
-    useContext(PeopleContext)
   const [segment, setSegment] = useState<string>('')
   const [classroom, setClassroom] = useState<string>('')
-  const [catechizing, setCatechizing] = useState<catechizing | undefined>(
-    {} as catechizing,
-  )
-  const [filteredClassroom, setFilteredClassroom] = useState<classroom[]>([])
-  const [filteredCatechizing, setFilteredCatechizing] = useState<catechizing[]>(
-    [],
-  )
+  const [catechizing, setCatechizing] = useState<string>('')
+  const [classroomsBySegment, setClassroomsBySegment] = useState<string[]>([])
+  const [catechizingsByClassroom, setCatechizingsByClassroom] = useState<
+    string[]
+  >([])
+  const [payment, setPayment] = useState<payment | null>(null)
   const [isUserAddingNewInstallment, setIsUserAddingNewInstallment] =
     useState<boolean>(false)
 
-  // filtro de turma
+  // Consulta nome das turmas
   useEffect(() => {
-    function filteredClassroom() {
+    async function getClassroomNames() {
       if (segment) {
-        const filteredClassroomList: classroom[] = []
-        const segmentKey = (segment: string) => {
-          switch (segment) {
-            case '1° Eucaristia':
-              return 'eucaristia'
-            case 'Pré-eucaristia':
-              return 'preeucaristia'
-            case 'Crisma':
-              return 'crisma'
-            case 'Catequese de Adultos':
-              return 'catequeseadultos'
-            case 'Sementinha':
-              return 'sementinha'
-          }
-        }
-        classroomList.forEach((classroom) => {
-          if (classroom.segment === segmentKey(segment)) {
-            filteredClassroomList.push(classroom)
-          }
-        })
-        setFilteredClassroom(filteredClassroomList)
+        const classroomNamesResponse =
+          await ClassroomRepository.getClassroomNames(segment)
+        setClassroomsBySegment(classroomNamesResponse)
+        setClassroom('')
       }
     }
-    filteredClassroom()
-  }, [catechistList, classroomList, segment, classroom])
+    getClassroomNames()
+  }, [segment])
 
-  // filtro de catequizando
+  // Consulta nome dos catequizandos por turma
   useEffect(() => {
-    function filteredCatechizing() {
+    async function getCatechizingByClassroom() {
       if (classroom) {
-        const filteredCatechizingIDList: string[] = classroomList.filter(
-          (room) => classroom.includes(' ' + String(room.classNumber) + ' '),
-        )[0].catechizing
-
-        const filteredCatechizingList: catechizing[] =
-          filteredCatechizingIDList.map(
-            (catechizingID) => catechizingList[Number(catechizingID)],
-          )
-        setFilteredCatechizing(filteredCatechizingList)
+        const catechizings =
+          await ClassroomRepository.getCatechizingByClassroom(classroom)
+        setCatechizingsByClassroom(catechizings)
       }
     }
+    getCatechizingByClassroom()
+  }, [classroom, segment])
 
-    filteredCatechizing()
-  }, [catechistList, catechizingList, classroom, classroomList, segment])
-
+  // Consulta carnê do catequizando
   useEffect(() => {
-    if (reload) {
-      setCatechizing(catechizingList[catechizing!.id])
+    async function getPaymentsByCatechizing() {
+      if (catechizing) {
+        const payment =
+          await CatechizingRepository.getPaymentsByCatechizing(catechizing)
+        setPayment(payment)
+      }
     }
-  }, [catechizing, catechizingList, reload])
+    getPaymentsByCatechizing()
+  }, [catechizing])
 
   function handleAddNewInstallment() {
     setIsUserAddingNewInstallment(true)
@@ -86,103 +66,92 @@ export function Payment() {
   }
 
   return (
-    classroomList &&
-    catechistList && (
-      <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
-        <h1 className="text-2xl">Pagamento do Carnê</h1>
-        <form className="bg-bunker-900 flex w-11/12 flex-col gap-4 rounded-xl p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
-          <Select
-            label="Segmento"
-            value={segment}
-            options={[
-              '1° Eucaristia',
-              'Crisma',
-              'Catequese de Adultos',
-              'Sementinha',
-              'Pré-eucaristia',
-            ]}
-            onChange={(e) => {
-              setSegment(e.target.value)
-              setClassroom('')
-              setFilteredClassroom([])
-              setFilteredCatechizing([])
-              setCatechizing({} as catechizing)
-            }}
-          />
-          <Select
-            label="Turma"
-            value={classroom}
-            onChange={(e) => {
-              setClassroom(e.target.value)
-              setCatechizing({} as catechizing)
-              setFilteredCatechizing([])
-            }}
-            options={filteredClassroom.map((classroom) => {
-              return `Turma ${String(classroom.classNumber)} - ${classroom.catechist.map((catechist) => catechistList[catechist].name.split(' ')[0]).join(' e ')}`
-            })}
-          />
-          <Autocomplete
-            label="Catequizando"
-            selectedKey={catechizing!.name}
-            defaultSelectedKey={''}
-            isClearable={false}
-            onSelectionChange={(selected) =>
-              setCatechizing(
-                catechizingList.filter((catechizing) => {
-                  if (catechizing.name === selected) {
-                    return catechizing
-                  }
-                  return undefined
-                })[0],
-              )
-            }
-          >
-            {filteredCatechizing.map((catechizing) => (
-              <AutocompleteItem key={catechizing.name} value={catechizing.name}>
-                {catechizing.name}
-              </AutocompleteItem>
-            ))}
-          </Autocomplete>
+    <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
+      <h1 className="text-2xl">Pagamento do Carnê</h1>
+      <form className="flex w-11/12 flex-col gap-4 rounded-xl bg-bunker-900 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
+        <Select
+          label="Segmento"
+          value={segment}
+          options={[
+            '1° Eucaristia',
+            'Crisma',
+            'Catequizandos Adultos',
+            'Catecúmenos Adultos',
+            'Sementinha',
+            'Pré-Eucaristia',
+          ]}
+          onChange={(e) => {
+            setSegment(e.target.value)
+            setClassroomsBySegment([])
+            setClassroom('')
+            setCatechizing('')
+            setPayment(null)
+            setCatechizingsByClassroom([])
+          }}
+        />
+        <Select
+          label="Turma"
+          value={classroom}
+          onChange={(e) => {
+            setClassroom(e.target.value)
+            setCatechizingsByClassroom([])
+            setCatechizing('')
+            setPayment(null)
+          }}
+          options={classroomsBySegment}
+        />
+        <Autocomplete
+          label="Catequizando"
+          selectedKey={catechizing}
+          defaultSelectedKey={''}
+          isClearable={false}
+          onSelectionChange={(selected) => setCatechizing(String(selected))}
+        >
+          {catechizingsByClassroom.map((catechizing) => (
+            <AutocompleteItem key={catechizing} value={catechizing}>
+              {catechizing}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
 
-          {catechizing?.name && (
-            <div className="rounded-xl">
-              <header className="flex flex-row items-center justify-between gap-2 pb-2 text-white">
-                <div className="flex flex-row gap-2">
-                  <p className="text-2xl font-bold">Parcelas</p>
-                  <Button
-                    isIconOnly
-                    isDisabled={catechizing.payment.toBePaid === 0}
-                    onClick={handleAddNewInstallment}
-                    radius="full"
-                    size="sm"
-                  >
-                    <Plus size={22} />
-                  </Button>
-                  <NewInstallmentModal
-                    catechizing={catechizing!}
-                    onClose={handleOnCloseNewInstallmentModal}
-                    open={isUserAddingNewInstallment}
-                  />
-                </div>
-
-                <p
-                  className={`${catechizing!.payment.toBePaid === 0 ? 'text-green-600' : 'text-red-600'} rounded-xl bg-white p-1 text-lg font-semibold`}
+        {payment && (
+          <div className="rounded-xl">
+            <header className="flex flex-row items-center justify-between gap-2 pb-2 text-white">
+              <div className="flex flex-row gap-2">
+                <p className="text-2xl font-bold">Parcelas</p>
+                <Button
+                  isIconOnly
+                  isDisabled={payment.toBePaid === 0}
+                  onClick={handleAddNewInstallment}
+                  radius="full"
+                  size="sm"
                 >
-                  {catechizing!.payment.toBePaid === 0
-                    ? 'Pago'
-                    : catechizing!.payment.toBePaid.toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      })}
-                </p>
-              </header>
-              <div>
-                <Installment paymentData={catechizing.payment} />
+                  <Plus size={22} />
+                </Button>
+                <NewInstallmentModal
+                  catechizing={catechizing}
+                  onClose={handleOnCloseNewInstallmentModal}
+                  open={isUserAddingNewInstallment}
+                />
               </div>
+
+              <p
+                className={`${payment.toBePaid === 0 ? 'text-green-600' : 'text-red-600'} rounded-xl bg-white p-1 text-lg font-semibold`}
+              >
+                {payment.toBePaid === 0
+                  ? 'Pago'
+                  : payment.toBePaid.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+              </p>
+            </header>
+            <div>
+              <Installment paymentData={payment} />
             </div>
-          )}
-        </form>
-      </div>
-    )
+          </div>
+        )}
+      </form>
+    </div>
   )
 }

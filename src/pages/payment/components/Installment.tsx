@@ -21,7 +21,7 @@ export function Installment({ paymentData }: InstallmentProps) {
           <TableColumn>DATA DE PAGAMENTO</TableColumn>
         </TableHeader>
         <TableBody>
-          {paymentData.installment.map((installment, index) => (
+          {paymentData.installments.map((installment, index) => (
             <TableRow key={index}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>
@@ -30,7 +30,13 @@ export function Installment({ paymentData }: InstallmentProps) {
                   currency: 'BRL',
                 })}
               </TableCell>
-              <TableCell>{installment.payedAt}</TableCell>
+              <TableCell>
+                {new Date(installment.payedAt).toLocaleString('pt-BR', {
+                  day: '2-digit', // Dia do mês com dois dígitos
+                  month: 'short', // Nome do mês abreviado
+                  year: 'numeric', // Ano completo
+                })}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
