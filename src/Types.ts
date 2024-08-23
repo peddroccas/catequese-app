@@ -1,20 +1,15 @@
 export interface catechist {
+  id: number
   name: string
-}
+  birthday: Date
+  phone: string
+  address: string
+  personWithSpecialNeeds?: string
+  hasReceivedBaptism: boolean
+  hasReceivedEucharist: boolean
+  hasReceivedMarriage: boolean
 
-export const segments = [
-  'eucaristia',
-  'crisma',
-  'catequeseadultos',
-  'sementinha',
-  'preeucaristia',
-]
-
-export interface classroom {
-  catechist: number[]
-  catechizing: string[]
-  segment: string
-  classNumber: number
+  email: string
 }
 
 export interface payment {
@@ -28,9 +23,38 @@ export interface payment {
   }[]
 }
 
-export interface catechizing {
-  id: number
+export interface parent {
   name: string
-  responsible: string
-  payment: payment
+  phone: string
+  kinship: string
+}
+
+export interface catechizing {
+  id?: number
+  name: string
+  birthday: Date
+  address: string
+  personWithSpecialNeeds?: string
+  hasReceivedBaptism: boolean
+  hasReceivedEucharist: boolean
+  hasReceivedMarriage: boolean
+  payments?: payment
+  parents?: parent
+}
+
+type segment =
+  | '1° Eucaristia'
+  | 'Crisma'
+  | 'Catequizandos Adultos'
+  | 'Catecúmenos Adultos'
+  | 'Sementinha'
+  | 'Pré-Eucaristia'
+
+export interface classroom {
+  id: string
+  roomNumber: number
+  segment: segment
+  startedAt?: Date
+  catechists: catechist[]
+  catechizings: catechizing[]
 }

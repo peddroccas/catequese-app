@@ -1,7 +1,9 @@
+import { AddNewCatechizingForm } from './components/AddNewCatechizingForm'
+
 export function Catechizings() {
   return (
     <div>
-      <p>2134</p>
+      <AddNewCatechizingForm />
     </div>
   )
 }
