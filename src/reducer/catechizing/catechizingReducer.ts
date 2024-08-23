@@ -5,7 +5,7 @@ export const catechizingInitialState = {
   name: '', // Nome inicial como string vazia
   birthday: new Date(0), // Data inicial (utiliza epoch time)
   address: '', // Endereço inicial como string vazia
-  personWithSpecialNeeds: '', // Pode ser opcional e começando como undefined
+  personWithSpecialNeeds: false, // Pode ser opcional e começando como undefined
   hasReceivedBaptism: false, // Inicialmente como false
   hasReceivedEucharist: false, // Inicialmente como false
   hasReceivedMarriage: false,

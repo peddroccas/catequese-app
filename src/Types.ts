@@ -34,7 +34,7 @@ export interface catechizing {
   name: string
   birthday: Date
   address: string
-  personWithSpecialNeeds?: string
+  personWithSpecialNeeds: boolean
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
   hasReceivedMarriage: boolean
