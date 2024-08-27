@@ -1,16 +1,38 @@
-import { Checkbox, Input } from '@nextui-org/react'
-import { useReducer } from 'react'
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  DatePicker,
+  Input,
+} from '@nextui-org/react'
+import { useReducer, useState } from 'react'
 import {
   catechizingInitialState,
   catechizingReducer,
 } from '../../../reducer/catechizing/catechizingReducer'
 import { CatechizingActionTypes } from '../../../reducer/catechizing/catechizingActionTypes'
+import { CatechizingRepository } from '../../../services/repositories/catechizingRepository'
+import { I18nProvider } from '@react-aria/i18n'
 
 export function AddNewCatechizingForm() {
   const [state, dispatch] = useReducer(
     catechizingReducer,
     catechizingInitialState,
   )
+  const [hasUserSubmittedForm, setHasUserSubmittedForm] =
+    useState<boolean>(false)
+
+  async function handleSubmitNewCatechizingForm() {
+    setHasUserSubmittedForm(true)
+
+    try {
+      await CatechizingRepository.createNewCatechizing(state).finally(() =>
+        setHasUserSubmittedForm(false),
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <div className="mt-4 flex flex-grow flex-col items-center justify-start gap-8 pb-8 pt-4">
       <h1 className="text-2xl text-white">Adicionar Novo Catequizando</h1>
@@ -25,16 +47,24 @@ export function AddNewCatechizingForm() {
             })
           }
         />
-        <Input
-          label="Date de Nascimento"
-          value={state.birthday.toDateString()}
-          onChange={(e) =>
-            dispatch({
-              type: CatechizingActionTypes.SET_BIRTHDAY,
-              payload: { birthday: e.target.value },
-            })
-          }
-        />
+        <I18nProvider locale="pt-BR">
+          <DatePicker
+            label="Data"
+            value={state.birthday}
+            dateInputClassNames={{
+              inputWrapper: 'border hover:border-2 focus:border-2',
+            }}
+            classNames={{ input: '!text-brown-500' }}
+            onChange={(e) =>
+              dispatch({
+                type: CatechizingActionTypes.SET_BIRTHDAY,
+                payload: { birthday: e },
+              })
+            }
+            showMonthAndYearPickers
+            isRequired
+          />
+        </I18nProvider>
         <Input
           label="Endereço"
           value={state.address}
@@ -99,8 +129,17 @@ export function AddNewCatechizingForm() {
             })
           }}
         >
-          Pessoa com necessidade Especial
+          Pessoa com Necessidade Especial
         </Checkbox>
+
+        <Button
+          variant="solid"
+          className="w-full p-2 font-medium shadow shadow-black"
+          onClick={handleSubmitNewCatechizingForm}
+          size="lg"
+        >
+          {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
+        </Button>
       </form>
     </div>
   )

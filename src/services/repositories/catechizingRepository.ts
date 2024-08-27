@@ -1,4 +1,5 @@
-import { payment } from '../../Types'
+import { getLocalTimeZone } from '@internationalized/date'
+import { catechizing, payment } from '../../Types'
 import { api } from '../api'
 
 export class CatechizingRepository {
@@ -11,8 +12,8 @@ export class CatechizingRepository {
         return response.data
       })
       .catch((error) => {
-        console.error('Erro na requisição:', error)
-        throw error // Lançar o erro para que o chamador possa tratá-lo
+        console.error('Erro ao consultar parcelas:', error)
+        throw error
       })
   }
 
@@ -26,8 +27,24 @@ export class CatechizingRepository {
         return response.data
       })
       .catch((error) => {
+        console.error('Erro ao adicionar nova parcela:', error)
+        throw error
+      })
+  }
+
+  static async createNewCatechizing(data: catechizing) {
+    return api
+      .post('/catechizings', {
+        ...data,
+        birthday: data.birthday?.toDate(getLocalTimeZone()),
+        parents: { name: '', phone: '', kinship: '' },
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
         console.error('Erro na requisição:', error)
-        throw error // Lançar o erro para que o chamador possa tratá-lo
+        throw error
       })
   }
 }
