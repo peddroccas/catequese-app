@@ -1,7 +1,9 @@
+import { ToolBar } from '@/components/ToolBar'
+
 export function Classrooms() {
   return (
     <div>
-      <p>Salas</p>
+      <ToolBar></ToolBar>
     </div>
   )
 }
