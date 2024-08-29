@@ -15,7 +15,7 @@ export function AddNewCatechizingModal({
       isOpen={isOpen}
       onClose={onClose}
       placement="center"
-      className="flex w-11/12 flex-col rounded-xl bg-bunker-900 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12"
+      className="flex flex-col rounded-xl bg-bunker-900 p-4"
     >
       <ModalContent>
         <AddNewCatechizingForm />

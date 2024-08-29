@@ -34,7 +34,7 @@ export function AddNewCatechizingForm() {
     }
   }
   return (
-    <div className="m-8 flex w-11/12 flex-col items-center justify-center rounded-xl bg-bunker-900 p-4 md:w-6/12 lg:w-5/12 2xl:w-3/12">
+    <div className="m-8 flex flex-col items-center justify-center rounded-xl bg-bunker-900 p-4">
       <form className="flex flex-col gap-4">
         <h1 className="text-2xl text-white">Adicionar Novo Catequizando</h1>
 
