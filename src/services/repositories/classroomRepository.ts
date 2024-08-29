@@ -1,3 +1,4 @@
+import { classroom } from '@/Types'
 import { api } from '../api'
 
 export type segment =
@@ -23,7 +24,12 @@ export class ClassroomRepository {
       })
   }
 
-  static async getClassroomNames(): Promise<string[]> {
+  static async getClassroomNames(): Promise<
+    {
+      id: string
+      classroomName: string
+    }[]
+  > {
     return api
       .get(`/classrooms/names`)
       .then((response) => {
@@ -43,6 +49,18 @@ export class ClassroomRepository {
   > {
     return api
       .get(`/catechizings/${encodeURIComponent(classroomName)}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
+  static async getClassroom(classroomId: string): Promise<classroom> {
+    return api
+      .get(`/classrooms/${classroomId}`)
       .then((response) => {
         return response.data
       })

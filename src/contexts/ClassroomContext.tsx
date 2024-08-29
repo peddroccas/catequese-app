@@ -5,7 +5,10 @@ interface ClassroomType {
   hasClassroomUpdate: boolean
   throwClassroomUpdate: () => void
   throwClassroomHasAlreadyUpdated: () => void
-  classroomNames: string[]
+  classrooms: {
+    id: string
+    classroomName: string
+  }[]
 }
 export const ClassroomContext = createContext({} as ClassroomType)
 
@@ -15,19 +18,23 @@ interface ClassroomProviderProps {
 
 export function ClassroomProvider({ children }: ClassroomProviderProps) {
   const [hasClassroomUpdate, sethasClassroomUpdate] = useState<boolean>(false)
-  const [classroomNames, setClassroomNames] = useState<string[]>([])
+  const [classrooms, setClassrooms] = useState<
+    {
+      id: string
+      classroomName: string
+    }[]
+  >([])
 
   // Consulta nome das turmas
   useEffect(() => {
     async function getClassroomNames() {
-      if (hasClassroomUpdate) {
-        const classroomNamesResponse =
-          await ClassroomRepository.getClassroomNames()
-        setClassroomNames(classroomNamesResponse)
-      }
+      const classroomNamesResponse =
+        await ClassroomRepository.getClassroomNames()
+      setClassrooms(classroomNamesResponse)
     }
+
     getClassroomNames()
-  }, [hasClassroomUpdate])
+  }, [])
 
   function throwClassroomUpdate() {
     sethasClassroomUpdate(true)
@@ -39,7 +46,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   return (
     <ClassroomContext.Provider
       value={{
-        classroomNames,
+        classrooms,
         hasClassroomUpdate,
         throwClassroomUpdate,
         throwClassroomHasAlreadyUpdated,
