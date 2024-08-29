@@ -44,7 +44,7 @@ export interface catechizing {
   parents?: parent
 }
 
-type segment =
+export type segment =
   | '1° Eucaristia'
   | 'Crisma'
   | 'Catequizandos Adultos'
@@ -56,7 +56,9 @@ export interface classroom {
   id: string
   roomNumber: number
   segment: segment
-  startedAt?: DateValue | null
+  startedAt: DateValue | null
   catechists: catechist[]
   catechizings: catechizing[]
 }
+
+export type toolBarType = 'classroom' | 'payment' | 'catechizing' | 'catechits'

@@ -19,6 +19,7 @@ export default function BasicSelect({
       label={label}
       onChange={onChange}
       value={value}
+      classNames={{ listbox: '!text-bunker-950' }}
       selectedKeys={[value]}
     >
       {options.map((option) => (
