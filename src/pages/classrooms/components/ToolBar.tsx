@@ -1,4 +1,4 @@
-import { AddNewCatechizingForm } from '@/pages/catechizings/components/AddNewCatechizingForm'
+import { AddNewCatechizingModal } from '@/pages/catechizings/components/AddNewCatechizingModal'
 import { Button, Tooltip } from '@nextui-org/react'
 import { PencilSimple, Plus, Trash, UserPlus } from '@phosphor-icons/react'
 import { useState } from 'react'
@@ -19,7 +19,7 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
 
   return (
     <div className="flex gap-2">
-      <AddNewCatechizingForm
+      <AddNewCatechizingModal
         isOpen={isUserAddingNewCatechizing}
         onClose={() => setIsUserAddingNewCatechizing(false)}
       />
