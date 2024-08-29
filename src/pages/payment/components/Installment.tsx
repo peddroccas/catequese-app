@@ -31,7 +31,7 @@ export function Installment({ paymentData }: InstallmentProps) {
                 })}
               </TableCell>
               <TableCell>
-                {new Date(installment.payedAt).toLocaleString('pt-BR', {
+                {new Date(String(installment.payedAt)).toLocaleString('pt-BR', {
                   day: '2-digit', // Dia do mês com dois dígitos
                   month: 'short', // Nome do mês abreviado
                   year: 'numeric', // Ano completo
