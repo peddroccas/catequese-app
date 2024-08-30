@@ -1,24 +1,53 @@
+import { ClassroomSelect } from '@/components/ClassroomSelect'
+import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
 import {
   catechizingReducer,
   catechizingInitialState,
 } from '@/reducer/catechizing/catechizingReducer'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { getLocalTimeZone, now } from '@internationalized/date'
 import {
   Input,
   DatePicker,
   Checkbox,
   Button,
   CircularProgress,
+  DateValue,
 } from '@nextui-org/react'
 import { I18nProvider } from '@react-aria/i18n'
-import { useReducer, useState } from 'react'
+import { useContext, useReducer, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+const formSchema = z.object({
+  name: z.string().min(1, 'Campo obrigatoŕio'),
+  birthday: z.unknown().refine((arg) => arg === null, { message: 'Erro' }),
+  classroom: z.string(),
+})
 
 export function AddNewCatechizingForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(formSchema) })
+  const { classrooms } = useContext(ClassroomContext)
   const [state, dispatch] = useReducer(
     catechizingReducer,
     catechizingInitialState,
   )
+  const [selectedClassroom, setSelectedClassroom] = useState<{
+    id: string
+    classroomName: string
+  }>(
+    {} as {
+      id: string
+      classroomName: string
+    },
+  )
+
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
@@ -35,9 +64,16 @@ export function AddNewCatechizingForm() {
   }
   return (
     <div className="flex flex-col items-center justify-center rounded-xl bg-bunker-900">
-      <form className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(handleSubmitNewCatechizingForm)}
+        className="flex flex-col gap-4"
+      >
         <Input
           label="Nome"
+          {...register('name')}
+          isRequired
+          isInvalid={Boolean(errors.name)}
+          errorMessage={String(errors.name?.message)}
           value={state.name}
           onChange={(e) =>
             dispatch({
@@ -49,6 +85,10 @@ export function AddNewCatechizingForm() {
         <I18nProvider locale="pt-BR">
           <DatePicker
             label="Data"
+            isRequired
+            {...register('birthday')}
+            isInvalid={Boolean(errors.birthday)}
+            errorMessage={String(errors.birthday?.message)}
             value={state.birthday}
             dateInputClassNames={{
               inputWrapper: 'border hover:border-2 focus:border-2',
@@ -61,7 +101,6 @@ export function AddNewCatechizingForm() {
               })
             }
             showMonthAndYearPickers
-            isRequired
           />
         </I18nProvider>
         <Input
@@ -131,10 +170,29 @@ export function AddNewCatechizingForm() {
           Pessoa com Necessidade Especial
         </Checkbox>
 
+        <ClassroomSelect
+          value={selectedClassroom!}
+          props={{
+            id: 'classroom',
+            isInvalid: Boolean(errors.classroom),
+            errorMessage: String(errors.classroom?.message),
+            children: <></>,
+            ...register('classroom'),
+          }}
+          onChange={(e) => {
+            setSelectedClassroom(
+              classrooms.find((classroom) => classroom.id === e.target.value)!,
+            )
+            dispatch({
+              type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
+              payload: { catechizing_id: e.target.value },
+            })
+          }}
+        />
         <Button
           variant="solid"
           className="w-full p-2 font-medium shadow shadow-black"
-          onClick={handleSubmitNewCatechizingForm}
+          type="submit"
           size="lg"
         >
           {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}

@@ -25,6 +25,8 @@ export function catechizingReducer(
       return { ...state, birthday: action.payload.birthday }
     case CatechizingActionTypes.SET_ADDRESS:
       return { ...state, address: action.payload.address }
+    case CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM:
+      return { ...state, classroom_id: action.payload.classroom_id }
     case CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS:
       return {
         ...state,

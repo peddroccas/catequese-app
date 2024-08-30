@@ -40,6 +40,7 @@ export interface catechizing {
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
   hasReceivedMarriage: boolean
+  classroom_id?: string
   payments?: payment[]
   parents?: parent
 }
