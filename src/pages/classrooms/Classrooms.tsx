@@ -14,7 +14,8 @@ import {
 import { useContext, useEffect, useState } from 'react'
 
 export function Classrooms() {
-  const { classrooms } = useContext(ClassroomContext)
+  const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
+    useContext(ClassroomContext)
   const [classroom, setClassroom] = useState<classroom>({} as classroom)
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
@@ -36,8 +37,13 @@ export function Classrooms() {
         setClassroom(classroom)
       }
     }
-    getClassroom()
-  }, [classrooms, selectedClassroom])
+    getClassroom().finally(throwClassroomHasAlreadyUpdated)
+  }, [
+    classrooms,
+    selectedClassroom,
+    hasClassroomUpdate,
+    throwClassroomHasAlreadyUpdated,
+  ])
 
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">

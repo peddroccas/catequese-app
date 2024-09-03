@@ -42,7 +42,7 @@ export function AddNewCatechizingForm() {
   } = useForm({
     resolver: zodResolver(addNewCatechizingFormSchema),
   })
-  const { classrooms } = useContext(ClassroomContext)
+  const { classrooms, throwClassroomUpdate } = useContext(ClassroomContext)
   const [state, dispatch] = useReducer(
     catechizingReducer,
     catechizingInitialState,
@@ -64,9 +64,9 @@ export function AddNewCatechizingForm() {
     setHasUserSubmittedForm(true)
     console.log(state.classroomId)
     try {
-      await CatechizingRepository.createNewCatechizing(state).finally(() =>
-        setHasUserSubmittedForm(false),
-      )
+      await CatechizingRepository.createNewCatechizing(state)
+        .finally(() => setHasUserSubmittedForm(false))
+        .then(throwClassroomUpdate)
     } catch (error) {
       console.error(error)
     }
@@ -143,7 +143,6 @@ export function AddNewCatechizingForm() {
           checked={state.hasReceivedBaptism}
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
-            console.log(e)
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_BAPTISM,
               payload: { personWithSpecialNeeds: e.target.checked },
@@ -157,7 +156,6 @@ export function AddNewCatechizingForm() {
           checked={state.hasReceivedEucharist}
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
-            console.log(e)
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_EUCHARIST,
               payload: { personWithSpecialNeeds: e.target.checked },
@@ -171,7 +169,6 @@ export function AddNewCatechizingForm() {
           checked={state.hasReceivedMarriage}
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
-            console.log(e)
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_MARRIAGE,
               payload: { personWithSpecialNeeds: e.target.checked },
@@ -185,7 +182,6 @@ export function AddNewCatechizingForm() {
           checked={state.personWithSpecialNeeds}
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
-            console.log(e)
             dispatch({
               type: CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS,
               payload: { personWithSpecialNeeds: e.target.checked },
