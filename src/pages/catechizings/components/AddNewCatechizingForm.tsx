@@ -7,23 +7,27 @@ import {
 } from '@/reducer/catechizing/catechizingReducer'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { getLocalTimeZone, now } from '@internationalized/date'
 import {
   Input,
   DatePicker,
   Checkbox,
   Button,
   CircularProgress,
-  DateValue,
 } from '@nextui-org/react'
 import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useReducer, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const formSchema = z.object({
+const addNewCatechizingFormSchema = z.object({
   name: z.string().min(1, 'Campo obrigatoŕio'),
-  birthday: z.unknown().refine((arg) => arg === null, { message: 'Erro' }),
+  birthday: z.custom((value) => {
+    if (value) {
+      return true
+    } else {
+      return false
+    }
+  }, 'Campo obrigatório'),
   classroom: z.string(),
 })
 
@@ -31,8 +35,11 @@ export function AddNewCatechizingForm() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(formSchema) })
+  } = useForm({
+    resolver: zodResolver(addNewCatechizingFormSchema),
+  })
   const { classrooms } = useContext(ClassroomContext)
   const [state, dispatch] = useReducer(
     catechizingReducer,
@@ -68,39 +75,62 @@ export function AddNewCatechizingForm() {
         onSubmit={handleSubmit(handleSubmitNewCatechizingForm)}
         className="flex flex-col gap-4"
       >
-        <Input
-          label="Nome"
-          {...register('name')}
-          isRequired
-          isInvalid={Boolean(errors.name)}
-          errorMessage={String(errors.name?.message)}
-          value={state.name}
-          onChange={(e) =>
-            dispatch({
-              type: CatechizingActionTypes.SET_NAME,
-              payload: { name: e.target.value },
-            })
-          }
-        />
-        <I18nProvider locale="pt-BR">
-          <DatePicker
-            label="Data"
-            isRequired
-            {...register('birthday')}
-            isInvalid={Boolean(errors.birthday)}
-            errorMessage={String(errors.birthday?.message)}
-            value={state.birthday}
-            dateInputClassNames={{
-              inputWrapper: 'border hover:border-2 focus:border-2',
-            }}
-            classNames={{ input: '!text-brown-500' }}
-            onChange={(e) =>
+        <Controller
+          name="name"
+          control={control}
+          rules={{
+            onChange: (e) =>
               dispatch({
-                type: CatechizingActionTypes.SET_BIRTHDAY,
-                payload: { birthday: e },
-              })
-            }
-            showMonthAndYearPickers
+                type: CatechizingActionTypes.SET_NAME,
+                payload: { name: e.target.value },
+              }),
+          }}
+          render={({ field }) => (
+            <Input
+              label="Nome"
+              {...field}
+              isRequired
+              isInvalid={Boolean(errors.name)}
+              errorMessage={String(errors.name?.message)}
+            />
+          )}
+        />
+
+        <I18nProvider locale="pt-BR">
+          <Controller
+            name="birthday"
+            control={control}
+            rules={{
+              required: true,
+              value: state.birthday,
+              onChange: (e) =>
+                dispatch({
+                  type: CatechizingActionTypes.SET_BIRTHDAY,
+                  payload: { birthday: e.target.value },
+                }),
+            }}
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                label="Data"
+                // validationBehavior="native"
+                // validate={(value) => {
+                //   const birthday = register('birthday', { value, required: true })
+                //   console.log(bir)
+                //   if (birthday) {
+                //     return true
+                //   }
+                // }}
+                isRequired
+                isInvalid={Boolean(errors.birthday)}
+                errorMessage={String(errors.birthday?.message)}
+                dateInputClassNames={{
+                  inputWrapper: 'border hover:border-2 focus:border-2',
+                }}
+                classNames={{ input: '!text-brown-500' }}
+                showMonthAndYearPickers
+              />
+            )}
           />
         </I18nProvider>
         <Input
