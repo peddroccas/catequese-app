@@ -1,6 +1,6 @@
+import { forwardRef, ChangeEvent, useContext } from 'react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { Select, SelectItem, SelectProps } from '@nextui-org/react'
-import { ChangeEvent, useContext } from 'react'
 
 interface ClassroomSelectProps {
   value: {
@@ -8,21 +8,20 @@ interface ClassroomSelectProps {
     classroomName: string
   }
   size?: 'lg'
-  props: SelectProps
+  props?: SelectProps
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
-export function ClassroomSelect({
-  onChange,
-  props,
-  value,
-  size,
-}: ClassroomSelectProps) {
+export const ClassroomSelect = forwardRef<
+  HTMLSelectElement,
+  ClassroomSelectProps
+>(({ onChange, props, value, size }, ref) => {
   const { classrooms } = useContext(ClassroomContext)
 
   return (
     value && (
       <Select
+        ref={ref}
         {...props}
         label={'Turma'}
         onChange={onChange}
@@ -40,4 +39,6 @@ export function ClassroomSelect({
       </Select>
     )
   )
-}
+})
+
+ClassroomSelect.displayName = 'ClassroomSelect'

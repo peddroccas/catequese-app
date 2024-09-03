@@ -1,4 +1,3 @@
-import { ClassroomSelect } from '@/components/ClassroomSelect'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
 import {
@@ -13,6 +12,8 @@ import {
   Checkbox,
   Button,
   CircularProgress,
+  Select,
+  SelectItem,
 } from '@nextui-org/react'
 import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useReducer, useState } from 'react'
@@ -20,7 +21,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const addNewCatechizingFormSchema = z.object({
-  name: z.string().min(1, 'Campo obrigatoŕio'),
+  name: z
+    .string({ message: 'Insira um valor válido' })
+    .min(1, 'Campo obrigatoŕio'),
   birthday: z.custom((value) => {
     if (value) {
       return true
@@ -28,12 +31,11 @@ const addNewCatechizingFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z.string(),
+  classroom: z.string({ message: 'Campo obrigatório' }).uuid(),
 })
 
 export function AddNewCatechizingForm() {
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
@@ -60,7 +62,7 @@ export function AddNewCatechizingForm() {
 
   async function handleSubmitNewCatechizingForm() {
     setHasUserSubmittedForm(true)
-
+    console.log(state.classroomId)
     try {
       await CatechizingRepository.createNewCatechizing(state).finally(() =>
         setHasUserSubmittedForm(false),
@@ -79,6 +81,7 @@ export function AddNewCatechizingForm() {
           name="name"
           control={control}
           rules={{
+            required: true,
             onChange: (e) =>
               dispatch({
                 type: CatechizingActionTypes.SET_NAME,
@@ -113,14 +116,6 @@ export function AddNewCatechizingForm() {
               <DatePicker
                 {...field}
                 label="Data"
-                // validationBehavior="native"
-                // validate={(value) => {
-                //   const birthday = register('birthday', { value, required: true })
-                //   console.log(bir)
-                //   if (birthday) {
-                //     return true
-                //   }
-                // }}
                 isRequired
                 isInvalid={Boolean(errors.birthday)}
                 errorMessage={String(errors.birthday?.message)}
@@ -200,25 +195,46 @@ export function AddNewCatechizingForm() {
           Pessoa com Necessidade Especial
         </Checkbox>
 
-        <ClassroomSelect
-          value={selectedClassroom!}
-          props={{
-            id: 'classroom',
-            isInvalid: Boolean(errors.classroom),
-            errorMessage: String(errors.classroom?.message),
-            children: <></>,
-            ...register('classroom'),
+        <Controller
+          name="classroom"
+          control={control}
+          rules={{
+            required: true,
+            value: selectedClassroom!,
+            onChange: (e) => {
+              setSelectedClassroom(
+                classrooms.find(
+                  (classroom) => classroom.id === e.target.value,
+                )!,
+              )
+              console.log(e.target.value)
+              dispatch({
+                type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
+                payload: { classroomId: e.target.value },
+              })
+            },
           }}
-          onChange={(e) => {
-            setSelectedClassroom(
-              classrooms.find((classroom) => classroom.id === e.target.value)!,
-            )
-            dispatch({
-              type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
-              payload: { catechizing_id: e.target.value },
-            })
-          }}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label="Turma"
+              size="md"
+              isRequired
+              className="max-w-prose"
+              classNames={{ listbox: '!text-bunker-950' }}
+              selectedKeys={[field.value]}
+              isInvalid={Boolean(errors.classroom)}
+              errorMessage={String(errors.classroom?.message)}
+            >
+              {classrooms.map((classroom) => (
+                <SelectItem key={classroom.id} value={classroom.classroomName}>
+                  {classroom.classroomName}
+                </SelectItem>
+              ))}
+            </Select>
+          )}
         />
+
         <Button
           variant="solid"
           className="w-full p-2 font-medium shadow shadow-black"
