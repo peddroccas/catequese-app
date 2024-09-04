@@ -5,6 +5,7 @@ export const catechizingInitialState = {
   name: '', // Nome inicial como string vazia
   birthday: null, // Data inicial (utiliza epoch time)
   address: '', // Endereço inicial como string vazia
+  classroomId: '',
   personWithSpecialNeeds: false, // Pode ser opcional e começando como undefined
   hasReceivedBaptism: false, // Inicialmente como false
   hasReceivedEucharist: false, // Inicialmente como false
@@ -25,6 +26,8 @@ export function catechizingReducer(
       return { ...state, birthday: action.payload.birthday }
     case CatechizingActionTypes.SET_ADDRESS:
       return { ...state, address: action.payload.address }
+    case CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM:
+      return { ...state, classroomId: action.payload.classroomId }
     case CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS:
       return {
         ...state,

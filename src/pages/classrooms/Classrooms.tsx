@@ -1,4 +1,4 @@
-import Select from '@/components/Select'
+import { ClassroomSelect } from '@/components/ClassroomSelect'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { ToolBar } from '@/pages/classrooms/components/ToolBar'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
@@ -14,35 +14,47 @@ import {
 import { useContext, useEffect, useState } from 'react'
 
 export function Classrooms() {
-  const { classrooms } = useContext(ClassroomContext)
+  const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
+    useContext(ClassroomContext)
   const [classroom, setClassroom] = useState<classroom>({} as classroom)
-  const [selectedClassroomName, setSelectedClassroomName] = useState<string>('')
+  const [selectedClassroom, setSelectedClassroom] = useState<{
+    id: string
+    classroomName: string
+  }>(
+    {} as {
+      id: string
+      classroomName: string
+    },
+  )
   const { catechizings } = classroom
 
   useEffect(() => {
     async function getClassroom() {
-      if (selectedClassroomName) {
-        const classroomId = classrooms.map((classroom) => {
-          if (classroom.classroomName === selectedClassroomName) {
-            return classroom.id
-          }
-          return ''
-        })[0]
-        const classroom = await ClassroomRepository.getClassroom(classroomId)
+      if (selectedClassroom.id) {
+        const classroom = await ClassroomRepository.getClassroom(
+          selectedClassroom.id,
+        )
         setClassroom(classroom)
       }
     }
-    getClassroom()
-  }, [classrooms, selectedClassroomName])
+    getClassroom().finally(throwClassroomHasAlreadyUpdated)
+  }, [
+    classrooms,
+    selectedClassroom,
+    hasClassroomUpdate,
+    throwClassroomHasAlreadyUpdated,
+  ])
+
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
       <nav className="flex items-center justify-between">
-        <Select
-          size="lg"
-          label="Turmas"
-          options={classrooms.map((classrooms) => classrooms.classroomName)}
-          value={selectedClassroomName}
-          onChange={(e) => setSelectedClassroomName(e.target.value)}
+        <ClassroomSelect
+          value={selectedClassroom!}
+          onChange={(e) =>
+            setSelectedClassroom(
+              classrooms.find((classroom) => classroom.id === e.target.value)!,
+            )
+          }
         />
         <ToolBar isClassroomSelected={Boolean(classroom.id)} />
       </nav>

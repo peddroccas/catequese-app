@@ -40,6 +40,7 @@ export interface catechizing {
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
   hasReceivedMarriage: boolean
+  classroomId?: string
   payments?: payment[]
   parents?: parent
 }
@@ -62,3 +63,5 @@ export interface classroom {
 }
 
 export type toolBarType = 'classroom' | 'payment' | 'catechizing' | 'catechits'
+
+export const dateType = {} as DateValue
