@@ -31,7 +31,9 @@ const addNewCatechizingFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z.string({ message: 'Campo obrigatório' }).uuid(),
+  classroom: z
+    .string({ message: 'Campo obrigatório' })
+    .uuid({ message: 'Campo obrigatório' }),
 })
 
 export function AddNewCatechizingForm() {
@@ -92,7 +94,6 @@ export function AddNewCatechizingForm() {
             <Input
               label="Nome"
               {...field}
-              isRequired
               isInvalid={Boolean(errors.name)}
               errorMessage={String(errors.name?.message)}
             />
@@ -116,7 +117,6 @@ export function AddNewCatechizingForm() {
               <DatePicker
                 {...field}
                 label="Data"
-                isRequired
                 isInvalid={Boolean(errors.birthday)}
                 errorMessage={String(errors.birthday?.message)}
                 dateInputClassNames={{
@@ -215,7 +215,6 @@ export function AddNewCatechizingForm() {
               {...field}
               label="Turma"
               size="md"
-              isRequired
               className="max-w-prose"
               classNames={{ listbox: '!text-bunker-950' }}
               selectedKeys={[field.value]}
