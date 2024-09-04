@@ -1,17 +1,19 @@
 import { DateValue } from '@nextui-org/react'
 
 export interface catechist {
-  id: number
+  id?: number
   name: string
   birthday: DateValue | null
   phone: string
   address: string
-  personWithSpecialNeeds?: string
+  classroomId: string
+
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
+  hasReceivedConfirmation: boolean
   hasReceivedMarriage: boolean
 
-  email: string
+  email?: string
 }
 
 export interface payment {
