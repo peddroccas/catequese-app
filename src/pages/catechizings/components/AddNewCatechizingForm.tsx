@@ -64,10 +64,13 @@ export function AddNewCatechizingForm() {
 
   async function handleSubmitNewCatechizingForm() {
     setHasUserSubmittedForm(true)
-    console.log(state.classroomId)
+    console.log(state)
     try {
       await CatechizingRepository.createNewCatechizing(state)
-        .finally(() => setHasUserSubmittedForm(false))
+        .finally(() => {
+          setHasUserSubmittedForm(false)
+          dispatch({ type: CatechizingActionTypes.RESET })
+        })
         .then(throwClassroomUpdate)
     } catch (error) {
       console.error(error)
@@ -145,7 +148,7 @@ export function AddNewCatechizingForm() {
           onChange={(e) => {
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_BAPTISM,
-              payload: { personWithSpecialNeeds: e.target.checked },
+              payload: { hasReceivedBaptism: e.target.checked },
             })
           }}
         >
@@ -158,7 +161,7 @@ export function AddNewCatechizingForm() {
           onChange={(e) => {
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_EUCHARIST,
-              payload: { personWithSpecialNeeds: e.target.checked },
+              payload: { hasReceivedEucharist: e.target.checked },
             })
           }}
         >
@@ -171,7 +174,7 @@ export function AddNewCatechizingForm() {
           onChange={(e) => {
             dispatch({
               type: CatechizingActionTypes.SET_HAS_RECEIVED_MARRIAGE,
-              payload: { personWithSpecialNeeds: e.target.checked },
+              payload: { hasReceivedMarriage: e.target.checked },
             })
           }}
         >
@@ -232,6 +235,8 @@ export function AddNewCatechizingForm() {
 
         <Button
           variant="solid"
+          aria-labelledby="cadastro de catequizando"
+          aria-label="cadastro de catequizando"
           className="w-full p-2 font-medium shadow shadow-black"
           type="submit"
           size="lg"
