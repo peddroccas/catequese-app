@@ -28,7 +28,10 @@ export const ClassroomSelect = forwardRef<
         size={size}
         className="max-w-prose"
         value={value.id}
-        classNames={{ listbox: '!text-bunker-950' }}
+        classNames={{
+          listbox: '!text-bunker-950',
+          selectorIcon: 'text-bunker-950',
+        }}
         selectedKeys={[value.id]}
       >
         {classrooms.map((classroom) => (

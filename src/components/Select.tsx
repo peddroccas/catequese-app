@@ -23,7 +23,10 @@ export default function BasicSelect({
       size={size}
       className="max-w-prose"
       value={value}
-      classNames={{ listbox: '!text-bunker-950' }}
+      classNames={{
+        listbox: '!text-bunker-950',
+        selectorIcon: 'text-bunker-950',
+      }}
       selectedKeys={[value]}
     >
       {options.map((option) => (

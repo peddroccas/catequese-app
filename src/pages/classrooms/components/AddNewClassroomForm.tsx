@@ -199,6 +199,7 @@ export function AddNewClassroomForm() {
             classNames={{
               listbox: '!text-bunker-950',
               innerWrapper: ' w-7/12',
+              selectorIcon: 'text-bunker-950',
             }}
             scrollShadowProps={{
               isEnabled: false,

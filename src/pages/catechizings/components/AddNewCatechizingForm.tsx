@@ -216,7 +216,10 @@ export function AddNewCatechizingForm() {
             label="Turma"
             size="md"
             className="max-w-prose"
-            classNames={{ listbox: '!text-bunker-950' }}
+            classNames={{
+              listbox: '!text-bunker-950',
+              selectorIcon: 'text-bunker-950',
+            }}
             selectedKeys={[field.value]}
             isInvalid={Boolean(errors.classroom)}
             errorMessage={String(errors.classroom?.message)}
