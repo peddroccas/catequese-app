@@ -82,6 +82,12 @@ export function AddNewCatechizingModal({
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: CatechizingActionTypes.RESET })
+          setSelectedClassroom(
+            {} as {
+              id: string
+              classroomName: string
+            },
+          )
           onClose()
         })
         .then(throwClassroomUpdate)
