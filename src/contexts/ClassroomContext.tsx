@@ -65,7 +65,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
       }
     }
     getCatechists().finally(throwCatechistHasAlreadyUpdated)
-  }, [hasCatechistUpdate])
+  }, [hasCatechistUpdate, hasClassroomUpdate])
 
   // Consulta todos os catequizandos
   useEffect(() => {
@@ -77,7 +77,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
     }
 
     getCatechizings().finally(throwClassroomHasAlreadyUpdated)
-  }, [hasCatechizingUpdate])
+  }, [hasCatechizingUpdate, hasClassroomUpdate])
 
   function throwClassroomUpdate() {
     setHasClassroomUpdate(true)
