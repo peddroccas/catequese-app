@@ -77,7 +77,6 @@ export function AddNewCatechizingModal({
 
   async function handleSubmitNewCatechizingForm() {
     setHasUserSubmittedForm(true)
-    console.log(state)
     try {
       await CatechizingRepository.createNewCatechizing(state)
         .finally(() => {
@@ -237,7 +236,6 @@ export function AddNewCatechizingModal({
                       (classroom) => classroom.id === e.target.value,
                     )!,
                   )
-                  console.log(e.target.value)
                   dispatch({
                     type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
                     payload: { classroomId: e.target.value },

@@ -76,7 +76,6 @@ export function AddNewClassroomModal({
 
   async function handleSubmitNewClassroomForm() {
     setHasUserSubmittedForm(true)
-    console.log(state)
     try {
       await ClassroomRepository.createNewClassroom(state)
         .finally(() => {
