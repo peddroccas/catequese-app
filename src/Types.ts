@@ -3,10 +3,10 @@ import { DateValue } from '@nextui-org/react'
 export interface catechist {
   id?: number
   name: string
-  birthday: DateValue | null
+  birthday: DateValue | undefined
   phone: string
   address: string
-  classroomId: string
+  classroomId: string | undefined
 
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean

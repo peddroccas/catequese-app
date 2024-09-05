@@ -3,10 +3,10 @@ import { CatechistActionTypes } from './catechistActionTypes'
 
 export const catechistInitialState = {
   name: '', // Nome inicial como string vazia
-  birthday: null, // Data inicial (utiliza epoch time)
+  birthday: undefined, // Data inicial (utiliza epoch time)
   phone: '',
   address: '', // Endereço inicial como string vazia
-  classroomId: '',
+  classroomId: undefined,
   hasReceivedBaptism: false, // Inicialmente como false
   hasReceivedEucharist: false, // Inicialmente como false
   hasReceivedConfirmation: false,

@@ -32,9 +32,7 @@ const addNewCatechistFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z
-    .string({ message: 'Campo obrigatório' })
-    .uuid({ message: 'Campo obrigatório' }),
+  classroom: z.string().uuid().optional(),
 })
 
 export function AddNewCatechistForm() {
@@ -206,7 +204,7 @@ export function AddNewCatechistForm() {
           name="classroom"
           control={control}
           rules={{
-            required: true,
+            required: false,
             value: selectedClassroom!,
             onChange: (e) => {
               setSelectedClassroom(
