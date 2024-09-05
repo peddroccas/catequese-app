@@ -1,6 +1,4 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { CatechistRepository } from '@/services/repositories/catechistRepository'
-import { catechist } from '@/Types'
 import {
   Table,
   TableHeader,
@@ -12,24 +10,14 @@ import {
   Tooltip,
 } from '@nextui-org/react'
 import { UserPlus } from '@phosphor-icons/react'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { AddNewCatechistModal } from './components/AddNewCatechistModal'
 
 export function Catechists() {
-  const { hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
-    useContext(ClassroomContext)
-  const [catechists, setCatechist] = useState<catechist[]>([])
+  const { catechists } = useContext(ClassroomContext)
 
   const [isUserAddingNewCatechist, setIsUserAddingNewCatechist] =
     useState<boolean>(false)
-
-  useEffect(() => {
-    async function getCathecist() {
-      const catechists = await CatechistRepository.getCatechists()
-      setCatechist(catechists)
-    }
-    getCathecist().finally(throwClassroomHasAlreadyUpdated)
-  }, [hasClassroomUpdate, throwClassroomHasAlreadyUpdated])
 
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">

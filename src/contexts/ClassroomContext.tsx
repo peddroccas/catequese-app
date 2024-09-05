@@ -1,15 +1,21 @@
+import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
+import { catechist } from '@/Types'
 import { ReactNode, createContext, useEffect, useState } from 'react'
 
 interface ClassroomType {
   hasClassroomUpdate: boolean
-  throwClassroomUpdate: () => void
-  throwClassroomHasAlreadyUpdated: () => void
+  hasCatechistUpdate: boolean
+  catechists: catechist[]
   classrooms: {
     id: string
     classroomName: string
     startedAt: number
   }[]
+  throwClassroomUpdate: () => void
+  throwClassroomHasAlreadyUpdated: () => void
+  throwCatechistUpdate: () => void
+  throwCatechistHasAlreadyUpdated: () => void
 }
 export const ClassroomContext = createContext({} as ClassroomType)
 
@@ -18,7 +24,8 @@ interface ClassroomProviderProps {
 }
 
 export function ClassroomProvider({ children }: ClassroomProviderProps) {
-  const [hasClassroomUpdate, sethasClassroomUpdate] = useState<boolean>(false)
+  const [hasClassroomUpdate, setHasClassroomUpdate] = useState<boolean>(true)
+  const [hasCatechistUpdate, setHasCatechistUpdate] = useState<boolean>(true)
   const [classrooms, setClassrooms] = useState<
     {
       id: string
@@ -26,32 +33,57 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
       startedAt: number
     }[]
   >([])
+  const [catechists, setCatechists] = useState<catechist[]>([])
 
   // Consulta nome das turmas
   useEffect(() => {
     async function getClassroomNames() {
-      const classroomNamesResponse =
-        await ClassroomRepository.getClassroomNames()
-      setClassrooms(classroomNamesResponse)
+      if (hasClassroomUpdate) {
+        const classroomNamesResponse =
+          await ClassroomRepository.getClassroomNames()
+        setClassrooms(classroomNamesResponse)
+      }
     }
 
-    getClassroomNames()
-  }, [])
+    getClassroomNames().finally(throwClassroomHasAlreadyUpdated)
+  }, [hasClassroomUpdate])
+
+  useEffect(() => {
+    async function getCatechists() {
+      if (hasCatechistUpdate) {
+        const catechists = await CatechistRepository.getCatechists()
+        setCatechists(catechists)
+      }
+    }
+    getCatechists().finally(throwCatechistHasAlreadyUpdated)
+  }, [hasCatechistUpdate])
 
   function throwClassroomUpdate() {
-    sethasClassroomUpdate(true)
+    setHasClassroomUpdate(true)
   }
 
   function throwClassroomHasAlreadyUpdated() {
-    sethasClassroomUpdate(false)
+    setHasClassroomUpdate(false)
+  }
+
+  function throwCatechistUpdate() {
+    setHasCatechistUpdate(true)
+  }
+
+  function throwCatechistHasAlreadyUpdated() {
+    setHasCatechistUpdate(false)
   }
   return (
     <ClassroomContext.Provider
       value={{
         classrooms,
+        catechists,
         hasClassroomUpdate,
+        hasCatechistUpdate,
         throwClassroomUpdate,
         throwClassroomHasAlreadyUpdated,
+        throwCatechistUpdate,
+        throwCatechistHasAlreadyUpdated,
       }}
     >
       {children}

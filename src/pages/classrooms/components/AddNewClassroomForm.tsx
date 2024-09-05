@@ -1,11 +1,10 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
+import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
 import {
-  catechistInitialState,
-  catechistReducer,
-} from '@/reducer/catechist/catechistReducer'
-import { CatechistRepository } from '@/services/repositories/catechistRepository'
-
+  catechizingReducer,
+  catechizingInitialState,
+} from '@/reducer/catechizing/catechizingReducer'
+import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Input,
@@ -21,7 +20,7 @@ import { useContext, useReducer, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const addNewCatechistFormSchema = z.object({
+const addNewCatechizingFormSchema = z.object({
   name: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
@@ -32,19 +31,24 @@ const addNewCatechistFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z.string().uuid().optional(),
+  classroom: z
+    .string({ message: 'Campo obrigatório' })
+    .uuid({ message: 'Campo obrigatório' }),
 })
 
-export function AddNewCatechistForm() {
+export function AddNewCatechizingForm() {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(addNewCatechistFormSchema),
+    resolver: zodResolver(addNewCatechizingFormSchema),
   })
-  const { classrooms, throwCatechistUpdate } = useContext(ClassroomContext)
-  const [state, dispatch] = useReducer(catechistReducer, catechistInitialState)
+  const { classrooms, throwClassroomUpdate } = useContext(ClassroomContext)
+  const [state, dispatch] = useReducer(
+    catechizingReducer,
+    catechizingInitialState,
+  )
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
     classroomName: string
@@ -58,15 +62,16 @@ export function AddNewCatechistForm() {
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
-  async function handleSubmitNewCatechistForm() {
+  async function handleSubmitNewCatechizingForm() {
     setHasUserSubmittedForm(true)
+    console.log(state)
     try {
-      await CatechistRepository.createNewCatechist(state)
-        .then(throwCatechistUpdate)
+      await CatechizingRepository.createNewCatechizing(state)
         .finally(() => {
           setHasUserSubmittedForm(false)
-          dispatch({ type: CatechistActionTypes.RESET })
+          dispatch({ type: CatechizingActionTypes.RESET })
         })
+        .then(throwClassroomUpdate)
     } catch (error) {
       console.error(error)
     }
@@ -74,7 +79,7 @@ export function AddNewCatechistForm() {
   return (
     <div className="flex flex-col items-center justify-center rounded-xl bg-bunker-900">
       <form
-        onSubmit={handleSubmit(handleSubmitNewCatechistForm)}
+        onSubmit={handleSubmit(handleSubmitNewCatechizingForm)}
         className="flex flex-col gap-4"
       >
         <Controller
@@ -84,7 +89,7 @@ export function AddNewCatechistForm() {
             required: true,
             onChange: (e) =>
               dispatch({
-                type: CatechistActionTypes.SET_NAME,
+                type: CatechizingActionTypes.SET_NAME,
                 payload: { name: e.target.value },
               }),
           }}
@@ -107,14 +112,14 @@ export function AddNewCatechistForm() {
               value: state.birthday,
               onChange: (e) =>
                 dispatch({
-                  type: CatechistActionTypes.SET_BIRTHDAY,
+                  type: CatechizingActionTypes.SET_BIRTHDAY,
                   payload: { birthday: e.target.value },
                 }),
             }}
             render={({ field }) => (
               <DatePicker
                 {...field}
-                label="Data de Nascimento"
+                label="Data"
                 isInvalid={Boolean(errors.birthday)}
                 errorMessage={String(errors.birthday?.message)}
                 dateInputClassNames={{
@@ -127,21 +132,11 @@ export function AddNewCatechistForm() {
           />
         </I18nProvider>
         <Input
-          label="Telefone"
-          value={state.phone}
-          onChange={(e) =>
-            dispatch({
-              type: CatechistActionTypes.SET_PHONE,
-              payload: { phone: e.target.value },
-            })
-          }
-        />
-        <Input
           label="Endereço"
           value={state.address}
           onChange={(e) =>
             dispatch({
-              type: CatechistActionTypes.SET_ADDRESS,
+              type: CatechizingActionTypes.SET_ADDRESS,
               payload: { address: e.target.value },
             })
           }
@@ -152,7 +147,7 @@ export function AddNewCatechistForm() {
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
             dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
+              type: CatechizingActionTypes.SET_HAS_RECEIVED_BAPTISM,
               payload: { hasReceivedBaptism: e.target.checked },
             })
           }}
@@ -165,7 +160,7 @@ export function AddNewCatechistForm() {
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
             dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
+              type: CatechizingActionTypes.SET_HAS_RECEIVED_EUCHARIST,
               payload: { hasReceivedEucharist: e.target.checked },
             })
           }}
@@ -173,37 +168,37 @@ export function AddNewCatechistForm() {
           1° Eucaristia
         </Checkbox>
         <Checkbox
-          value="Crisma"
-          checked={state.hasReceivedConfirmation}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
-              payload: { hasReceivedConfirmation: e.target.checked },
-            })
-          }}
-        >
-          Crisma
-        </Checkbox>
-
-        <Checkbox
           value="Sacramento do Matrimônio"
           checked={state.hasReceivedMarriage}
           classNames={{ label: 'text-white' }}
           onChange={(e) => {
             dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
+              type: CatechizingActionTypes.SET_HAS_RECEIVED_MARRIAGE,
               payload: { hasReceivedMarriage: e.target.checked },
             })
           }}
         >
           Sacramento do Matrimônio
         </Checkbox>
+        <Checkbox
+          value="Pessoa com necessidade especial"
+          checked={state.personWithSpecialNeeds}
+          classNames={{ label: 'text-white' }}
+          onChange={(e) => {
+            dispatch({
+              type: CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS,
+              payload: { personWithSpecialNeeds: e.target.checked },
+            })
+          }}
+        >
+          Pessoa com Necessidade Especial
+        </Checkbox>
+
         <Controller
           name="classroom"
           control={control}
           rules={{
-            required: false,
+            required: true,
             value: selectedClassroom!,
             onChange: (e) => {
               setSelectedClassroom(
@@ -211,8 +206,9 @@ export function AddNewCatechistForm() {
                   (classroom) => classroom.id === e.target.value,
                 )!,
               )
+              console.log(e.target.value)
               dispatch({
-                type: CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM,
+                type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
                 payload: { classroomId: e.target.value },
               })
             },
@@ -222,6 +218,7 @@ export function AddNewCatechistForm() {
               {...field}
               label="Turma"
               size="md"
+              selectionMode="multiple"
               className="max-w-prose"
               classNames={{ listbox: '!text-bunker-950' }}
               selectedKeys={[field.value]}
