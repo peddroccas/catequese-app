@@ -62,6 +62,7 @@ export function AddNewClassroomModal({
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(addNewClassroomFormSchema),
@@ -81,6 +82,8 @@ export function AddNewClassroomModal({
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: ClassroomActionTypes.RESET })
+          setSelectedCatechists([])
+          reset()
           onClose()
         })
         .then(throwClassroomUpdate)

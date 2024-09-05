@@ -53,6 +53,7 @@ export function AddNewCatechistModal({
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(addNewCatechistFormSchema),
@@ -80,6 +81,13 @@ export function AddNewCatechistModal({
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: CatechistActionTypes.RESET })
+          setSelectedClassroom(
+            {} as {
+              id: string
+              classroomName: string
+            },
+          )
+          reset()
           onClose()
         })
     } catch (error) {

@@ -52,6 +52,7 @@ export function AddNewCatechizingModal({
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(addNewCatechizingFormSchema),
@@ -88,6 +89,7 @@ export function AddNewCatechizingModal({
               classroomName: string
             },
           )
+          reset()
           onClose()
         })
         .then(throwClassroomUpdate)
