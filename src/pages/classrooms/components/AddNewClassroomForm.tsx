@@ -1,250 +1,231 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
+import { ClassroomActionTypes } from '@/reducer/classroom/classroomActionTypes'
 import {
-  catechizingReducer,
-  catechizingInitialState,
-} from '@/reducer/catechizing/catechizingReducer'
-import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
+  classroomInitialState,
+  classroomReducer,
+} from '@/reducer/classroom/classroomReducer'
+import { ClassroomRepository } from '@/services/repositories/classroomRepository'
+import { catechist } from '@/Types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Input,
-  DatePicker,
-  Checkbox,
   Button,
   CircularProgress,
   Select,
   SelectItem,
 } from '@nextui-org/react'
-import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useReducer, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const addNewCatechizingFormSchema = z.object({
-  name: z
-    .string({ message: 'Insira um valor válido' })
-    .min(1, 'Campo obrigatoŕio'),
-  birthday: z.custom((value) => {
+const addNewClassroomFormSchema = z.object({
+  roomNumber: z.coerce
+    .number({ message: 'Campo obrigatório' })
+    .min(1, 'Campo inválido')
+    .max(20, 'Número máximo: 20'),
+  segment: z.enum(
+    [
+      '1° Eucaristia',
+      'Crisma',
+      'Catequizandos Adultos',
+      'Catecúmenos Adultos',
+      'Sementinha',
+      'Pré-Eucaristia',
+    ],
+    { message: 'Campo obrigatório' },
+  ),
+  startedAt: z.enum(['2023', '2024', '2025'], {
+    message: 'Digite um dos anos 2023, 2024, 2025',
+  }),
+  catechists: z.custom((value) => {
     if (value) {
       return true
     } else {
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z
-    .string({ message: 'Campo obrigatório' })
-    .uuid({ message: 'Campo obrigatório' }),
 })
 
-export function AddNewCatechizingForm() {
+export function AddNewClassroomForm() {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(addNewCatechizingFormSchema),
+    resolver: zodResolver(addNewClassroomFormSchema),
   })
-  const { classrooms, throwClassroomUpdate } = useContext(ClassroomContext)
-  const [state, dispatch] = useReducer(
-    catechizingReducer,
-    catechizingInitialState,
-  )
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
-  )
+  const { catechists, throwClassroomUpdate } = useContext(ClassroomContext)
+  const [state, dispatch] = useReducer(classroomReducer, classroomInitialState)
+  const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>([])
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
-  async function handleSubmitNewCatechizingForm() {
+  async function handleSubmitNewClassroomForm() {
     setHasUserSubmittedForm(true)
     console.log(state)
     try {
-      await CatechizingRepository.createNewCatechizing(state)
+      await ClassroomRepository.createNewClassroom(state)
         .finally(() => {
           setHasUserSubmittedForm(false)
-          dispatch({ type: CatechizingActionTypes.RESET })
+          dispatch({ type: ClassroomActionTypes.RESET })
         })
         .then(throwClassroomUpdate)
     } catch (error) {
       console.error(error)
     }
   }
+
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl bg-bunker-900">
-      <form
-        onSubmit={handleSubmit(handleSubmitNewCatechizingForm)}
-        className="flex flex-col gap-4"
-      >
-        <Controller
-          name="name"
-          control={control}
-          rules={{
-            required: true,
-            onChange: (e) =>
-              dispatch({
-                type: CatechizingActionTypes.SET_NAME,
-                payload: { name: e.target.value },
-              }),
-          }}
-          render={({ field }) => (
-            <Input
-              label="Nome"
-              {...field}
-              isInvalid={Boolean(errors.name)}
-              errorMessage={String(errors.name?.message)}
-            />
-          )}
-        />
-
-        <I18nProvider locale="pt-BR">
-          <Controller
-            name="birthday"
-            control={control}
-            rules={{
-              required: true,
-              value: state.birthday,
-              onChange: (e) =>
-                dispatch({
-                  type: CatechizingActionTypes.SET_BIRTHDAY,
-                  payload: { birthday: e.target.value },
-                }),
-            }}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Data"
-                isInvalid={Boolean(errors.birthday)}
-                errorMessage={String(errors.birthday?.message)}
-                dateInputClassNames={{
-                  inputWrapper: 'border hover:border-2 focus:border-2',
-                }}
-                classNames={{ input: '!text-brown-500' }}
-                showMonthAndYearPickers
-              />
-            )}
+    <form
+      onSubmit={handleSubmit(handleSubmitNewClassroomForm)}
+      className="flex flex-col gap-4"
+    >
+      <Controller
+        name="roomNumber"
+        control={control}
+        rules={{
+          required: true,
+          onChange: (e) =>
+            dispatch({
+              type: ClassroomActionTypes.SET_ROOM_NUMBER,
+              payload: { roomNumber: e.target.value },
+            }),
+        }}
+        render={({ field }) => (
+          <Input
+            label="Turma"
+            description="Insira o número da Turma"
+            {...field}
+            isInvalid={Boolean(errors.roomNumber)}
+            errorMessage={String(errors.roomNumber?.message)}
           />
-        </I18nProvider>
-        <Input
-          label="Endereço"
-          value={state.address}
-          onChange={(e) =>
-            dispatch({
-              type: CatechizingActionTypes.SET_ADDRESS,
-              payload: { address: e.target.value },
-            })
-          }
-        />
-        <Checkbox
-          value="Batismo"
-          checked={state.hasReceivedBaptism}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechizingActionTypes.SET_HAS_RECEIVED_BAPTISM,
-              payload: { hasReceivedBaptism: e.target.checked },
-            })
-          }}
-        >
-          Batismo
-        </Checkbox>
-        <Checkbox
-          value="1° Eucaristia"
-          checked={state.hasReceivedEucharist}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechizingActionTypes.SET_HAS_RECEIVED_EUCHARIST,
-              payload: { hasReceivedEucharist: e.target.checked },
-            })
-          }}
-        >
-          1° Eucaristia
-        </Checkbox>
-        <Checkbox
-          value="Sacramento do Matrimônio"
-          checked={state.hasReceivedMarriage}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechizingActionTypes.SET_HAS_RECEIVED_MARRIAGE,
-              payload: { hasReceivedMarriage: e.target.checked },
-            })
-          }}
-        >
-          Sacramento do Matrimônio
-        </Checkbox>
-        <Checkbox
-          value="Pessoa com necessidade especial"
-          checked={state.personWithSpecialNeeds}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS,
-              payload: { personWithSpecialNeeds: e.target.checked },
-            })
-          }}
-        >
-          Pessoa com Necessidade Especial
-        </Checkbox>
+        )}
+      />
 
-        <Controller
-          name="classroom"
-          control={control}
-          rules={{
-            required: true,
-            value: selectedClassroom!,
-            onChange: (e) => {
-              setSelectedClassroom(
-                classrooms.find(
-                  (classroom) => classroom.id === e.target.value,
-                )!,
-              )
-              console.log(e.target.value)
-              dispatch({
-                type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
-                payload: { classroomId: e.target.value },
-              })
-            },
-          }}
-          render={({ field }) => (
-            <Select
-              {...field}
-              label="Turma"
-              size="md"
-              selectionMode="multiple"
-              className="max-w-prose"
-              classNames={{ listbox: '!text-bunker-950' }}
-              selectedKeys={[field.value]}
-              isInvalid={Boolean(errors.classroom)}
-              errorMessage={String(errors.classroom?.message)}
-            >
-              {classrooms.map((classroom) => (
-                <SelectItem key={classroom.id} value={classroom.classroomName}>
-                  {classroom.classroomName}
-                </SelectItem>
-              ))}
-            </Select>
-          )}
-        />
+      <Controller
+        name="segment"
+        control={control}
+        rules={{
+          required: true,
+          value: state.segment!,
+          onChange: (e) => {
+            dispatch({
+              type: ClassroomActionTypes.SET_SEGMENT,
+              payload: { segment: e.target.value },
+            })
+          },
+        }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            label="Segmento"
+            size="md"
+            className="max-w-prose"
+            classNames={{
+              listbox: '!text-bunker-950',
+              innerWrapper: ' w-7/12',
+            }}
+            scrollShadowProps={{
+              isEnabled: false,
+            }}
+            selectedKeys={field.value ? String(field.value).split(',') : ''}
+            isInvalid={Boolean(errors.segment)}
+            errorMessage={String(errors.segment?.message)}
+          >
+            {[
+              '1° Eucaristia',
+              'Crisma',
+              'Catequizandos Adultos',
+              'Catecúmenos Adultos',
+              'Sementinha',
+              'Pré-Eucaristia',
+            ].map((segment) => (
+              <SelectItem key={segment} value={segment}>
+                {segment}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
+      <Controller
+        name="startedAt"
+        control={control}
+        rules={{
+          required: true,
+          onChange: (e) =>
+            dispatch({
+              type: ClassroomActionTypes.SET_STARTED_AT,
+              payload: { startedAt: e.target.value },
+            }),
+        }}
+        render={({ field }) => (
+          <Input
+            label="Ano de início"
+            description="Digite um dos anos 2023, 2024, 2025"
+            {...field}
+            isInvalid={Boolean(errors.startedAt)}
+            errorMessage={String(errors.startedAt?.message)}
+          />
+        )}
+      />
 
-        <Button
-          variant="solid"
-          aria-labelledby="cadastro de catequizando"
-          aria-label="cadastro de catequizando"
-          className="w-full p-2 font-medium shadow shadow-black"
-          type="submit"
-          size="lg"
-        >
-          {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
-        </Button>
-      </form>
-    </div>
+      <Controller
+        name="catechists"
+        control={control}
+        rules={{
+          required: true,
+          value: selectedCatechists!,
+          onChange: (e) => {
+            setSelectedCatechists(
+              catechists.filter((catechist) =>
+                String(e.target.value).includes(catechist.id!),
+              ),
+            )
+            dispatch({
+              type: ClassroomActionTypes.SET_CATECHISTS,
+              payload: { catechists: e.target.value.split(',') },
+            })
+          },
+        }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            label="Catequistas"
+            size="md"
+            selectionMode="multiple"
+            isMultiline
+            className="max-w-prose"
+            classNames={{
+              listbox: '!text-bunker-950',
+              innerWrapper: ' w-7/12',
+            }}
+            scrollShadowProps={{
+              isEnabled: false,
+            }}
+            selectedKeys={field.value ? String(field.value).split(',') : ''}
+            isInvalid={Boolean(errors.catechists)}
+            errorMessage={String(errors.catechists?.message)}
+          >
+            {catechists.map((catechist) => (
+              <SelectItem key={catechist.id!} value={catechist.name}>
+                {catechist.name}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
+
+      <Button
+        variant="solid"
+        aria-labelledby="cadastro de catequizando"
+        aria-label="cadastro de catequizando"
+        className="w-full p-2 font-medium shadow shadow-black"
+        type="submit"
+        size="lg"
+      >
+        {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
+      </Button>
+    </form>
   )
 }

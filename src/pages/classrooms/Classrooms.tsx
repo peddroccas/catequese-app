@@ -74,7 +74,7 @@ export function Classrooms() {
             <TableColumn align="center">STATUS</TableColumn>
           </TableHeader>
           <TableBody>
-            {catechizings.map((catechizing) => (
+            {catechizings!.map((catechizing) => (
               <TableRow key={catechizing.id}>
                 <TableCell>{catechizing.name}</TableCell>
                 <TableCell>{catechizing.payments![0].toBePaid}</TableCell>

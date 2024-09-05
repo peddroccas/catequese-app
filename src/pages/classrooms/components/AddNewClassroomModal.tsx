@@ -1,29 +1,28 @@
 import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
-import { AddNewCatechistForm } from './AddNewCatechistForm'
+import { AddNewClassroomForm } from './AddNewClassroomForm'
 
-interface AddNewCatechistFormModal {
+interface AddNewCatechizingFormProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function AddNewCatechistModal({
+export function AddNewClassroomModal({
   isOpen,
   onClose,
-}: AddNewCatechistFormModal) {
+}: AddNewCatechizingFormProps) {
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={onClose}
       placement="center"
       className="flex w-9/12 flex-col rounded-xl bg-bunker-900 py-4 md:w-5/12 lg:w-3/12 2xl:w-3/12"
     >
       <ModalContent>
         <ModalHeader className="flex justify-center text-xl">
-          Adicionar Novo Catequista
+          Adicionar Novo Turma
         </ModalHeader>
         <ModalBody>
-          <AddNewCatechistForm />
+          <AddNewClassroomForm />
         </ModalBody>
       </ModalContent>
     </Modal>

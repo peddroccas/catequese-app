@@ -2,6 +2,7 @@ import { AddNewCatechizingModal } from '@/pages/catechizings/components/AddNewCa
 import { Button, Tooltip } from '@nextui-org/react'
 import { PencilSimple, Plus, Trash, UserPlus } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { AddNewClassroomModal } from './AddNewClassroomModal'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
@@ -10,7 +11,7 @@ interface ToolBarProps {
 export function ToolBar({ isClassroomSelected }: ToolBarProps) {
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
-  const [_isUserAddingNewClassroom, _setIsUserAddingNewClassroom] =
+  const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
     useState<boolean>(false)
   const [_isUserDeletingClassroom, _setIsUserDeletingClassroom] =
     useState<boolean>(false)
@@ -19,6 +20,10 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
 
   return (
     <div className="flex gap-2">
+      <AddNewClassroomModal
+        isOpen={isUserAddingNewClassroom}
+        onClose={() => setIsUserAddingNewClassroom(false)}
+      />
       <AddNewCatechizingModal
         isOpen={isUserAddingNewCatechizing}
         onClose={() => setIsUserAddingNewCatechizing(false)}
@@ -38,12 +43,13 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
         </Button>
       </Tooltip>
       <Tooltip
-        content="Adicionar nova sala"
+        content="Adicionar nova turma"
         className="text-bunker-950"
         closeDelay={0}
       >
         <Button
           isIconOnly
+          onPress={() => setIsUserAddingNewClassroom(true)}
           className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
         >
           <Plus size={28} className="text-white" />

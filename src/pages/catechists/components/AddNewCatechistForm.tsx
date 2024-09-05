@@ -72,182 +72,178 @@ export function AddNewCatechistForm() {
     }
   }
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl bg-bunker-900">
-      <form
-        onSubmit={handleSubmit(handleSubmitNewCatechistForm)}
-        className="flex flex-col gap-4"
-      >
+    <form
+      onSubmit={handleSubmit(handleSubmitNewCatechistForm)}
+      className="flex flex-col gap-4"
+    >
+      <Controller
+        name="name"
+        control={control}
+        rules={{
+          required: true,
+          onChange: (e) =>
+            dispatch({
+              type: CatechistActionTypes.SET_NAME,
+              payload: { name: e.target.value },
+            }),
+        }}
+        render={({ field }) => (
+          <Input
+            label="Nome"
+            {...field}
+            isInvalid={Boolean(errors.name)}
+            errorMessage={String(errors.name?.message)}
+          />
+        )}
+      />
+
+      <I18nProvider locale="pt-BR">
         <Controller
-          name="name"
+          name="birthday"
           control={control}
           rules={{
             required: true,
+            value: state.birthday,
             onChange: (e) =>
               dispatch({
-                type: CatechistActionTypes.SET_NAME,
-                payload: { name: e.target.value },
+                type: CatechistActionTypes.SET_BIRTHDAY,
+                payload: { birthday: e.target.value },
               }),
           }}
           render={({ field }) => (
-            <Input
-              label="Nome"
+            <DatePicker
               {...field}
-              isInvalid={Boolean(errors.name)}
-              errorMessage={String(errors.name?.message)}
+              label="Data de Nascimento"
+              isInvalid={Boolean(errors.birthday)}
+              errorMessage={String(errors.birthday?.message)}
+              dateInputClassNames={{
+                inputWrapper: 'border hover:border-2 focus:border-2',
+              }}
+              classNames={{ input: '!text-brown-500' }}
+              showMonthAndYearPickers
             />
           )}
         />
+      </I18nProvider>
+      <Input
+        label="Telefone"
+        value={state.phone}
+        onChange={(e) =>
+          dispatch({
+            type: CatechistActionTypes.SET_PHONE,
+            payload: { phone: e.target.value },
+          })
+        }
+      />
+      <Input
+        label="Endereço"
+        value={state.address}
+        onChange={(e) =>
+          dispatch({
+            type: CatechistActionTypes.SET_ADDRESS,
+            payload: { address: e.target.value },
+          })
+        }
+      />
+      <Checkbox
+        value="Batismo"
+        checked={state.hasReceivedBaptism}
+        classNames={{ label: 'text-white' }}
+        onChange={(e) => {
+          dispatch({
+            type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
+            payload: { hasReceivedBaptism: e.target.checked },
+          })
+        }}
+      >
+        Batismo
+      </Checkbox>
+      <Checkbox
+        value="1° Eucaristia"
+        checked={state.hasReceivedEucharist}
+        classNames={{ label: 'text-white' }}
+        onChange={(e) => {
+          dispatch({
+            type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
+            payload: { hasReceivedEucharist: e.target.checked },
+          })
+        }}
+      >
+        1° Eucaristia
+      </Checkbox>
+      <Checkbox
+        value="Crisma"
+        checked={state.hasReceivedConfirmation}
+        classNames={{ label: 'text-white' }}
+        onChange={(e) => {
+          dispatch({
+            type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
+            payload: { hasReceivedConfirmation: e.target.checked },
+          })
+        }}
+      >
+        Crisma
+      </Checkbox>
 
-        <I18nProvider locale="pt-BR">
-          <Controller
-            name="birthday"
-            control={control}
-            rules={{
-              required: true,
-              value: state.birthday,
-              onChange: (e) =>
-                dispatch({
-                  type: CatechistActionTypes.SET_BIRTHDAY,
-                  payload: { birthday: e.target.value },
-                }),
-            }}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Data de Nascimento"
-                isInvalid={Boolean(errors.birthday)}
-                errorMessage={String(errors.birthday?.message)}
-                dateInputClassNames={{
-                  inputWrapper: 'border hover:border-2 focus:border-2',
-                }}
-                classNames={{ input: '!text-brown-500' }}
-                showMonthAndYearPickers
-              />
-            )}
-          />
-        </I18nProvider>
-        <Input
-          label="Telefone"
-          value={state.phone}
-          onChange={(e) =>
+      <Checkbox
+        value="Sacramento do Matrimônio"
+        checked={state.hasReceivedMarriage}
+        classNames={{ label: 'text-white' }}
+        onChange={(e) => {
+          dispatch({
+            type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
+            payload: { hasReceivedMarriage: e.target.checked },
+          })
+        }}
+      >
+        Sacramento do Matrimônio
+      </Checkbox>
+      <Controller
+        name="classroom"
+        control={control}
+        rules={{
+          required: false,
+          value: selectedClassroom!,
+          onChange: (e) => {
+            setSelectedClassroom(
+              classrooms.find((classroom) => classroom.id === e.target.value)!,
+            )
             dispatch({
-              type: CatechistActionTypes.SET_PHONE,
-              payload: { phone: e.target.value },
+              type: CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM,
+              payload: { classroomId: e.target.value },
             })
-          }
-        />
-        <Input
-          label="Endereço"
-          value={state.address}
-          onChange={(e) =>
-            dispatch({
-              type: CatechistActionTypes.SET_ADDRESS,
-              payload: { address: e.target.value },
-            })
-          }
-        />
-        <Checkbox
-          value="Batismo"
-          checked={state.hasReceivedBaptism}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
-              payload: { hasReceivedBaptism: e.target.checked },
-            })
-          }}
-        >
-          Batismo
-        </Checkbox>
-        <Checkbox
-          value="1° Eucaristia"
-          checked={state.hasReceivedEucharist}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
-              payload: { hasReceivedEucharist: e.target.checked },
-            })
-          }}
-        >
-          1° Eucaristia
-        </Checkbox>
-        <Checkbox
-          value="Crisma"
-          checked={state.hasReceivedConfirmation}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
-              payload: { hasReceivedConfirmation: e.target.checked },
-            })
-          }}
-        >
-          Crisma
-        </Checkbox>
+          },
+        }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            label="Turma"
+            size="md"
+            className="max-w-prose"
+            classNames={{ listbox: '!text-bunker-950' }}
+            selectedKeys={[field.value]}
+            isInvalid={Boolean(errors.classroom)}
+            errorMessage={String(errors.classroom?.message)}
+          >
+            {classrooms.map((classroom) => (
+              <SelectItem key={classroom.id} value={classroom.classroomName}>
+                {classroom.classroomName}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
 
-        <Checkbox
-          value="Sacramento do Matrimônio"
-          checked={state.hasReceivedMarriage}
-          classNames={{ label: 'text-white' }}
-          onChange={(e) => {
-            dispatch({
-              type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
-              payload: { hasReceivedMarriage: e.target.checked },
-            })
-          }}
-        >
-          Sacramento do Matrimônio
-        </Checkbox>
-        <Controller
-          name="classroom"
-          control={control}
-          rules={{
-            required: false,
-            value: selectedClassroom!,
-            onChange: (e) => {
-              setSelectedClassroom(
-                classrooms.find(
-                  (classroom) => classroom.id === e.target.value,
-                )!,
-              )
-              dispatch({
-                type: CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM,
-                payload: { classroomId: e.target.value },
-              })
-            },
-          }}
-          render={({ field }) => (
-            <Select
-              {...field}
-              label="Turma"
-              size="md"
-              className="max-w-prose"
-              classNames={{ listbox: '!text-bunker-950' }}
-              selectedKeys={[field.value]}
-              isInvalid={Boolean(errors.classroom)}
-              errorMessage={String(errors.classroom?.message)}
-            >
-              {classrooms.map((classroom) => (
-                <SelectItem key={classroom.id} value={classroom.classroomName}>
-                  {classroom.classroomName}
-                </SelectItem>
-              ))}
-            </Select>
-          )}
-        />
-
-        <Button
-          variant="solid"
-          aria-labelledby="cadastro de catequizando"
-          aria-label="cadastro de catequizando"
-          className="w-full p-2 font-medium shadow shadow-black"
-          type="submit"
-          size="lg"
-        >
-          {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
-        </Button>
-      </form>
-    </div>
+      <Button
+        variant="solid"
+        aria-labelledby="cadastro de catequizando"
+        aria-label="cadastro de catequizando"
+        className="w-full p-2 font-medium shadow shadow-black"
+        type="submit"
+        size="lg"
+      >
+        {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
+      </Button>
+    </form>
   )
 }
