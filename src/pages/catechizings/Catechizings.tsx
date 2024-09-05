@@ -9,7 +9,7 @@ import {
   Button,
   Tooltip,
 } from '@nextui-org/react'
-import { UserPlus } from '@phosphor-icons/react'
+import { Check, UserPlus, X } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { AddNewCatechizingModal } from './components/AddNewCatechizingModal'
 
@@ -52,12 +52,28 @@ export function Catechizings() {
           <TableHeader>
             <TableColumn align="start">NOME</TableColumn>
             <TableColumn align="center">FALTA PAGAR</TableColumn>
+            <TableColumn align="center">BATISMO</TableColumn>
+            <TableColumn align="center">1° EUCARISTIA</TableColumn>
           </TableHeader>
           <TableBody>
             {catechizings.map((catechizing) => (
               <TableRow key={catechizing.id}>
                 <TableCell>{catechizing.name}</TableCell>
                 <TableCell>{catechizing.payments![0].toBePaid}</TableCell>
+                <TableCell>
+                  {catechizing.hasReceivedBaptism ? (
+                    <Check size={20} className="text-green-500" />
+                  ) : (
+                    <X size={20} className="text-red-500" />
+                  )}
+                </TableCell>
+                <TableCell>
+                  {catechizing.hasReceivedEucharist ? (
+                    <Check size={20} className="text-green-500" />
+                  ) : (
+                    <X size={20} className="text-red-500" />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
