@@ -33,6 +33,9 @@ const addNewCatechistFormSchema = z.object({
     }
   }, 'Campo obrigatório'),
   classroom: z.string().uuid().optional(),
+  email: z
+    .string({ message: 'Digite um email válido' })
+    .email('Digite um email válido'),
 })
 
 export function AddNewCatechistForm() {
@@ -125,6 +128,26 @@ export function AddNewCatechistForm() {
           )}
         />
       </I18nProvider>
+      <Controller
+        name="email"
+        control={control}
+        rules={{
+          required: true,
+          onChange: (e) =>
+            dispatch({
+              type: CatechistActionTypes.SET_EMAIL,
+              payload: { email: e.target.value },
+            }),
+        }}
+        render={({ field }) => (
+          <Input
+            label="Email"
+            {...field}
+            isInvalid={Boolean(errors.email)}
+            errorMessage={String(errors.email?.message)}
+          />
+        )}
+      />
       <Input
         label="Telefone"
         value={state.phone}

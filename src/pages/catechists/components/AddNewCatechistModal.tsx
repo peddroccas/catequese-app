@@ -14,9 +14,8 @@ export function AddNewCatechistModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={onClose}
       placement="center"
-      className="flex w-9/12 flex-col rounded-xl bg-bunker-900 py-4 md:w-5/12 lg:w-3/12 2xl:w-3/12"
+      className="flex w-9/12 flex-col rounded-xl bg-bunker-900 py-2 md:w-5/12 lg:w-3/12 2xl:w-3/12"
     >
       <ModalContent>
         <ModalHeader className="flex justify-center text-xl">

@@ -11,7 +11,7 @@ export type segment =
   | 'Pré-eucaristia'
 
 export class CatechistRepository {
-  static async getCatechists(): Promise<catechist[]> {
+  static async getAllCatechists(): Promise<catechist[]> {
     return api
       .get(`/catechists`)
       .then((response) => {

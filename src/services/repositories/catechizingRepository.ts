@@ -17,6 +17,18 @@ export class CatechizingRepository {
       })
   }
 
+  static async getAllCatechizings(): Promise<catechizing[]> {
+    return api
+      .get('/catechizings') // Incluindo o parâmetro na URL
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro ao consultar parcelas:', error)
+        throw error
+      })
+  }
+
   static async addNewInstallment(
     catechizingName: string,
     data: { payedAt: Date; value: number },

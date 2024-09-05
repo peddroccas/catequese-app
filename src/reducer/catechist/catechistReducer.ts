@@ -29,6 +29,8 @@ export function catechistReducer(
       return { ...state, address: action.payload.address }
     case CatechistActionTypes.SET_PHONE:
       return { ...state, phone: action.payload.phone }
+    case CatechistActionTypes.SET_EMAIL:
+      return { ...state, email: action.payload.email }
     case CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM:
       return { ...state, classroomId: action.payload.classroomId }
     case CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM:
