@@ -20,10 +20,12 @@ export function Classrooms() {
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
     classroomName: string
+    startedAt: number
   }>(
     {} as {
       id: string
       classroomName: string
+      startedAt: number
     },
   )
   const { catechizings } = classroom

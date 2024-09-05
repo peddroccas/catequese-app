@@ -10,6 +10,17 @@ export type segment =
   | 'Pré-eucaristia'
 
 export class ClassroomRepository {
+  static async createNewClassroom(classroom: classroom) {
+    return api
+      .post('/classrooms', classroom)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro na requisição:', error)
+      })
+  }
+
   static async getClassroomNamesBySegment(
     segment: string,
   ): Promise<{ id: string; classroomName: string }[]> {
@@ -28,6 +39,7 @@ export class ClassroomRepository {
     {
       id: string
       classroomName: string
+      startedAt: number
     }[]
   > {
     return api

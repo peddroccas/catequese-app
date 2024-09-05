@@ -8,6 +8,7 @@ interface ClassroomType {
   classrooms: {
     id: string
     classroomName: string
+    startedAt: number
   }[]
 }
 export const ClassroomContext = createContext({} as ClassroomType)
@@ -22,6 +23,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
     {
       id: string
       classroomName: string
+      startedAt: number
     }[]
   >([])
 
