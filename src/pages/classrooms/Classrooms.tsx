@@ -3,15 +3,8 @@ import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { ToolBar } from '@/pages/classrooms/components/ToolBar'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
 import { classroom } from '@/Types'
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from '@nextui-org/react'
 import { useContext, useEffect, useState } from 'react'
+import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
 
 export function Classrooms() {
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
@@ -60,30 +53,7 @@ export function Classrooms() {
         />
         <ToolBar isClassroomSelected={Boolean(classroom.id)} />
       </nav>
-      {classroom.id && (
-        <Table
-          aria-label="Catequizandos da turma selecionada"
-          classNames={{
-            wrapper: 'bg-bunker-900',
-            th: 'bg-bunker-300 text-bunker-950',
-          }}
-        >
-          <TableHeader>
-            <TableColumn align="start">NOME</TableColumn>
-            <TableColumn align="center">RESTANTE CARNÊ</TableColumn>
-            <TableColumn align="center">STATUS</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {catechizings!.map((catechizing) => (
-              <TableRow key={catechizing.id}>
-                <TableCell>{catechizing.name}</TableCell>
-                <TableCell>{catechizing.payments![0].toBePaid}</TableCell>
-                <TableCell>{catechizing.personWithSpecialNeeds}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+      {classroom.id && <CatechizingsTable catechizings={catechizings!} />}
     </div>
   )
 }
