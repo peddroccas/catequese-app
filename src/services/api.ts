@@ -1,4 +1,5 @@
 import axios from 'axios'
+import 'dotenv'
 
 export const api = axios.create({
   baseURL: process.env.DATABASE_URL, // https://catequese-api.onrender.com
