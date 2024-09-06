@@ -53,7 +53,7 @@ export function Catechizings() {
             <TableColumn align="start" className="w-max">
               NOME
             </TableColumn>
-            <TableColumn align="center">FALTA PAGAR</TableColumn>
+            <TableColumn align="center">CARNÊ</TableColumn>
             <TableColumn align="center">BATISMO</TableColumn>
             <TableColumn align="center">1° EUCARISTIA</TableColumn>
           </TableHeader>
@@ -61,7 +61,13 @@ export function Catechizings() {
             {catechizings.map((catechizing) => (
               <TableRow key={catechizing.id}>
                 <TableCell>{catechizing.name}</TableCell>
-                <TableCell>{catechizing.payments![0].toBePaid}</TableCell>
+                <TableCell>
+                  <div className="flex justify-center text-red-500">
+                    {catechizing.payments![0].toBePaid || (
+                      <Check size={20} className="text-green-500" />
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
                     {catechizing.hasReceivedBaptism ? (

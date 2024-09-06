@@ -62,6 +62,7 @@ export default function NewInstallmentModal({
               <Input
                 autoFocus
                 label="Valor"
+                className="text-bunker-950"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 type="number"
