@@ -50,7 +50,9 @@ export function Catechizings() {
           }}
         >
           <TableHeader>
-            <TableColumn align="start">NOME</TableColumn>
+            <TableColumn align="start" className="w-max">
+              NOME
+            </TableColumn>
             <TableColumn align="center">FALTA PAGAR</TableColumn>
             <TableColumn align="center">BATISMO</TableColumn>
             <TableColumn align="center">1° EUCARISTIA</TableColumn>
@@ -61,18 +63,22 @@ export function Catechizings() {
                 <TableCell>{catechizing.name}</TableCell>
                 <TableCell>{catechizing.payments![0].toBePaid}</TableCell>
                 <TableCell>
-                  {catechizing.hasReceivedBaptism ? (
-                    <Check size={20} className="text-green-500" />
-                  ) : (
-                    <X size={20} className="text-red-500" />
-                  )}
+                  <div className="flex justify-center">
+                    {catechizing.hasReceivedBaptism ? (
+                      <Check size={20} className="text-green-500" />
+                    ) : (
+                      <X size={20} className="text-red-500" />
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell>
-                  {catechizing.hasReceivedEucharist ? (
-                    <Check size={20} className="text-green-500" />
-                  ) : (
-                    <X size={20} className="text-red-500" />
-                  )}
+                  <div className="flex justify-center">
+                    {catechizing.hasReceivedEucharist ? (
+                      <Check size={20} className="text-green-500" />
+                    ) : (
+                      <X size={20} className="text-red-500" />
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
