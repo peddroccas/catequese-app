@@ -20,6 +20,7 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
       classNames={{
         wrapper: 'bg-bunker-900',
         th: 'bg-bunker-300 text-bunker-950',
+        base: 'rounded-xl shadow shadow-black',
       }}
     >
       <TableHeader>
@@ -29,6 +30,7 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
         <TableColumn align="center">CARNÊ</TableColumn>
         <TableColumn align="center">BATISMO</TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
+        <TableColumn align="center">AÇÕES</TableColumn>
       </TableHeader>
       <TableBody>
         {catechizings.map((catechizing) => (
@@ -36,7 +38,12 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
             <TableCell>{catechizing.name}</TableCell>
             <TableCell>
               <div className="flex justify-center text-red-500">
-                {catechizing.payments![0].toBePaid || (
+                {catechizing.payments![0].toBePaid ? (
+                  catechizing.payments![0].toBePaid.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })
+                ) : (
                   <Check size={20} className="text-green-500" />
                 )}
               </div>
@@ -58,6 +65,9 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
                   <X size={20} className="text-red-500" />
                 )}
               </div>
+            </TableCell>
+            <TableCell>
+              <p>123</p>
             </TableCell>
           </TableRow>
         ))}
