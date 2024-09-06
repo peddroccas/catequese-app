@@ -8,6 +8,7 @@ import {
   TableCell,
 } from '@nextui-org/react'
 import { Check, X } from '@phosphor-icons/react'
+import ToolBar from './ToolBar'
 
 interface CatechizingsTableProps {
   catechizings: catechizing[]
@@ -24,13 +25,15 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
       }}
     >
       <TableHeader>
-        <TableColumn align="start" className="w-max">
+        <TableColumn align="start" className="flex-1">
           NOME
         </TableColumn>
         <TableColumn align="center">CARNÊ</TableColumn>
         <TableColumn align="center">BATISMO</TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
-        <TableColumn align="center">AÇÕES</TableColumn>
+        <TableColumn align="end" className="w-fit">
+          AÇÕES
+        </TableColumn>
       </TableHeader>
       <TableBody>
         {catechizings.map((catechizing) => (
@@ -67,7 +70,7 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
               </div>
             </TableCell>
             <TableCell>
-              <p>123</p>
+              <ToolBar catechizing={catechizing} />
             </TableCell>
           </TableRow>
         ))}
