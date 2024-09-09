@@ -46,10 +46,52 @@ export class CatechizingRepository {
 
   static async createNewCatechizing(data: catechizing) {
     return api
-      .post('/catechizings', {
+      .post('/catechizings/new', {
         ...data,
-        birthday: data.birthday?.toDate(getLocalTimeZone()),
+        birthday: data.birthday,
         parents: { name: '', phone: '', kinship: '' },
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro na requisição:', error)
+        throw error
+      })
+  }
+
+  static async deleteCatechizing(catechizingId: string) {
+    return api
+      .delete(`/catechizings/${catechizingId}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro na requisição:', error)
+        throw error
+      })
+  }
+
+  static async updateCatechizing(data: catechizing) {
+    return api
+      .put('/catechizings', {
+        ...data,
+        birthday: data.birthday,
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro na requisição:', error)
+        throw error
+      })
+  }
+
+  static async transferClassCatechizing(data: catechizing) {
+    return api
+      .patch('/catechizings/transfer', {
+        ...data,
+        birthday: data.birthday,
       })
       .then((response) => {
         return response.data

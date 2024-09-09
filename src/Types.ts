@@ -1,9 +1,7 @@
-import { DateValue } from '@nextui-org/react'
-
 export interface catechist {
   id?: string
   name: string
-  birthday: DateValue | undefined
+  birthday: string | undefined
   phone: string
   address: string
   classroomId: string | undefined
@@ -21,7 +19,7 @@ export interface payment {
   toBePaid: number
   installments: {
     id: string
-    payedAt: DateValue | null
+    payedAt: string | null
     value: number
     payment_id: string
   }[]
@@ -36,7 +34,7 @@ export interface parent {
 export interface catechizing {
   id?: string
   name: string
-  birthday: DateValue | null
+  birthday: string | null
   address: string
   personWithSpecialNeeds: boolean
   hasReceivedBaptism: boolean
@@ -65,5 +63,3 @@ export interface classroom {
 }
 
 export type toolBarType = 'classroom' | 'payment' | 'catechizing' | 'catechits'
-
-export const dateType = {} as DateValue

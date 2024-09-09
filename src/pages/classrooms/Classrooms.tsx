@@ -42,7 +42,7 @@ export function Classrooms() {
 
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
-      <nav className="flex items-center justify-between">
+      <nav className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <ClassroomSelect
           value={selectedClassroom!}
           onChange={(e) =>

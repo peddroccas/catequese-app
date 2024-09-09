@@ -70,7 +70,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   // Consulta todos os catequizandos
   useEffect(() => {
     async function getCatechizings() {
-      if (hasCatechizingUpdate) {
+      if (hasCatechizingUpdate || hasClassroomUpdate) {
         const catechizings = await CatechizingRepository.getAllCatechizings()
         setCatechizings(catechizings)
       }
