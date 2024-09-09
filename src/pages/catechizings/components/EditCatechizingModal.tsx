@@ -8,15 +8,10 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  Select,
-  SelectItem,
 } from '@nextui-org/react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
-import {
-  catechizingReducer,
-  catechizingInitialState,
-} from '@/reducer/catechizing/catechizingReducer'
+import { catechizingReducer } from '@/reducer/catechizing/catechizingReducer'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { I18nProvider } from '@react-aria/i18n'
@@ -24,13 +19,7 @@ import { useContext, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { catechizing } from '@/Types'
-import {
-  parseAbsolute,
-  parseAbsoluteToLocal,
-  parseDate,
-  parseZonedDateTime,
-  ZonedDateTime,
-} from '@internationalized/date'
+import { parseAbsoluteToLocal } from '@internationalized/date'
 
 const EditCatechizingFormSchema = z.object({
   name: z
