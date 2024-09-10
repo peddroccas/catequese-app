@@ -55,15 +55,6 @@ export function EditCatechizingModal({
   })
   const { classrooms, throwClassroomUpdate } = useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechizingReducer, data)
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
-  )
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
@@ -130,7 +121,6 @@ export function EditCatechizingModal({
                   required: true,
                   value: parseAbsoluteToLocal(state.birthday!),
                   onChange: (e) => {
-                    console.log(e.target.value)
                     dispatch({
                       type: CatechizingActionTypes.SET_BIRTHDAY,
                       payload: { birthday: e.target.value.toAbsoluteString() },

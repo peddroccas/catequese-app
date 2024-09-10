@@ -12,6 +12,7 @@ import {
 import { UserPlus } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { AddNewCatechistModal } from './components/AddNewCatechistModal'
+import ToolBar from './components/ToolBar'
 
 export function Catechists() {
   const { catechists } = useContext(ClassroomContext)
@@ -52,12 +53,16 @@ export function Catechists() {
           <TableHeader>
             <TableColumn align="start">NOME</TableColumn>
             <TableColumn align="center">TURMA</TableColumn>
+            <TableColumn align="center">AÇÕES</TableColumn>
           </TableHeader>
           <TableBody>
             {catechists.map((catechist) => (
               <TableRow key={catechist.id}>
                 <TableCell>{catechist.name}</TableCell>
                 <TableCell>{catechist.classroomId}</TableCell>
+                <TableCell>
+                  <ToolBar catechist={catechist} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

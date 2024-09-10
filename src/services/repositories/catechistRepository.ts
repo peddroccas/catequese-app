@@ -1,6 +1,5 @@
 import { catechist } from '@/Types'
 import { api } from '../api'
-import { getLocalTimeZone } from '@internationalized/date'
 
 export type segment =
   | '1° Eucaristia'
@@ -25,10 +24,7 @@ export class CatechistRepository {
 
   static async createNewCatechist(catechist: catechist) {
     return api
-      .post(`/catechists`, {
-        ...catechist,
-        birthday: catechist.birthday?.toDate(getLocalTimeZone()),
-      })
+      .post(`/catechists`, catechist)
       .then((response) => {
         return response.data
       })

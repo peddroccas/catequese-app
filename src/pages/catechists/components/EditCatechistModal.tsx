@@ -24,8 +24,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
 import { parseAbsoluteToLocal } from '@internationalized/date'
+import { catechist } from '@/Types'
 
-const addNewCatechistFormSchema = z.object({
+const editCatechistFormSchema = z.object({
   name: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
@@ -42,34 +43,26 @@ const addNewCatechistFormSchema = z.object({
     .email('Digite um email válido'),
 })
 
-interface AddNewCatechistFormModal {
+interface EditCatechistFormModal {
+  data: catechist
   isOpen: boolean
   onClose: () => void
 }
 
-export function AddNewCatechistModal({
+export function EditCatechistModal({
   isOpen,
   onClose,
-}: AddNewCatechistFormModal) {
+  data,
+}: EditCatechistFormModal) {
   const {
     handleSubmit,
     control,
-    reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(addNewCatechistFormSchema),
+    resolver: zodResolver(editCatechistFormSchema),
   })
   const { classrooms, throwCatechistUpdate } = useContext(ClassroomContext)
-  const [state, dispatch] = useReducer(catechistReducer, catechistInitialState)
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
-  )
+  const [state, dispatch] = useReducer(catechistReducer, data)
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
@@ -77,20 +70,14 @@ export function AddNewCatechistModal({
   async function handleSubmitNewCatechistForm() {
     setHasUserSubmittedForm(true)
     try {
-      await CatechistRepository.createNewCatechist(state)
-        .then(throwCatechistUpdate)
-        .finally(() => {
-          setHasUserSubmittedForm(false)
-          dispatch({ type: CatechistActionTypes.RESET })
-          setSelectedClassroom(
-            {} as {
-              id: string
-              classroomName: string
-            },
-          )
-          reset()
-          onClose()
-        })
+      console.log('Updated')
+      //   await CatechistRepository.createNewCatechist(state)
+      //     .then(throwCatechistUpdate)
+      //     .finally(() => {
+      //       setHasUserSubmittedForm(false)
+      //       dispatch({ type: CatechistActionTypes.RESET })
+      //       onClose()
+      //     })
     } catch (error) {
       console.error(error)
     }
@@ -105,7 +92,7 @@ export function AddNewCatechistModal({
     >
       <ModalContent>
         <ModalHeader className="flex justify-center text-xl">
-          Adicionar Novo Catequista
+          Editar Catequista
         </ModalHeader>
         <ModalBody>
           <form
@@ -115,7 +102,9 @@ export function AddNewCatechistModal({
             <Controller
               name="name"
               control={control}
+              defaultValue={state.name}
               rules={{
+                value: state.name,
                 required: true,
                 onChange: (e) =>
                   dispatch({
@@ -137,9 +126,10 @@ export function AddNewCatechistModal({
               <Controller
                 name="birthday"
                 control={control}
+                defaultValue={parseAbsoluteToLocal(state.birthday!)}
                 rules={{
                   required: true,
-                  value: state.birthday!,
+                  value: parseAbsoluteToLocal(state.birthday!),
                   onChange: (e) =>
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
@@ -157,14 +147,17 @@ export function AddNewCatechistModal({
                     }}
                     classNames={{ input: '!text-brown-500' }}
                     showMonthAndYearPickers
+                    granularity="day"
                   />
                 )}
               />
             </I18nProvider>
             <Controller
               name="email"
+              defaultValue={state.email}
               control={control}
               rules={{
+                value: state.email,
                 required: true,
                 onChange: (e) =>
                   dispatch({
@@ -203,7 +196,7 @@ export function AddNewCatechistModal({
             />
             <Checkbox
               value="Batismo"
-              checked={state.hasReceivedBaptism}
+              isSelected={state.hasReceivedBaptism}
               classNames={{ label: 'text-white' }}
               onChange={(e) => {
                 dispatch({
@@ -216,7 +209,7 @@ export function AddNewCatechistModal({
             </Checkbox>
             <Checkbox
               value="1° Eucaristia"
-              checked={state.hasReceivedEucharist}
+              isSelected={state.hasReceivedEucharist}
               classNames={{ label: 'text-white' }}
               onChange={(e) => {
                 dispatch({
@@ -229,7 +222,7 @@ export function AddNewCatechistModal({
             </Checkbox>
             <Checkbox
               value="Crisma"
-              checked={state.hasReceivedConfirmation}
+              isSelected={state.hasReceivedConfirmation}
               classNames={{ label: 'text-white' }}
               onChange={(e) => {
                 dispatch({
@@ -243,7 +236,7 @@ export function AddNewCatechistModal({
 
             <Checkbox
               value="Sacramento do Matrimônio"
-              checked={state.hasReceivedMarriage}
+              isSelected={state.hasReceivedMarriage}
               classNames={{ label: 'text-white' }}
               onChange={(e) => {
                 dispatch({
@@ -254,49 +247,6 @@ export function AddNewCatechistModal({
             >
               Sacramento do Matrimônio
             </Checkbox>
-            <Controller
-              name="classroom"
-              control={control}
-              rules={{
-                required: false,
-                value: selectedClassroom!,
-                onChange: (e) => {
-                  setSelectedClassroom(
-                    classrooms.find(
-                      (classroom) => classroom.id === e.target.value,
-                    )!,
-                  )
-                  dispatch({
-                    type: CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM,
-                    payload: { classroomId: e.target.value },
-                  })
-                },
-              }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label="Turma"
-                  size="md"
-                  className="max-w-prose"
-                  classNames={{
-                    listbox: '!text-bunker-950',
-                    selectorIcon: 'text-bunker-950',
-                  }}
-                  selectedKeys={[field.value]}
-                  isInvalid={Boolean(errors.classroom)}
-                  errorMessage={String(errors.classroom?.message)}
-                >
-                  {classrooms.map((classroom) => (
-                    <SelectItem
-                      key={classroom.id}
-                      value={classroom.classroomName}
-                    >
-                      {classroom.classroomName}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
 
             <Button
               variant="solid"

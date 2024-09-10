@@ -24,7 +24,7 @@ export function catechistReducer(
     case CatechistActionTypes.SET_NAME:
       return { ...state, name: action.payload.name }
     case CatechistActionTypes.SET_BIRTHDAY:
-      return { ...state, birthday: action.payload.birthday }
+      return { ...state, birthday: action.payload.birthday.toAbsoluteString() }
     case CatechistActionTypes.SET_ADDRESS:
       return { ...state, address: action.payload.address }
     case CatechistActionTypes.SET_PHONE:

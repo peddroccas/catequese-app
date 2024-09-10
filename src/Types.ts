@@ -19,7 +19,7 @@ export interface payment {
   toBePaid: number
   installments: {
     id: string
-    payedAt: string | null
+    payedAt: string | undefined
     value: number
     payment_id: string
   }[]
@@ -34,7 +34,7 @@ export interface parent {
 export interface catechizing {
   id?: string
   name: string
-  birthday: string | null
+  birthday: string | undefined
   address: string
   personWithSpecialNeeds: boolean
   hasReceivedBaptism: boolean

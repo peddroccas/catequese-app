@@ -48,7 +48,6 @@ export class CatechizingRepository {
     return api
       .post('/catechizings/new', {
         ...data,
-        birthday: data.birthday,
         parents: { name: '', phone: '', kinship: '' },
       })
       .then((response) => {
@@ -74,10 +73,7 @@ export class CatechizingRepository {
 
   static async updateCatechizing(data: catechizing) {
     return api
-      .put('/catechizings', {
-        ...data,
-        birthday: data.birthday,
-      })
+      .put('/catechizings', data)
       .then((response) => {
         return response.data
       })
@@ -89,10 +85,7 @@ export class CatechizingRepository {
 
   static async transferClassCatechizing(data: catechizing) {
     return api
-      .patch('/catechizings/transfer', {
-        ...data,
-        birthday: data.birthday,
-      })
+      .patch('/catechizings/transfer', data)
       .then((response) => {
         return response.data
       })

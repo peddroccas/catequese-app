@@ -23,6 +23,7 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
+import { parseAbsoluteToLocal } from '@internationalized/date'
 
 const addNewCatechizingFormSchema = z.object({
   name: z
@@ -136,15 +137,18 @@ export function AddNewCatechizingModal({
             <I18nProvider locale="pt-BR">
               <Controller
                 name="birthday"
+                defaultValue={undefined}
                 control={control}
                 rules={{
                   required: true,
                   value: state.birthday,
-                  onChange: (e) =>
+                  onChange: (e) => {
+                    console.log(e.target.value)
                     dispatch({
                       type: CatechizingActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value },
-                    }),
+                      payload: { birthday: e.target.value.toString() },
+                    })
+                  },
                 }}
                 render={({ field }) => (
                   <DatePicker

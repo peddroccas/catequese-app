@@ -1,25 +1,25 @@
-import { catechizing } from '@/Types'
+import { catechist } from '@/Types'
 import { Tooltip } from '@nextui-org/react'
 import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { EditCatechizingModal } from './EditCatechizingModal'
+import { EditCatechistModal } from './EditCatechistModal'
 
 interface ToolBarProps {
-  catechizing: catechizing
+  catechist: catechist
 }
-export default function ToolBar({ catechizing }: ToolBarProps) {
-  const [isUserEditingCatechizing, setIsUserEditingCatechizing] =
+export default function ToolBar({ catechist }: ToolBarProps) {
+  const [isUserEditingCatechist, setIsUserEditingCatechist] =
     useState<boolean>(false)
-  const [_isUserDeletingCatechizing, _setIsUserDeletingCatechizing] =
+  const [_isUserDeletingCatechist, _setIsUserDeletingCatechist] =
     useState<boolean>(false)
-  const [_isUserTransferingCatechizing, _setIsUserDTransferingatechizing] =
+  const [_isUserTransferingCatechist, _setIsUserDTransferingatechizing] =
     useState<boolean>(false)
   return (
     <div className="flex items-center justify-end gap-2">
-      <EditCatechizingModal
-        isOpen={isUserEditingCatechizing}
-        data={catechizing}
-        onClose={() => setIsUserEditingCatechizing(false)}
+      <EditCatechistModal
+        isOpen={isUserEditingCatechist}
+        data={catechist}
+        onClose={() => setIsUserEditingCatechist(false)}
       />
       <Tooltip
         content="Transferir de sala"
@@ -35,7 +35,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
       <PencilSimple
         size={20}
         className="cursor-pointer duration-300 hover:opacity-60"
-        onClick={() => setIsUserEditingCatechizing(true)}
+        onClick={() => setIsUserEditingCatechist(true)}
       />
 
       <Trash
