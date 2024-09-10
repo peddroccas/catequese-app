@@ -15,7 +15,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
   const [_isUserTransferingCatechizing, _setIsUserDTransferingatechizing] =
     useState<boolean>(false)
   return (
-    <div className="flex items-center justify-end gap-2">
+    <div className="flex items-center justify-center gap-2">
       <EditCatechizingModal
         isOpen={isUserEditingCatechizing}
         data={catechizing}

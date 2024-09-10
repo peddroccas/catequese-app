@@ -215,7 +215,7 @@ export function EditCatechizingModal({
               type="submit"
               size="lg"
             >
-              {hasUserSubmittedForm ? <CircularProgress /> : 'Atualizar'}
+              {hasUserSubmittedForm ? <CircularProgress /> : 'Salvar'}
             </Button>
           </form>
         </ModalBody>

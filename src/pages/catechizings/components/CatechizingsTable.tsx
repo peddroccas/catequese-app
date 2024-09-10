@@ -31,7 +31,7 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
         <TableColumn align="center">CARNÊ</TableColumn>
         <TableColumn align="center">BATISMO</TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
-        <TableColumn align="end" className="w-fit">
+        <TableColumn align="center" className="w-fit">
           AÇÕES
         </TableColumn>
       </TableHeader>
