@@ -33,4 +33,17 @@ export class CatechistRepository {
         console.error('Erro na requisição:', error)
       })
   }
+
+  static async updateCatechist(catechist: catechist) {
+    console.log(catechist)
+    return api
+      .put(`/catechists/${encodeURIComponent(catechist.id!)}`, catechist)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
 }

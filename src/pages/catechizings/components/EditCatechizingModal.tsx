@@ -53,7 +53,8 @@ export function EditCatechizingModal({
   } = useForm({
     resolver: zodResolver(EditCatechizingFormSchema),
   })
-  const { classrooms, throwClassroomUpdate } = useContext(ClassroomContext)
+  const { throwCatechizingUpdate, throwClassroomUpdate } =
+    useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechizingReducer, data)
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -63,12 +64,14 @@ export function EditCatechizingModal({
     setHasUserSubmittedForm(true)
     try {
       await CatechizingRepository.updateCatechizing(state)
+        .then(() => {
+          throwCatechizingUpdate()
+          throwClassroomUpdate()
+        })
         .finally(() => {
           setHasUserSubmittedForm(false)
-          // reset()
           onClose()
         })
-        .then(throwClassroomUpdate)
     } catch (error) {
       console.error(error)
     }

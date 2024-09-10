@@ -61,7 +61,8 @@ export function EditCatechistModal({
   } = useForm({
     resolver: zodResolver(editCatechistFormSchema),
   })
-  const { classrooms, throwCatechistUpdate } = useContext(ClassroomContext)
+  const { classrooms, throwClassroomUpdate, throwCatechistUpdate } =
+    useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechistReducer, data)
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -70,14 +71,16 @@ export function EditCatechistModal({
   async function handleSubmitNewCatechistForm() {
     setHasUserSubmittedForm(true)
     try {
-      console.log('Updated')
-      //   await CatechistRepository.createNewCatechist(state)
-      //     .then(throwCatechistUpdate)
-      //     .finally(() => {
-      //       setHasUserSubmittedForm(false)
-      //       dispatch({ type: CatechistActionTypes.RESET })
-      //       onClose()
-      //     })
+      // console.log(state)
+      await CatechistRepository.updateCatechist(state)
+        .then(() => {
+          throwCatechistUpdate()
+          throwClassroomUpdate()
+        })
+        .finally(() => {
+          setHasUserSubmittedForm(false)
+          onClose()
+        })
     } catch (error) {
       console.error(error)
     }

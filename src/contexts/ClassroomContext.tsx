@@ -59,24 +59,30 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   // Consulta todos os catequistas
   useEffect(() => {
     async function getCatechists() {
-      if (hasCatechistUpdate) {
+      if (hasCatechistUpdate && hasClassroomUpdate) {
         const catechists = await CatechistRepository.getAllCatechists()
         setCatechists(catechists)
       }
     }
-    getCatechists().finally(throwCatechistHasAlreadyUpdated)
+    getCatechists().finally(() => {
+      throwCatechistHasAlreadyUpdated()
+      throwClassroomHasAlreadyUpdated()
+    })
   }, [hasCatechistUpdate, hasClassroomUpdate])
 
   // Consulta todos os catequizandos
   useEffect(() => {
     async function getCatechizings() {
-      if (hasCatechizingUpdate || hasClassroomUpdate) {
+      if (hasCatechizingUpdate && hasClassroomUpdate) {
         const catechizings = await CatechizingRepository.getAllCatechizings()
         setCatechizings(catechizings)
       }
     }
 
-    getCatechizings().finally(throwClassroomHasAlreadyUpdated)
+    getCatechizings().finally(() => {
+      throwCatechizingHasAlreadyUpdated()
+      throwClassroomHasAlreadyUpdated()
+    })
   }, [hasCatechizingUpdate, hasClassroomUpdate])
 
   function throwClassroomUpdate() {
