@@ -35,9 +35,20 @@ export class CatechistRepository {
   }
 
   static async updateCatechist(catechist: catechist) {
-    console.log(catechist)
     return api
       .put(`/catechists/${encodeURIComponent(catechist.id!)}`, catechist)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
+  static async deleteCatechist(catechistId: string) {
+    return api
+      .delete(`/catechists/${encodeURIComponent(catechistId)}`)
       .then((response) => {
         return response.data
       })

@@ -136,7 +136,7 @@ export function EditCatechistModal({
                   onChange: (e) =>
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value },
+                      payload: { birthday: e.target.value.toAbsoluteString() },
                     }),
                 }}
                 render={({ field }) => (

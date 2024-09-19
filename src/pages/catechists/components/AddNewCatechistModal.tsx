@@ -59,7 +59,8 @@ export function AddNewCatechistModal({
   } = useForm({
     resolver: zodResolver(addNewCatechistFormSchema),
   })
-  const { classrooms, throwCatechistUpdate } = useContext(ClassroomContext)
+  const { classrooms, throwCatechistUpdate, throwClassroomUpdate } =
+    useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechistReducer, catechistInitialState)
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
@@ -78,9 +79,13 @@ export function AddNewCatechistModal({
     setHasUserSubmittedForm(true)
     try {
       await CatechistRepository.createNewCatechist(state)
-        .then(throwCatechistUpdate)
+        .then(() => {
+          throwCatechistUpdate()
+          throwClassroomUpdate()
+        })
         .finally(() => {
           setHasUserSubmittedForm(false)
+          throwCatechistUpdate()
           dispatch({ type: CatechistActionTypes.RESET })
           setSelectedClassroom(
             {} as {
@@ -140,11 +145,13 @@ export function AddNewCatechistModal({
                 rules={{
                   required: true,
                   value: state.birthday!,
-                  onChange: (e) =>
+                  onChange: (e) => {
+                    console.log(e.target.value.toString())
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value },
-                    }),
+                      payload: { birthday: e.target.value.toString() },
+                    })
+                  },
                 }}
                 render={({ field }) => (
                   <DatePicker
