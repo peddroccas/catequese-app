@@ -20,7 +20,7 @@ import {
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { I18nProvider } from '@react-aria/i18n'
-import { useContext, useReducer, useState } from 'react'
+import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { parseAbsoluteToLocal } from '@internationalized/date'
@@ -44,11 +44,13 @@ const addNewCatechizingFormSchema = z.object({
 interface AddNewCatechizingFormProps {
   isOpen: boolean
   onClose: () => void
+  classroomId?: string
 }
 
 export function AddNewCatechizingModal({
   isOpen,
   onClose,
+  classroomId,
 }: AddNewCatechizingFormProps) {
   const {
     handleSubmit,
@@ -66,12 +68,14 @@ export function AddNewCatechizingModal({
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
     classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
-  )
+    startedAt: number
+  }>()
+
+  useEffect(() => {
+    setSelectedClassroom(
+      classrooms.find((classroom) => classroom.id === classroomId)!,
+    )
+  }, [classrooms, classroomId])
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
@@ -87,6 +91,7 @@ export function AddNewCatechizingModal({
             {} as {
               id: string
               classroomName: string
+              startedAt: number
             },
           )
           reset()

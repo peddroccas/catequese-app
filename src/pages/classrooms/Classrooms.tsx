@@ -51,7 +51,10 @@ export function Classrooms() {
             )
           }
         />
-        <ToolBar isClassroomSelected={Boolean(classroom.id)} />
+        <ToolBar
+          isClassroomSelected={Boolean(classroom.id)}
+          selectedClassroomId={classroom.id}
+        />
       </nav>
       {classroom.id && <CatechizingsTable catechizings={catechizings!} />}
     </div>

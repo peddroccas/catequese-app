@@ -6,9 +6,13 @@ import { AddNewClassroomModal } from './AddNewClassroomModal'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
+  selectedClassroomId?: string
 }
 
-export function ToolBar({ isClassroomSelected }: ToolBarProps) {
+export function ToolBar({
+  isClassroomSelected,
+  selectedClassroomId,
+}: ToolBarProps) {
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
   const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
@@ -27,6 +31,7 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
       <AddNewCatechizingModal
         isOpen={isUserAddingNewCatechizing}
         onClose={() => setIsUserAddingNewCatechizing(false)}
+        classroomId={selectedClassroomId}
       />
       <Tooltip
         content="Adicionar novo catequizando a sala"
