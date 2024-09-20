@@ -46,6 +46,21 @@ export class CatechistRepository {
       })
   }
 
+  static async transferCatechist(catechistId: string, newClassroomId: string) {
+    return api
+      .patch(`/catechists/transfer`, {
+        id: catechistId,
+        classroomId: newClassroomId,
+      })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
   static async deleteCatechist(catechistId: string) {
     return api
       .delete(`/catechists/${encodeURIComponent(catechistId)}`)

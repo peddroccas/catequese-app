@@ -9,13 +9,14 @@ interface ClassroomSelectProps {
   }
   size?: 'lg'
   props?: SelectProps
+  disabledOptions?: string
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export const ClassroomSelect = forwardRef<
   HTMLSelectElement,
   ClassroomSelectProps
->(({ onChange, props, value, size }, ref) => {
+>(({ onChange, props, value, size, disabledOptions }, ref) => {
   const { classrooms } = useContext(ClassroomContext)
 
   return (
@@ -25,6 +26,7 @@ export const ClassroomSelect = forwardRef<
         {...props}
         label={'Turma'}
         onChange={onChange}
+        disabledKeys={disabledOptions}
         size={size}
         className="max-w-prose"
         value={value.id}

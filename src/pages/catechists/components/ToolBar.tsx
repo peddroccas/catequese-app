@@ -4,6 +4,7 @@ import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechistModal } from './EditCatechistModal'
 import { DeleteCatechistModal } from './DeleteCatechistModal'
+import { TransferModal } from '@/components/TransferModal'
 
 interface ToolBarProps {
   catechist: catechist
@@ -13,7 +14,7 @@ export default function ToolBar({ catechist }: ToolBarProps) {
     useState<boolean>(false)
   const [isUserDeletingCatechist, setIsUserDeletingCatechist] =
     useState<boolean>(false)
-  const [_isUserTransferingCatechist, _setIsUserDTransferingatechizing] =
+  const [isUserTransferingCatechist, setIsUserTransferingCatechist] =
     useState<boolean>(false)
   return (
     <div className="flex items-center justify-center gap-2">
@@ -27,6 +28,12 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         onClose={() => setIsUserDeletingCatechist(false)}
         data={catechist}
       />
+      <TransferModal
+        data={catechist}
+        isOpen={isUserTransferingCatechist}
+        onClose={() => setIsUserTransferingCatechist(false)}
+        type="catechist"
+      />
       <Tooltip
         content="Transferir de sala"
         placement="left"
@@ -36,6 +43,7 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         <ArrowsLeftRight
           size={20}
           className="cursor-pointer duration-300 hover:opacity-60"
+          onClick={() => setIsUserTransferingCatechist(true)}
         />
       </Tooltip>
       <PencilSimple
