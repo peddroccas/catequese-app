@@ -71,29 +71,38 @@ export function EditClassroomModal({
   })
   const { catechists, throwClassroomUpdate, throwCatechistUpdate } =
     useContext(ClassroomContext)
-  const [state, dispatch] = useReducer(classroomReducer, classroomInitialState)
-  const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>([])
+  const [state, dispatch] = useReducer(classroomReducer, data)
+  const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>(
+    data.catechists,
+  )
   const [hasChangedCatechists, setHasChangedCatechists] =
     useState<boolean>(false)
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
   useEffect(() => {
-    dispatch({ type: ClassroomActionTypes.SET_ALL, payload: data })
-    setSelectedCatechists(data.catechists)
-  }, [data, isOpen])
+    if (data) {
+      reset({
+        roomNumber: data.roomNumber,
+        segment: data.segment,
+        startedAt: data.startedAt,
+        catechists: data.catechists,
+      })
+      dispatch({ type: ClassroomActionTypes.SET_ALL, payload: data })
+      setSelectedCatechists(data.catechists)
+    }
+  }, [data, isOpen, hasUserSubmittedForm, reset])
 
-  console.log(state.catechists)
   async function handleSubmitNewClassroomForm() {
     setHasUserSubmittedForm(true)
     try {
       await ClassroomRepository.editClassroom(state)
         .finally(() => {
+          onClose()
+          reset()
           setHasUserSubmittedForm(false)
           dispatch({ type: ClassroomActionTypes.RESET })
           setSelectedCatechists([])
-          reset()
-          onClose()
         })
         .then(() => {
           throwClassroomUpdate()
@@ -124,8 +133,8 @@ export function EditClassroomModal({
           >
             <Controller
               name="roomNumber"
-              defaultValue={state.roomNumber}
               control={control}
+              defaultValue={state.roomNumber}
               rules={{
                 value: state.roomNumber,
                 required: true,
