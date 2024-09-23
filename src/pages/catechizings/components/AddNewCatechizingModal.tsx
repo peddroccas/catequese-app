@@ -23,7 +23,6 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
-import { parseAbsoluteToLocal } from '@internationalized/date'
 
 const addNewCatechizingFormSchema = z.object({
   name: z
@@ -261,7 +260,7 @@ export function AddNewCatechizingModal({
                     listbox: '!text-bunker-950',
                     selectorIcon: 'text-bunker-950',
                   }}
-                  selectedKeys={[field.value]}
+                  selectedKeys={[selectedClassroom!.id]}
                   isInvalid={Boolean(errors.classroom)}
                   errorMessage={String(errors.classroom?.message)}
                 >
