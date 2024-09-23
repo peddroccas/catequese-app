@@ -7,6 +7,7 @@ interface ClassroomSelectProps {
     id: string
     classroomName: string
   }
+
   size?: 'lg'
   props?: SelectProps
   disabledOptions?: string
