@@ -260,7 +260,9 @@ export function AddNewCatechizingModal({
                     listbox: '!text-bunker-950',
                     selectorIcon: 'text-bunker-950',
                   }}
-                  selectedKeys={[selectedClassroom!.id]}
+                  selectedKeys={[
+                    classroomId ? selectedClassroom!.id : field.value,
+                  ]}
                   isInvalid={Boolean(errors.classroom)}
                   errorMessage={String(errors.classroom?.message)}
                 >
