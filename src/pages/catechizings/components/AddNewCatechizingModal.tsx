@@ -35,9 +35,13 @@ const addNewCatechizingFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z
-    .string({ message: 'Campo obrigatório' })
-    .uuid({ message: 'Campo obrigatório' }),
+  classroom: z.custom((value) => {
+    if (value) {
+      return true
+    } else {
+      return false
+    }
+  }, 'Campo obrigatório'),
 })
 
 interface AddNewCatechizingFormProps {
@@ -74,6 +78,10 @@ export function AddNewCatechizingModal({
     setSelectedClassroom(
       classrooms.find((classroom) => classroom.id === classroomId)!,
     )
+    dispatch({
+      type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
+      payload: { classroomId },
+    })
   }, [classrooms, classroomId])
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -101,6 +109,7 @@ export function AddNewCatechizingModal({
       console.error(error)
     }
   }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -235,6 +244,7 @@ export function AddNewCatechizingModal({
             <Controller
               name="classroom"
               control={control}
+              defaultValue={selectedClassroom}
               rules={{
                 required: true,
                 value: selectedClassroom!,
