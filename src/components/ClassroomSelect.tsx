@@ -23,6 +23,7 @@ export const ClassroomSelect = forwardRef<
   return (
     value && (
       <Select
+        disallowEmptySelection
         ref={ref}
         {...props}
         label={'Turma'}

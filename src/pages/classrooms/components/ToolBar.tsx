@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { AddNewClassroomModal } from './AddNewClassroomModal'
 import { EditClassroomModal } from './EditClassroomModal'
 import { classroom } from '@/Types'
+import { DeleteClassroomModal } from './DeleteClassroomModal'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
@@ -16,7 +17,7 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
     useState<boolean>(false)
   const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
     useState<boolean>(false)
-  const [_isUserDeletingClassroom, _setIsUserDeletingClassroom] =
+  const [isUserDeletingClassroom, setIsUserDeletingClassroom] =
     useState<boolean>(false)
   const [isUserEditingClassroom, setIsUserEditingClassroom] =
     useState<boolean>(false)
@@ -35,6 +36,11 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
       <EditClassroomModal
         isOpen={isUserEditingClassroom}
         onClose={() => setIsUserEditingClassroom(false)}
+        data={classroom!}
+      />
+      <DeleteClassroomModal
+        isOpen={isUserDeletingClassroom}
+        onClose={() => setIsUserDeletingClassroom(false)}
         data={classroom!}
       />
       <Tooltip
@@ -83,6 +89,7 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
           isIconOnly
           isDisabled={!isClassroomSelected}
           className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-red-600"
+          onPress={() => setIsUserDeletingClassroom(true)}
         >
           <Trash size={28} className="text-white" />
         </Button>

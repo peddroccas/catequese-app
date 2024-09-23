@@ -83,7 +83,19 @@ export class ClassroomRepository {
 
   static async getClassroom(classroomId: string): Promise<classroom> {
     return api
-      .get(`/classrooms/${classroomId}`)
+      .get(`/classrooms/${encodeURIComponent(classroomId)}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
+  static async deleteClassroom(classroomId: string): Promise<classroom> {
+    return api
+      .delete(`/classrooms/${classroomId}`)
       .then((response) => {
         return response.data
       })
