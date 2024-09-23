@@ -38,9 +38,14 @@ const EditClassroomFormSchema = z.object({
     ],
     { message: 'Campo obrigatório' },
   ),
-  startedAt: z.nativeEnum(years, {
-    message: 'Digite um dos anos 2023, 2024, 2025',
-  }),
+  startedAt: z.coerce
+    .number()
+    .min(2023, {
+      message: 'Digite um dos anos 2023, 2024, 2025',
+    })
+    .max(2025, {
+      message: 'Digite um dos anos 2023, 2024, 2025',
+    }),
   catechists: z.custom((value) => {
     if (value) {
       return true
