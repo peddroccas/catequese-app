@@ -21,6 +21,17 @@ export class ClassroomRepository {
       })
   }
 
+  static async editClassroom(classroom: classroom) {
+    return api
+      .put('/classrooms', classroom)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        console.error('Erro na requisição:', error)
+      })
+  }
+
   static async getClassroomNamesBySegment(
     segment: string,
   ): Promise<{ id: string; classroomName: string }[]> {

@@ -63,3 +63,9 @@ export interface classroom {
 }
 
 export type toolBarType = 'classroom' | 'payment' | 'catechizing' | 'catechits'
+
+export enum years {
+  y2023 = 2023,
+  y2024 = 2024,
+  y2025 = 2025,
+}

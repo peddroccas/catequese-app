@@ -3,23 +3,22 @@ import { Button, Tooltip } from '@nextui-org/react'
 import { PencilSimple, Plus, Trash, UserPlus } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { AddNewClassroomModal } from './AddNewClassroomModal'
+import { EditClassroomModal } from './EditClassroomModal'
+import { classroom } from '@/Types'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
-  selectedClassroomId?: string
+  classroom?: classroom
 }
 
-export function ToolBar({
-  isClassroomSelected,
-  selectedClassroomId,
-}: ToolBarProps) {
+export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
   const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
     useState<boolean>(false)
   const [_isUserDeletingClassroom, _setIsUserDeletingClassroom] =
     useState<boolean>(false)
-  const [_isUserEditingClassroom, _setIsUserEditingClassroom] =
+  const [isUserEditingClassroom, setIsUserEditingClassroom] =
     useState<boolean>(false)
 
   return (
@@ -31,7 +30,12 @@ export function ToolBar({
       <AddNewCatechizingModal
         isOpen={isUserAddingNewCatechizing}
         onClose={() => setIsUserAddingNewCatechizing(false)}
-        classroomId={selectedClassroomId}
+        classroomId={classroom?.id}
+      />
+      <EditClassroomModal
+        isOpen={isUserEditingClassroom}
+        onClose={() => setIsUserEditingClassroom(false)}
+        data={classroom!}
       />
       <Tooltip
         content="Adicionar novo catequizando a sala"
@@ -64,6 +68,7 @@ export function ToolBar({
         <Button
           isIconOnly
           isDisabled={!isClassroomSelected}
+          onPress={() => setIsUserEditingClassroom(true)}
           className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-orange-400"
         >
           <PencilSimple size={28} className="text-white" />

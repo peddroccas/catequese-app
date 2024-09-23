@@ -16,13 +16,13 @@ import {
   classroomInitialState,
 } from '@/reducer/classroom/classroomReducer'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
-import { catechist } from '@/Types'
+import { catechist, classroom, years } from '@/Types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext, useReducer, useState } from 'react'
+import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 
-const addNewClassroomFormSchema = z.object({
+const EditClassroomFormSchema = z.object({
   roomNumber: z.coerce
     .number({ message: 'Campo obrigatório' })
     .min(1, 'Campo inválido')
@@ -38,7 +38,7 @@ const addNewClassroomFormSchema = z.object({
     ],
     { message: 'Campo obrigatório' },
   ),
-  startedAt: z.enum(['2023', '2024', '2025'], {
+  startedAt: z.nativeEnum(years, {
     message: 'Digite um dos anos 2023, 2024, 2025',
   }),
   catechists: z.custom((value) => {
@@ -50,34 +50,44 @@ const addNewClassroomFormSchema = z.object({
   }, 'Campo obrigatório'),
 })
 
-interface AddNewCatechistFormProps {
+interface EditCatechistFormProps {
   isOpen: boolean
   onClose: () => void
+  data: classroom
 }
 
-export function AddNewClassroomModal({
+export function EditClassroomModal({
   isOpen,
   onClose,
-}: AddNewCatechistFormProps) {
+  data,
+}: EditCatechistFormProps) {
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(addNewClassroomFormSchema),
+    resolver: zodResolver(EditClassroomFormSchema),
   })
-  const { catechists, throwClassroomUpdate } = useContext(ClassroomContext)
+  const { catechists, throwClassroomUpdate, throwCatechistUpdate } =
+    useContext(ClassroomContext)
   const [state, dispatch] = useReducer(classroomReducer, classroomInitialState)
   const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>([])
-
+  const [hasChangedCatechists, setHasChangedCatechists] =
+    useState<boolean>(false)
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
+  useEffect(() => {
+    dispatch({ type: ClassroomActionTypes.SET_ALL, payload: data })
+    setSelectedCatechists(data.catechists)
+  }, [data, isOpen])
+
+  console.log(state.catechists)
   async function handleSubmitNewClassroomForm() {
     setHasUserSubmittedForm(true)
     try {
-      await ClassroomRepository.createNewClassroom(state)
+      await ClassroomRepository.editClassroom(state)
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: ClassroomActionTypes.RESET })
@@ -85,7 +95,13 @@ export function AddNewClassroomModal({
           reset()
           onClose()
         })
-        .then(throwClassroomUpdate)
+        .then(() => {
+          throwClassroomUpdate()
+          if (hasChangedCatechists) {
+            throwCatechistUpdate()
+            setHasChangedCatechists(false)
+          }
+        })
     } catch (error) {
       console.error(error)
     }
@@ -99,7 +115,7 @@ export function AddNewClassroomModal({
     >
       <ModalContent>
         <ModalHeader className="flex justify-center text-xl">
-          Adicionar Novo Turma
+          Editar Turma
         </ModalHeader>
         <ModalBody>
           <form
@@ -108,8 +124,10 @@ export function AddNewClassroomModal({
           >
             <Controller
               name="roomNumber"
+              defaultValue={state.roomNumber}
               control={control}
               rules={{
+                value: state.roomNumber,
                 required: true,
                 onChange: (e) =>
                   dispatch({
@@ -119,9 +137,9 @@ export function AddNewClassroomModal({
               }}
               render={({ field }) => (
                 <Input
+                  {...field}
                   label="Turma"
                   description="Insira o número da Turma"
-                  {...field}
                   isInvalid={Boolean(errors.roomNumber)}
                   errorMessage={String(errors.roomNumber?.message)}
                 />
@@ -130,6 +148,7 @@ export function AddNewClassroomModal({
 
             <Controller
               name="segment"
+              defaultValue={state.segment}
               control={control}
               rules={{
                 required: true,
@@ -178,7 +197,9 @@ export function AddNewClassroomModal({
             <Controller
               name="startedAt"
               control={control}
+              defaultValue={state.startedAt}
               rules={{
+                value: state.startedAt,
                 required: true,
                 onChange: (e) =>
                   dispatch({
@@ -199,19 +220,30 @@ export function AddNewClassroomModal({
 
             <Controller
               name="catechists"
+              defaultValue={selectedCatechists}
               control={control}
               rules={{
                 required: true,
-                value: selectedCatechists!,
+                value: selectedCatechists,
                 onChange: (e) => {
                   setSelectedCatechists(
                     catechists.filter((catechist) =>
                       String(e.target.value).includes(catechist.id!),
                     ),
                   )
+                  setHasChangedCatechists(true)
+
                   dispatch({
                     type: ClassroomActionTypes.SET_CATECHISTS,
-                    payload: { catechists: e.target.value.split(',') },
+                    payload: {
+                      catechists: e.target.value
+                        .split(',')
+                        .map((id: string) => {
+                          return {
+                            id,
+                          }
+                        }),
+                    },
                   })
                 },
               }}
@@ -231,9 +263,9 @@ export function AddNewClassroomModal({
                   scrollShadowProps={{
                     isEnabled: false,
                   }}
-                  selectedKeys={
-                    field.value ? String(field.value).split(',') : ''
-                  }
+                  selectedKeys={selectedCatechists.map(
+                    (catechist) => catechist.id!,
+                  )}
                   isInvalid={Boolean(errors.catechists)}
                   errorMessage={String(errors.catechists?.message)}
                 >
@@ -254,7 +286,7 @@ export function AddNewClassroomModal({
               type="submit"
               size="lg"
             >
-              {hasUserSubmittedForm ? <CircularProgress /> : 'Cadastrar'}
+              {hasUserSubmittedForm ? <CircularProgress /> : 'Salvar'}
             </Button>
           </form>
         </ModalBody>

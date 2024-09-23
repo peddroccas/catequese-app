@@ -53,7 +53,7 @@ export function Classrooms() {
         />
         <ToolBar
           isClassroomSelected={Boolean(classroom.id)}
-          selectedClassroomId={classroom.id}
+          classroom={classroom}
         />
       </nav>
       {classroom.id && <CatechizingsTable catechizings={catechizings!} />}
