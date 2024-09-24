@@ -22,11 +22,15 @@ export function DeleteClassroomModal({
   isOpen,
   onClose,
 }: DeleteClassroomFormModal) {
-  const { throwClassroomUpdate } = useContext(ClassroomContext)
+  const { throwClassroomUpdate, throwCatechizingUpdate, throwCatechistUpdate } =
+    useContext(ClassroomContext)
   async function handleDeleteClassroom() {
     try {
       await ClassroomRepository.deleteClassroom(data.id!)
-        .then(throwClassroomUpdate)
+        .then(() => {
+          throwClassroomUpdate()
+          throwCatechistUpdate()
+        })
         .finally(() => {
           onClose()
         })

@@ -51,8 +51,8 @@ export function Header() {
               className={({ isActive }) =>
                 `flex transform items-center gap-2 p-2 transition-all duration-150 ${
                   isActive
-                    ? 'text-bunker-300 border-bunker-300 scale-105 border-b-2 font-bold'
-                    : 'text-bunker-100 hover:text-bunker-300 hover:border-bunker-300 hover:scale-105 hover:border-b-1'
+                    ? 'scale-105 border-b-2 border-bunker-300 font-bold text-bunker-300'
+                    : 'text-bunker-100 hover:scale-105 hover:border-b-1 hover:border-bunker-300 hover:text-bunker-300'
                 }`
               }
               to={item.link}
@@ -70,14 +70,14 @@ export function Header() {
         </NavbarItem>
         <NavbarItem></NavbarItem>
       </NavbarContent>
-      <NavbarMenu className="bg-bunker-950 w-fit opacity-95">
+      <NavbarMenu className="w-fit bg-bunker-950 opacity-95">
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <NavLink
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 transition-colors duration-300 ${
                   isActive
-                    ? 'text-bunker-300 border-b-1 font-bold'
+                    ? 'border-b-1 font-bold text-bunker-300'
                     : 'text-bunker-300'
                 }`
               }
