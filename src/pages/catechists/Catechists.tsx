@@ -15,7 +15,7 @@ import { AddNewCatechistModal } from './components/AddNewCatechistModal'
 import ToolBar from './components/ToolBar'
 
 export function Catechists() {
-  const { catechists } = useContext(ClassroomContext)
+  const { catechists, classrooms } = useContext(ClassroomContext)
 
   const [isUserAddingNewCatechist, setIsUserAddingNewCatechist] =
     useState<boolean>(false)
@@ -56,15 +56,20 @@ export function Catechists() {
             <TableColumn align="center">AÇÕES</TableColumn>
           </TableHeader>
           <TableBody>
-            {catechists.map((catechist) => (
-              <TableRow key={catechist.id}>
-                <TableCell>{catechist.name}</TableCell>
-                <TableCell>{catechist.classroomId}</TableCell>
-                <TableCell>
-                  <ToolBar catechist={catechist} />
-                </TableCell>
-              </TableRow>
-            ))}
+            {catechists.map((catechist) => {
+              const classroom = classrooms.find(
+                (classroom) => classroom.id === catechist.classroomId,
+              )
+              return (
+                <TableRow key={catechist.id}>
+                  <TableCell>{catechist.name}</TableCell>
+                  <TableCell>{classroom?.roomNumber}</TableCell>
+                  <TableCell>
+                    <ToolBar catechist={catechist} />
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       )}

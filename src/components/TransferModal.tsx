@@ -1,6 +1,6 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
-import { catechist, catechizing } from '@/Types'
+import { catechist, catechizing, classroom } from '@/Types'
 import {
   Button,
   Modal,
@@ -28,11 +28,9 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
     throwCatechizingUpdate,
   } = useContext(ClassroomContext)
 
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-    startedAt: number
-  }>(classrooms.find((classroom) => classroom.id === data.classroomId)!)
+  const [selectedClassroom, setSelectedClassroom] = useState<classroom>(
+    classrooms.find((classroom) => classroom.id === data.classroomId)!,
+  )
 
   async function handleTransfer() {
     try {
@@ -41,7 +39,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
           // console.log(state)
           await CatechistRepository.transferCatechist(
             data.id!,
-            selectedClassroom.id,
+            selectedClassroom.id!,
           )
             .then(() => {
               throwCatechistUpdate()
@@ -54,7 +52,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
         case 'catechizing':
           await CatechizingRepository.transferCatechizing(
             data.id!,
-            selectedClassroom.id,
+            selectedClassroom.id!,
           )
             .then(() => {
               throwCatechizingUpdate()
@@ -75,6 +73,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
   return (
     <Modal
       isOpen={isOpen}
+      placement="center"
       onClose={() => {
         onClose()
         setSelectedClassroom(
@@ -89,14 +88,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
           <p>Nome: {data.name}</p>
           <p>Turma: {data.classroomId || 'Sem turma'}</p>
           <ClassroomSelect
-            value={
-              selectedClassroom ||
-              ({} as {
-                id: string
-                classroomName: string
-                startedAt: number
-              })
-            }
+            value={selectedClassroom || ({} as classroom)}
             onChange={(e) =>
               setSelectedClassroom(
                 classrooms.find(

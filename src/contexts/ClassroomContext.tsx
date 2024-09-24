@@ -1,7 +1,7 @@
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
-import { catechist, catechizing } from '@/Types'
+import { catechist, catechizing, classroom } from '@/Types'
 import { ReactNode, createContext, useEffect, useState } from 'react'
 
 interface ClassroomType {
@@ -10,11 +10,7 @@ interface ClassroomType {
   hasCatechizingUpdate: boolean
   catechizings: catechizing[]
   catechists: catechist[]
-  classrooms: {
-    id: string
-    classroomName: string
-    startedAt: number
-  }[]
+  classrooms: classroom[]
   throwClassroomUpdate: () => void
   throwClassroomHasAlreadyUpdated: () => void
   throwCatechistUpdate: () => void
@@ -34,13 +30,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   const [hasCatechizingUpdate, setHasCatechizingUpdate] =
     useState<boolean>(true)
   const [catechizings, setCatechizings] = useState<catechizing[]>([])
-  const [classrooms, setClassrooms] = useState<
-    {
-      id: string
-      classroomName: string
-      startedAt: number
-    }[]
-  >([])
+  const [classrooms, setClassrooms] = useState<classroom[]>([])
   const [catechists, setCatechists] = useState<catechist[]>([])
 
   // Consulta nome das turmas

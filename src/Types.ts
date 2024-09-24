@@ -55,10 +55,11 @@ export type segment =
 
 export interface classroom {
   id?: string
+  name?: string
   roomNumber: number | undefined
   segment: segment | undefined
   startedAt: number | undefined
-  catechists: catechist[]
+  catechists?: catechist[]
   catechizings?: catechizing[]
 }
 

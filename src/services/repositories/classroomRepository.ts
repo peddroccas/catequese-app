@@ -46,13 +46,7 @@ export class ClassroomRepository {
       })
   }
 
-  static async getClassroomNames(): Promise<
-    {
-      id: string
-      classroomName: string
-      startedAt: number
-    }[]
-  > {
+  static async getClassroomNames(): Promise<classroom[]> {
     return api
       .get(`/classrooms/names`)
       .then((response) => {

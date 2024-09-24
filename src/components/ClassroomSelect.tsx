@@ -1,12 +1,10 @@
 import { forwardRef, ChangeEvent, useContext } from 'react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { Select, SelectItem, SelectProps } from '@nextui-org/react'
+import { classroom } from '@/Types'
 
 interface ClassroomSelectProps {
-  value: {
-    id: string
-    classroomName: string
-  }
+  value: classroom
 
   size?: 'lg'
   props?: SelectProps
@@ -36,11 +34,11 @@ export const ClassroomSelect = forwardRef<
           listbox: '!text-bunker-950',
           selectorIcon: 'text-bunker-950',
         }}
-        selectedKeys={[value.id]}
+        selectedKeys={[value.id!]}
       >
         {classrooms.map((classroom) => (
-          <SelectItem key={classroom.id} value={classroom.classroomName}>
-            {classroom.classroomName}
+          <SelectItem key={classroom.id!} value={classroom.name}>
+            {classroom.name}
           </SelectItem>
         ))}
       </Select>
