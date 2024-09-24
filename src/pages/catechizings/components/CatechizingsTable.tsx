@@ -45,13 +45,15 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
           const classroom = classrooms.find(
             (classroom) => classroom.id === catechizing.classroomId,
           )
+          const { catechists } = classroom!
+
           return (
             <TableRow key={catechizing.id}>
               <TableCell>{catechizing.name}</TableCell>
               <TableCell>{classroom?.roomNumber}</TableCell>
               <TableCell>
-                {classroom?.catechists
-                  ?.map((catechist) => catechist.name)
+                {catechists
+                  ?.map((catechist) => catechist.name.split(' ')[0])
                   .join(' e ')}
               </TableCell>
               <TableCell>
