@@ -38,8 +38,10 @@ export function SignUp() {
           }
         },
       )
-      console.log(user)
-    } catch (error) {}
+    } catch (error) {
+      setHasUserSubmittedForm(false)
+      reset()
+    }
   }
 
   return (
