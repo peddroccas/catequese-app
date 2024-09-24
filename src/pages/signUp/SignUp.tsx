@@ -9,7 +9,7 @@ import { z } from 'zod'
 
 const signUpFormSchema = z.object({
   email: z.string({ message: 'Campo obrigatório' }).email('Email inválido'),
-  password: z.string().min(6).optional(),
+  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
 })
 
 export function SignUp() {
@@ -35,12 +35,15 @@ export function SignUp() {
         (response) => {
           if (response) {
             navigate('/signIn')
+          } else {
+            throw new Error()
           }
         },
       )
     } catch (error) {
+      alert('Email não cadastrado, contate Pedro')
       setHasUserSubmittedForm(false)
-      reset()
+      reset({ email: '', password: '' })
     }
   }
 
