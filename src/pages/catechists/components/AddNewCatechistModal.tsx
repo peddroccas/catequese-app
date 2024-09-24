@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
 import { parseAbsoluteToLocal } from '@internationalized/date'
+import { classroom } from '@/Types'
 
 const addNewCatechistFormSchema = z.object({
   name: z
@@ -62,14 +63,8 @@ export function AddNewCatechistModal({
   const { classrooms, throwCatechistUpdate, throwClassroomUpdate } =
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechistReducer, catechistInitialState)
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
+  const [selectedClassroom, setSelectedClassroom] = useState<classroom>(
+    {} as classroom,
   )
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -87,12 +82,7 @@ export function AddNewCatechistModal({
           setHasUserSubmittedForm(false)
           throwCatechistUpdate()
           dispatch({ type: CatechistActionTypes.RESET })
-          setSelectedClassroom(
-            {} as {
-              id: string
-              classroomName: string
-            },
-          )
+          setSelectedClassroom({} as classroom)
           reset()
           onClose()
         })
@@ -294,11 +284,8 @@ export function AddNewCatechistModal({
                   errorMessage={String(errors.classroom?.message)}
                 >
                   {classrooms.map((classroom) => (
-                    <SelectItem
-                      key={classroom.id}
-                      value={classroom.classroomName}
-                    >
-                      {classroom.classroomName}
+                    <SelectItem key={classroom.id!} value={classroom.name}>
+                      {classroom.name}
                     </SelectItem>
                   ))}
                 </Select>
