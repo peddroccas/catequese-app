@@ -36,7 +36,6 @@ export function Classrooms() {
     hasClassroomUpdate,
     throwClassroomHasAlreadyUpdated,
   ])
-  // console.log(classrooms)
   const { catechizings } = classroom
 
   return (
@@ -55,7 +54,12 @@ export function Classrooms() {
           classroom={classroom}
         />
       </nav>
-      {classroom.id && <CatechizingsTable catechizings={catechizings!} />}
+      {classroom.id && (
+        <CatechizingsTable
+          catechizings={catechizings!}
+          hasPageClassroomInfo={true}
+        />
+      )}
     </div>
   )
 }

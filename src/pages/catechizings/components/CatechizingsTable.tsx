@@ -14,9 +14,13 @@ import { ClassroomContext } from '@/contexts/ClassroomContext'
 
 interface CatechizingsTableProps {
   catechizings: catechizing[]
+  hasPageClassroomInfo?: boolean
 }
 
-export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
+export function CatechizingsTable({
+  catechizings,
+  hasPageClassroomInfo,
+}: CatechizingsTableProps) {
   const { classrooms } = useContext(ClassroomContext)
   return (
     <Table
@@ -31,8 +35,12 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
         <TableColumn align="start" className="flex-1">
           NOME
         </TableColumn>
-        <TableColumn align="center">TURMA</TableColumn>
-        <TableColumn align="center">CATEQUISTA</TableColumn>
+        <TableColumn align="center" hidden={hasPageClassroomInfo}>
+          TURMA
+        </TableColumn>
+        <TableColumn align="center" hidden={hasPageClassroomInfo}>
+          CATEQUISTA
+        </TableColumn>
         <TableColumn align="center">CARNÊ</TableColumn>
         <TableColumn align="center">BATISMO</TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
@@ -50,8 +58,10 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
           return (
             <TableRow key={catechizing.id}>
               <TableCell>{catechizing.name}</TableCell>
-              <TableCell>{classroom?.roomNumber}</TableCell>
-              <TableCell>
+              <TableCell hidden={hasPageClassroomInfo}>
+                {classroom?.roomNumber}
+              </TableCell>
+              <TableCell hidden={hasPageClassroomInfo}>
                 {catechists
                   ?.map((catechist) => catechist.name.split(' ')[0])
                   .join(' e ')}
