@@ -32,6 +32,7 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
           NOME
         </TableColumn>
         <TableColumn align="center">TURMA</TableColumn>
+        <TableColumn align="center">CATEQUISTA</TableColumn>
         <TableColumn align="center">CARNÊ</TableColumn>
         <TableColumn align="center">BATISMO</TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
@@ -47,7 +48,12 @@ export function CatechizingsTable({ catechizings }: CatechizingsTableProps) {
           return (
             <TableRow key={catechizing.id}>
               <TableCell>{catechizing.name}</TableCell>
-              <TableCell>{classroom?.name}</TableCell>
+              <TableCell>{classroom?.roomNumber}</TableCell>
+              <TableCell>
+                {classroom?.catechists
+                  ?.map((catechist) => catechist.name)
+                  .join(' e ')}
+              </TableCell>
               <TableCell>
                 <div className="flex justify-center text-red-500">
                   {catechizing.payments![0].toBePaid ? (
