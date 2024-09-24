@@ -10,12 +10,18 @@ import {
   Tooltip,
 } from '@nextui-org/react'
 import { UserPlus } from '@phosphor-icons/react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AddNewCatechistModal } from './components/AddNewCatechistModal'
 import ToolBar from './components/ToolBar'
+import { useAuth } from '@/hooks/useAuth'
 
 export function Catechists() {
   const { catechists, classrooms } = useContext(ClassroomContext)
+  const auth = useAuth()
+
+  useEffect(() => {
+    auth()
+  })
 
   const [isUserAddingNewCatechist, setIsUserAddingNewCatechist] =
     useState<boolean>(false)

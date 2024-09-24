@@ -6,8 +6,15 @@ import { classroom } from '@/Types'
 import { useContext, useEffect, useState } from 'react'
 import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
 import { classroomInitialState } from '@/reducer/classroom/classroomReducer'
+import { useAuth } from '@/hooks/useAuth'
+import { AuthContext } from '@/contexts/AuthContext'
 
 export function Classrooms() {
+  const { user } = useContext(AuthContext)
+  const auth = useAuth()
+  console.log(user.id)
+  auth()
+
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
     useContext(ClassroomContext)
   const [classroom, setClassroom] = useState<classroom>(classroomInitialState)

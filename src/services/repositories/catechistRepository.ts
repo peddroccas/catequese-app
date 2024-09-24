@@ -72,4 +72,41 @@ export class CatechistRepository {
         console.error('Erro na requisição:', error)
       })
   }
+
+  static async getCatechist(catechistId: string) {
+    return api
+      .get(`/catechists/${encodeURIComponent(catechistId)}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
+  static async signIn(email: string, password: string): Promise<catechist> {
+    const response = api
+      .post(`/signIn`, { email, password })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+    return response
+  }
+
+  static async signUp(email: string, password: string) {
+    return api
+      .patch(`/signUp`, { email, password })
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
 }

@@ -5,6 +5,7 @@ export interface catechist {
   phone: string
   address: string
   classroomId: string | undefined
+  role: 'COORDINATOR' | 'MEMBER'
 
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
