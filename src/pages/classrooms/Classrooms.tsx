@@ -11,16 +11,8 @@ export function Classrooms() {
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
     useContext(ClassroomContext)
   const [classroom, setClassroom] = useState<classroom>(classroomInitialState)
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-    startedAt: number
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-      startedAt: number
-    },
+  const [selectedClassroom, setSelectedClassroom] = useState<classroom>(
+    {} as classroom,
   )
 
   useEffect(() => {
@@ -33,13 +25,7 @@ export function Classrooms() {
           setClassroom(classroom)
         } else {
           setClassroom({} as classroom)
-          setSelectedClassroom(
-            {} as {
-              id: string
-              classroomName: string
-              startedAt: number
-            },
-          )
+          setSelectedClassroom({} as classroom)
         }
       }
     }
