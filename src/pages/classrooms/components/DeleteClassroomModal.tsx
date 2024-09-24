@@ -26,9 +26,7 @@ export function DeleteClassroomModal({
   async function handleDeleteClassroom() {
     try {
       await ClassroomRepository.deleteClassroom(data.id!)
-        .then(() => {
-          throwClassroomUpdate()
-        })
+        .then(throwClassroomUpdate)
         .finally(() => {
           onClose()
         })

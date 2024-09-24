@@ -6,6 +6,7 @@ export const classroomInitialState = {
   segment: undefined,
   startedAt: undefined,
   catechists: [],
+  catechizings: [],
 }
 export function classroomReducer(
   state: classroom,
