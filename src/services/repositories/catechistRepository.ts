@@ -46,11 +46,11 @@ export class CatechistRepository {
       })
   }
 
-  static async transferCatechist(catechistId: string, newClassroomId: string) {
+  static async transferCatechist(catechistId: string, classroomId: string) {
     return api
       .patch(`/catechists/transfer`, {
         id: catechistId,
-        classroomId: newClassroomId,
+        classroomId,
       })
       .then((response) => {
         return response.data

@@ -83,9 +83,12 @@ export class CatechizingRepository {
       })
   }
 
-  static async transferClassCatechizing(data: catechizing) {
+  static async transferCatechizing(catechizingId: string, classroomId: string) {
     return api
-      .patch('/catechizings/transfer', data)
+      .patch('/catechizings/transfer', {
+        id: catechizingId,
+        classroomId,
+      })
       .then((response) => {
         return response.data
       })

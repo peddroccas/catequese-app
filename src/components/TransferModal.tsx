@@ -11,6 +11,7 @@ import {
 } from '@nextui-org/react'
 import { useContext, useState } from 'react'
 import { ClassroomSelect } from './ClassroomSelect'
+import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 
 interface TransferModal {
   data: catechist | catechizing
@@ -20,8 +21,12 @@ interface TransferModal {
 }
 
 export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
-  const { classrooms, throwClassroomUpdate, throwCatechistUpdate } =
-    useContext(ClassroomContext)
+  const {
+    classrooms,
+    throwClassroomUpdate,
+    throwCatechistUpdate,
+    throwCatechizingUpdate,
+  } = useContext(ClassroomContext)
 
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
@@ -47,6 +52,18 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
             })
           break
         case 'catechizing':
+          await CatechizingRepository.transferCatechizing(
+            data.id!,
+            selectedClassroom.id,
+          )
+            .then(() => {
+              throwCatechizingUpdate()
+              throwClassroomUpdate()
+            })
+            .finally(() => {
+              onClose()
+            })
+          break
         default:
           break
       }

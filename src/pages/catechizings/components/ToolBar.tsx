@@ -3,6 +3,7 @@ import { Tooltip } from '@nextui-org/react'
 import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechizingModal } from './EditCatechizingModal'
+import { TransferModal } from '@/components/TransferModal'
 
 interface ToolBarProps {
   catechizing: catechizing
@@ -12,7 +13,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
     useState<boolean>(false)
   const [_isUserDeletingCatechizing, _setIsUserDeletingCatechizing] =
     useState<boolean>(false)
-  const [_isUserTransferingCatechizing, _setIsUserDTransferingatechizing] =
+  const [isUserTransferingCatechizing, setIsUserTransferingatechizing] =
     useState<boolean>(false)
   return (
     <div className="flex items-center justify-center gap-2">
@@ -20,6 +21,12 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         isOpen={isUserEditingCatechizing}
         data={catechizing}
         onClose={() => setIsUserEditingCatechizing(false)}
+      />
+      <TransferModal
+        data={catechizing}
+        isOpen={isUserTransferingCatechizing}
+        onClose={() => setIsUserTransferingatechizing(false)}
+        type="catechizing"
       />
       <Tooltip
         content="Transferir de sala"
@@ -30,6 +37,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         <ArrowsLeftRight
           size={20}
           className="cursor-pointer duration-300 hover:opacity-60"
+          onClick={() => setIsUserTransferingatechizing(true)}
         />
       </Tooltip>
       <PencilSimple
