@@ -67,7 +67,8 @@ export function AddNewClassroomModal({
   } = useForm({
     resolver: zodResolver(addNewClassroomFormSchema),
   })
-  const { catechists, throwClassroomUpdate } = useContext(ClassroomContext)
+  const { catechists, throwClassroomUpdate, throwCatechistUpdate } =
+    useContext(ClassroomContext)
   const [state, dispatch] = useReducer(classroomReducer, classroomInitialState)
   const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>([])
 
@@ -85,7 +86,10 @@ export function AddNewClassroomModal({
           reset()
           onClose()
         })
-        .then(throwClassroomUpdate)
+        .then(() => {
+          throwClassroomUpdate()
+          throwCatechistUpdate()
+        })
     } catch (error) {
       console.error(error)
     }

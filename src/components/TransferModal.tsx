@@ -93,7 +93,11 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
           <Button color="danger" onClick={onClose}>
             Cancelar
           </Button>
-          <Button color="primary" onClick={handleTransfer}>
+          <Button
+            color="primary"
+            onClick={handleTransfer}
+            isDisabled={!selectedClassroom}
+          >
             Transferir
           </Button>
         </ModalFooter>
