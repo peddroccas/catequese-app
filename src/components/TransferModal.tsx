@@ -70,9 +70,16 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
         <ModalHeader>Transferência de turma</ModalHeader>
         <ModalBody>
           <p>Nome: {data.name}</p>
-          <p>Turma: {data.classroomId}</p>
+          <p>Turma: {data.classroomId || 'Sem turma'}</p>
           <ClassroomSelect
-            value={selectedClassroom!}
+            value={
+              selectedClassroom ||
+              ({} as {
+                id: string
+                classroomName: string
+                startedAt: number
+              })
+            }
             onChange={(e) =>
               setSelectedClassroom(
                 classrooms.find(

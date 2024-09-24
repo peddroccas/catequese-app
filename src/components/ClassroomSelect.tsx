@@ -7,6 +7,7 @@ interface ClassroomSelectProps {
     id: string
     classroomName: string
   }
+
   size?: 'lg'
   props?: SelectProps
   disabledOptions?: string
@@ -22,6 +23,7 @@ export const ClassroomSelect = forwardRef<
   return (
     value && (
       <Select
+        disallowEmptySelection
         ref={ref}
         {...props}
         label={'Turma'}

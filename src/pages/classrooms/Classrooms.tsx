@@ -5,11 +5,12 @@ import { ClassroomRepository } from '@/services/repositories/classroomRepository
 import { classroom } from '@/Types'
 import { useContext, useEffect, useState } from 'react'
 import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
+import { classroomInitialState } from '@/reducer/classroom/classroomReducer'
 
 export function Classrooms() {
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
     useContext(ClassroomContext)
-  const [classroom, setClassroom] = useState<classroom>({} as classroom)
+  const [classroom, setClassroom] = useState<classroom>(classroomInitialState)
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
     classroomName: string
@@ -21,7 +22,6 @@ export function Classrooms() {
       startedAt: number
     },
   )
-  const { catechizings } = classroom
 
   useEffect(() => {
     async function getClassroom() {
@@ -29,7 +29,18 @@ export function Classrooms() {
         const classroom = await ClassroomRepository.getClassroom(
           selectedClassroom.id,
         )
-        setClassroom(classroom)
+        if (classroom) {
+          setClassroom(classroom)
+        } else {
+          setClassroom({} as classroom)
+          setSelectedClassroom(
+            {} as {
+              id: string
+              classroomName: string
+              startedAt: number
+            },
+          )
+        }
       }
     }
     getClassroom().finally(throwClassroomHasAlreadyUpdated)
@@ -39,6 +50,8 @@ export function Classrooms() {
     hasClassroomUpdate,
     throwClassroomHasAlreadyUpdated,
   ])
+  // console.log(classrooms)
+  const { catechizings } = classroom
 
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
@@ -51,7 +64,10 @@ export function Classrooms() {
             )
           }
         />
-        <ToolBar isClassroomSelected={Boolean(classroom.id)} />
+        <ToolBar
+          isClassroomSelected={Boolean(classroom.id)}
+          classroom={classroom}
+        />
       </nav>
       {classroom.id && <CatechizingsTable catechizings={catechizings!} />}
     </div>

@@ -20,10 +20,9 @@ import {
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { I18nProvider } from '@react-aria/i18n'
-import { useContext, useReducer, useState } from 'react'
+import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
-import { parseAbsoluteToLocal } from '@internationalized/date'
 
 const addNewCatechizingFormSchema = z.object({
   name: z
@@ -36,19 +35,25 @@ const addNewCatechizingFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
-  classroom: z
-    .string({ message: 'Campo obrigatório' })
-    .uuid({ message: 'Campo obrigatório' }),
+  classroom: z.custom((value) => {
+    if (value) {
+      return true
+    } else {
+      return false
+    }
+  }, 'Campo obrigatório'),
 })
 
 interface AddNewCatechizingFormProps {
   isOpen: boolean
   onClose: () => void
+  classroomId?: string
 }
 
 export function AddNewCatechizingModal({
   isOpen,
   onClose,
+  classroomId,
 }: AddNewCatechizingFormProps) {
   const {
     handleSubmit,
@@ -66,12 +71,18 @@ export function AddNewCatechizingModal({
   const [selectedClassroom, setSelectedClassroom] = useState<{
     id: string
     classroomName: string
-  }>(
-    {} as {
-      id: string
-      classroomName: string
-    },
-  )
+    startedAt: number
+  }>()
+
+  useEffect(() => {
+    setSelectedClassroom(
+      classrooms.find((classroom) => classroom.id === classroomId)!,
+    )
+    dispatch({
+      type: CatechizingActionTypes.SET_CATECHIZING_TO_CLASSROOM,
+      payload: { classroomId },
+    })
+  }, [classrooms, classroomId])
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
@@ -87,6 +98,7 @@ export function AddNewCatechizingModal({
             {} as {
               id: string
               classroomName: string
+              startedAt: number
             },
           )
           reset()
@@ -97,6 +109,7 @@ export function AddNewCatechizingModal({
       console.error(error)
     }
   }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -231,6 +244,7 @@ export function AddNewCatechizingModal({
             <Controller
               name="classroom"
               control={control}
+              defaultValue={selectedClassroom}
               rules={{
                 required: true,
                 value: selectedClassroom!,
@@ -256,7 +270,9 @@ export function AddNewCatechizingModal({
                     listbox: '!text-bunker-950',
                     selectorIcon: 'text-bunker-950',
                   }}
-                  selectedKeys={[field.value]}
+                  selectedKeys={[
+                    classroomId ? selectedClassroom!.id : field.value,
+                  ]}
                   isInvalid={Boolean(errors.classroom)}
                   errorMessage={String(errors.classroom?.message)}
                 >

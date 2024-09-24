@@ -3,19 +3,23 @@ import { Button, Tooltip } from '@nextui-org/react'
 import { PencilSimple, Plus, Trash, UserPlus } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { AddNewClassroomModal } from './AddNewClassroomModal'
+import { EditClassroomModal } from './EditClassroomModal'
+import { classroom } from '@/Types'
+import { DeleteClassroomModal } from './DeleteClassroomModal'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
+  classroom?: classroom
 }
 
-export function ToolBar({ isClassroomSelected }: ToolBarProps) {
+export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
   const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
     useState<boolean>(false)
-  const [_isUserDeletingClassroom, _setIsUserDeletingClassroom] =
+  const [isUserDeletingClassroom, setIsUserDeletingClassroom] =
     useState<boolean>(false)
-  const [_isUserEditingClassroom, _setIsUserEditingClassroom] =
+  const [isUserEditingClassroom, setIsUserEditingClassroom] =
     useState<boolean>(false)
 
   return (
@@ -27,6 +31,17 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
       <AddNewCatechizingModal
         isOpen={isUserAddingNewCatechizing}
         onClose={() => setIsUserAddingNewCatechizing(false)}
+        classroomId={classroom?.id}
+      />
+      <EditClassroomModal
+        isOpen={isUserEditingClassroom}
+        onClose={() => setIsUserEditingClassroom(false)}
+        data={classroom!}
+      />
+      <DeleteClassroomModal
+        isOpen={isUserDeletingClassroom}
+        onClose={() => setIsUserDeletingClassroom(false)}
+        data={classroom!}
       />
       <Tooltip
         content="Adicionar novo catequizando a sala"
@@ -59,6 +74,7 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
         <Button
           isIconOnly
           isDisabled={!isClassroomSelected}
+          onPress={() => setIsUserEditingClassroom(true)}
           className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-orange-400"
         >
           <PencilSimple size={28} className="text-white" />
@@ -73,6 +89,7 @@ export function ToolBar({ isClassroomSelected }: ToolBarProps) {
           isIconOnly
           isDisabled={!isClassroomSelected}
           className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-red-600"
+          onPress={() => setIsUserDeletingClassroom(true)}
         >
           <Trash size={28} className="text-white" />
         </Button>
