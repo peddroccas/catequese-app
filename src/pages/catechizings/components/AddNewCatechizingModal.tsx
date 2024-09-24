@@ -23,6 +23,7 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
+import { classroom } from '@/Types'
 
 const addNewCatechizingFormSchema = z.object({
   name: z
@@ -68,11 +69,7 @@ export function AddNewCatechizingModal({
     catechizingReducer,
     catechizingInitialState,
   )
-  const [selectedClassroom, setSelectedClassroom] = useState<{
-    id: string
-    classroomName: string
-    startedAt: number
-  }>()
+  const [selectedClassroom, setSelectedClassroom] = useState<classroom>()
 
   useEffect(() => {
     setSelectedClassroom(
@@ -94,13 +91,7 @@ export function AddNewCatechizingModal({
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: CatechizingActionTypes.RESET })
-          setSelectedClassroom(
-            {} as {
-              id: string
-              classroomName: string
-              startedAt: number
-            },
-          )
+          setSelectedClassroom({} as classroom)
           reset()
           onClose()
         })
@@ -277,11 +268,8 @@ export function AddNewCatechizingModal({
                   errorMessage={String(errors.classroom?.message)}
                 >
                   {classrooms.map((classroom) => (
-                    <SelectItem
-                      key={classroom.id}
-                      value={classroom.classroomName}
-                    >
-                      {classroom.classroomName}
+                    <SelectItem key={classroom.id!} value={classroom.name}>
+                      {classroom.name}
                     </SelectItem>
                   ))}
                 </Select>
