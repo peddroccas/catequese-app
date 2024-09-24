@@ -78,7 +78,7 @@ export function EditClassroomModal({
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(classroomReducer, data)
   const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>(
-    data.catechists,
+    data.catechists!,
   )
   const [hasChangedCatechists, setHasChangedCatechists] =
     useState<boolean>(false)
@@ -94,7 +94,7 @@ export function EditClassroomModal({
         catechists: data.catechists,
       })
       dispatch({ type: ClassroomActionTypes.SET_ALL, payload: data })
-      setSelectedCatechists(data.catechists)
+      setSelectedCatechists(data.catechists!)
     }
   }, [data, isOpen, hasUserSubmittedForm, reset])
 
