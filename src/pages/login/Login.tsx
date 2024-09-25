@@ -3,7 +3,7 @@ import { AuthContext } from '@/contexts/AuthContext'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CircularProgress, Input } from '@nextui-org/react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -23,7 +23,13 @@ export function Login() {
     resolver: zodResolver(loginFormSchema),
   })
   const navigate = useNavigate()
-  const { login } = useContext(AuthContext)
+  const { user, isCheckingLocalStorage, login } = useAuth()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/classrooms')
+    }
+  }, [user, isCheckingLocalStorage, navigate])
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
