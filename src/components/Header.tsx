@@ -11,8 +11,10 @@ import catequeseLogo from '../assets/catequese-logo.svg'
 import { useState } from 'react'
 import { List } from '@phosphor-icons/react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '@/hooks/useAuth'
 
 export function Header() {
+  const { logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const menuItems = [
@@ -66,6 +68,7 @@ export function Header() {
         <NavbarItem className="hidden lg:flex">
           <Avatar
             classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
+            onClick={() => logout()}
           />
         </NavbarItem>
         <NavbarItem></NavbarItem>

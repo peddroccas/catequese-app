@@ -73,9 +73,9 @@ export class CatechistRepository {
       })
   }
 
-  static async getCatechist(catechistId: string) {
+  static async getCatechist(token: string): Promise<catechist> {
     return api
-      .get(`/catechists/${encodeURIComponent(catechistId)}`)
+      .get(`/profile`, { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => {
         return response.data
       })
@@ -85,7 +85,10 @@ export class CatechistRepository {
       })
   }
 
-  static async login(email: string, password: string): Promise<catechist> {
+  static async login(
+    email: string,
+    password: string,
+  ): Promise<{ token: string }> {
     const response = api
       .post(`/login`, { email, password })
       .then((response) => {

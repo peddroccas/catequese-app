@@ -18,14 +18,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<catechist | null>(null)
   const [isCheckingLocalStorage, setIsCheckingLocalStorage] =
     useState<boolean>(true)
-  console.log(user?.id)
 
   useEffect(() => {
     async function getCatechist() {
       setIsCheckingLocalStorage(true)
-      const userId = localStorage.getItem('auth')
-      if (userId) {
-        const catechist = await CatechistRepository.getCatechist(userId)
+      const token = localStorage.getItem('auth')
+      if (token) {
+        const catechist = await CatechistRepository.getCatechist(token)
         setUser(catechist)
       }
     }
@@ -33,11 +32,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   async function login(email: string, password: string) {
-    const response = await CatechistRepository.login(email, password)
-    if (response) {
-      setUser(response)
-      localStorage.setItem('auth', response.id!)
-      return response
+    const { token } = await CatechistRepository.login(email, password)
+    if (token) {
+      localStorage.setItem('auth', token)
+      const catechist = await CatechistRepository.getCatechist(token)
+      setUser(catechist)
+      return catechist
     }
   }
 
