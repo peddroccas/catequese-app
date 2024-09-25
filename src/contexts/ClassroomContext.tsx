@@ -2,7 +2,14 @@ import { CatechistRepository } from '@/services/repositories/catechistRepository
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
 import { catechist, catechizing, classroom } from '@/Types'
-import { ReactNode, createContext, useEffect, useState } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import { AuthContext } from './AuthContext'
 
 interface ClassroomType {
   hasClassroomUpdate: boolean
@@ -25,6 +32,7 @@ interface ClassroomProviderProps {
 }
 
 export function ClassroomProvider({ children }: ClassroomProviderProps) {
+  const { user } = useContext(AuthContext)
   const [hasClassroomUpdate, setHasClassroomUpdate] = useState<boolean>(true)
   const [hasCatechistUpdate, setHasCatechistUpdate] = useState<boolean>(true)
   const [hasCatechizingUpdate, setHasCatechizingUpdate] =
@@ -42,9 +50,10 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
         setClassrooms(classroomNamesResponse)
       }
     }
-
-    getClassroomNames().finally(throwClassroomHasAlreadyUpdated)
-  }, [hasClassroomUpdate])
+    if (user) {
+      getClassroomNames().finally(throwClassroomHasAlreadyUpdated)
+    }
+  }, [hasClassroomUpdate, user])
 
   // Consulta todos os catequistas
   useEffect(() => {
@@ -54,11 +63,13 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
         setCatechists(catechists)
       }
     }
-    getCatechists().finally(() => {
-      throwCatechistHasAlreadyUpdated()
-      throwClassroomHasAlreadyUpdated()
-    })
-  }, [hasCatechistUpdate, hasClassroomUpdate])
+    if (user) {
+      getCatechists().finally(() => {
+        throwCatechistHasAlreadyUpdated()
+        throwClassroomHasAlreadyUpdated()
+      })
+    }
+  }, [hasCatechistUpdate, hasClassroomUpdate, user])
 
   // Consulta todos os catequizandos
   useEffect(() => {
@@ -69,11 +80,13 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
       }
     }
 
-    getCatechizings().finally(() => {
-      throwCatechizingHasAlreadyUpdated()
-      throwClassroomHasAlreadyUpdated()
-    })
-  }, [hasCatechizingUpdate, hasClassroomUpdate])
+    if (user) {
+      getCatechizings().finally(() => {
+        throwCatechizingHasAlreadyUpdated()
+        throwClassroomHasAlreadyUpdated()
+      })
+    }
+  }, [hasCatechizingUpdate, hasClassroomUpdate, user])
 
   function throwClassroomUpdate() {
     setHasClassroomUpdate(true)

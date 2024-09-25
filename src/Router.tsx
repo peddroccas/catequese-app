@@ -5,15 +5,13 @@ import { Catechizings } from './pages/catechizings/Catechizings'
 import { Catechists } from './pages/catechists/Catechists'
 import { Rites } from './pages/rites/Rites'
 import { Classrooms } from './pages/classrooms/Classrooms'
-import { SignIn } from './pages/signIn/SignIn'
-import { SignUp } from './pages/signUp/SignUp'
+import { Login } from './pages/login/Login'
 
 export function Router() {
   return (
     <Routes>
-      <Route path="" element={<Navigate to={'/signUp'} />} />
-      <Route path="/signIn" element={<SignIn />} />
-      <Route path="/signUp" element={<SignUp />} />
+      <Route path="" element={<Navigate to={'/login'} />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayout />}>
         <Route path="payment" element={<Payment />} />
         <Route path="catechizing" element={<Catechizings />} />

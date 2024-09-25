@@ -85,9 +85,9 @@ export class CatechistRepository {
       })
   }
 
-  static async signIn(email: string, password: string): Promise<catechist> {
+  static async login(email: string, password: string): Promise<catechist> {
     const response = api
-      .post(`/signIn`, { email, password })
+      .post(`/login`, { email, password })
       .then((response) => {
         return response.data
       })
@@ -96,17 +96,5 @@ export class CatechistRepository {
         console.error('Erro na requisição:', error)
       })
     return response
-  }
-
-  static async signUp(email: string, password: string) {
-    return api
-      .patch(`/signUp`, { email, password })
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
   }
 }

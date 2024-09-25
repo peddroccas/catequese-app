@@ -5,14 +5,18 @@ import { useContext, useEffect, useState } from 'react'
 import { AddNewCatechizingModal } from './components/AddNewCatechizingModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
 import { useAuth } from '@/hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 export function Catechizings() {
   const { catechizings } = useContext(ClassroomContext)
-  const auth = useAuth()
+  const navigate = useNavigate()
+  const { user, isCheckingLocalStorage } = useAuth()
 
   useEffect(() => {
-    auth()
-  })
+    if (!user && !isCheckingLocalStorage) {
+      navigate('/login')
+    }
+  }, [user, isCheckingLocalStorage, navigate])
 
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)

@@ -1,48 +1,47 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
-import { CatechistRepository } from '@/services/repositories/catechistRepository'
+import { AuthContext } from '@/contexts/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CircularProgress, Input } from '@nextui-org/react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-const signUpFormSchema = z.object({
+const loginFormSchema = z.object({
   email: z.string({ message: 'Campo obrigatório' }).email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
+  password: z.string().min(6).optional(),
 })
 
-export function SignUp() {
+export function Login() {
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(signUpFormSchema),
+    resolver: zodResolver(loginFormSchema),
   })
   const navigate = useNavigate()
+  const { login } = useContext(AuthContext)
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
 
-  async function handleSignUp() {
+  async function handlelogin() {
     setHasUserSubmittedForm(true)
     try {
-      const user = await CatechistRepository.signUp(email, password).then(
-        (response) => {
-          if (response) {
-            navigate('/signIn')
-          } else {
-            throw new Error()
-          }
-        },
-      )
+      const user = await login(email, password)
+      if (user) {
+        navigate('/classrooms')
+      } else {
+        throw new Error()
+      }
     } catch (error) {
-      alert('Email não cadastrado, contate Pedro')
       setHasUserSubmittedForm(false)
+      alert('Login inválido')
       reset({ email: '', password: '' })
     }
   }
@@ -54,10 +53,10 @@ export function SignUp() {
       </header>
       <main className="mx-10 mt-4 flex flex-col items-center gap-8 pb-8 pt-4">
         <form
-          onSubmit={handleSubmit(handleSignUp)}
+          onSubmit={handleSubmit(handlelogin)}
           className="flex w-11/12 flex-col gap-4 rounded-xl bg-bunker-900 p-4 text-bunker-950 md:w-6/12 lg:w-5/12 2xl:w-3/12"
         >
-          <h1 className="text-center text-2xl text-white">Cadastro</h1>
+          <h1 className="text-center text-2xl text-white">Login</h1>
           <Controller
             name="email"
             control={control}

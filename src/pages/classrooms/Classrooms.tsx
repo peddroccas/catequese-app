@@ -7,13 +7,17 @@ import { useContext, useEffect, useState } from 'react'
 import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
 import { classroomInitialState } from '@/reducer/classroom/classroomReducer'
 import { useAuth } from '@/hooks/useAuth'
-import { AuthContext } from '@/contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export function Classrooms() {
-  const { user } = useContext(AuthContext)
-  const auth = useAuth()
-  console.log(user.id)
-  auth()
+  const navigate = useNavigate()
+  const { user, isCheckingLocalStorage } = useAuth()
+
+  useEffect(() => {
+    if (!user && !isCheckingLocalStorage) {
+      navigate('/login')
+    }
+  }, [user, isCheckingLocalStorage, navigate])
 
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
     useContext(ClassroomContext)

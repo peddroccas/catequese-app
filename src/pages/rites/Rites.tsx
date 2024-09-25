@@ -1,12 +1,17 @@
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export function Rites() {
-  const auth = useAuth()
+  const navigate = useNavigate()
+  const { user, isCheckingLocalStorage } = useAuth()
 
   useEffect(() => {
-    auth()
-  })
+    if (!user && !isCheckingLocalStorage) {
+      navigate('/login')
+    }
+  }, [user, isCheckingLocalStorage, navigate])
+
   return (
     <div>
       <p>Ritos</p>
