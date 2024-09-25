@@ -22,6 +22,11 @@ export function Catechists() {
   const { user, isCheckingLocalStorage } = useAuth()
 
   useEffect(() => {
+    if (user) {
+      if (user.role === 'MEMBER') {
+        navigate('/classroom')
+      }
+    }
     if (!user && !isCheckingLocalStorage) {
       navigate('/login')
     }
