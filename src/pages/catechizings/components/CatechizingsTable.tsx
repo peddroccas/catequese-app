@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react'
 import { Check, X } from '@phosphor-icons/react'
 import ToolBar from './ToolBar'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 
 interface CatechizingsTableProps {
@@ -22,17 +22,65 @@ export function CatechizingsTable({
   hasPageClassroomInfo,
 }: CatechizingsTableProps) {
   const { classrooms } = useContext(ClassroomContext)
+
+  const [sortDescriptor, setSortDescriptor] = useState({
+    column: 'BATISMO',
+    direction: 'ascending' as 'ascending' | 'descending',
+  })
+
+  const handleSort = (column: string) => {
+    setSortDescriptor((prev) => {
+      const direction =
+        prev.column === column && prev.direction === 'ascending'
+          ? 'descending'
+          : 'ascending'
+      return { column, direction }
+    })
+  }
+
+  const sortedCatechizings = [...catechizings].sort((a, b) => {
+    const column = sortDescriptor.column
+    const direction = sortDescriptor.direction === 'ascending' ? 1 : -1
+
+    switch (column) {
+      case 'BATISMO':
+        return (
+          (a.hasReceivedBaptism === b.hasReceivedBaptism
+            ? 0
+            : a.hasReceivedBaptism
+              ? -1
+              : 1) * direction
+        )
+      case 'NOME':
+        return a.name.localeCompare(b.name) * direction
+      case 'CARNÊ':
+        return (
+          (a.payments![0]?.toBePaid ?? 0) -
+          (b.payments![0]?.toBePaid ?? 0) * direction
+        )
+      default:
+        return 0
+    }
+  })
+
   return (
     <Table
       aria-label="Catequizandos"
       classNames={{
         wrapper: 'bg-bunker-900',
-        th: 'bg-bunker-300 text-bunker-950',
+        th: 'bg-bunker-300 !text-bunker-950',
         base: 'rounded-xl shadow shadow-black',
+
+        sortIcon: 'text-bunker-950',
       }}
     >
       <TableHeader>
-        <TableColumn align="start" className="flex-1">
+        <TableColumn
+          onClick={() => handleSort('NOME')}
+          align="start"
+          className="flex-1"
+          allowsSorting
+        >
           NOME
         </TableColumn>
         <TableColumn align="center" hidden={hasPageClassroomInfo}>
@@ -41,15 +89,27 @@ export function CatechizingsTable({
         <TableColumn align="center" hidden={hasPageClassroomInfo}>
           CATEQUISTA
         </TableColumn>
-        <TableColumn align="center">CARNÊ</TableColumn>
-        <TableColumn align="center">BATISMO</TableColumn>
+        <TableColumn
+          onClick={() => handleSort('CARNÊ')}
+          align="center"
+          allowsSorting
+        >
+          CARNÊ
+        </TableColumn>
+        <TableColumn
+          onClick={() => handleSort('BATISMO')}
+          align="center"
+          allowsSorting
+        >
+          BATISMO
+        </TableColumn>
         <TableColumn align="center">1° EUCARISTIA</TableColumn>
         <TableColumn align="center" className="w-fit">
           AÇÕES
         </TableColumn>
       </TableHeader>
       <TableBody>
-        {catechizings.map((catechizing) => {
+        {sortedCatechizings.map((catechizing) => {
           const classroom = classrooms.find(
             (classroom) => classroom.id === catechizing.classroomId,
           )
