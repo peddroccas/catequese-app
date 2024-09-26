@@ -1,11 +1,19 @@
 import { AddNewCatechizingModal } from '@/pages/catechizings/components/AddNewCatechizingModal'
 import { Button, Tooltip } from '@nextui-org/react'
-import { PencilSimple, Plus, Trash, UserPlus } from '@phosphor-icons/react'
+import {
+  DownloadSimple,
+  PencilSimple,
+  Plus,
+  Trash,
+  UserPlus,
+} from '@phosphor-icons/react'
 import { useState } from 'react'
 import { AddNewClassroomModal } from './AddNewClassroomModal'
 import { EditClassroomModal } from './EditClassroomModal'
 import { classroom } from '@/Types'
 import { DeleteClassroomModal } from './DeleteClassroomModal'
+import { downloadCallList } from '@/utils/downloadCallList'
+import DownloadButton from '@/components/DownloadButton'
 
 interface ToolBarProps {
   isClassroomSelected: boolean
@@ -43,6 +51,7 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
         onClose={() => setIsUserDeletingClassroom(false)}
         data={classroom!}
       />
+      <DownloadButton classroom={classroom!} />
       <Tooltip
         content="Adicionar novo catequizando a sala"
         className="text-bunker-950"
