@@ -24,7 +24,7 @@ export function CatechizingsTable({
   const { classrooms } = useContext(ClassroomContext)
 
   const [sortDescriptor, setSortDescriptor] = useState({
-    column: 'BATISMO',
+    column: 'NOME',
     direction: 'ascending' as 'ascending' | 'descending',
   })
 
