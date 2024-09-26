@@ -1,10 +1,16 @@
 import { catechizing } from '@/Types'
 import { Tooltip } from '@nextui-org/react'
-import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
+import {
+  ArrowsLeftRight,
+  Info,
+  PencilSimple,
+  Trash,
+} from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechizingModal } from './EditCatechizingModal'
 import { TransferModal } from '@/components/TransferModal'
 import { DeleteCatechizingModal } from './DeleteCatechizingModal'
+import { CatechizingInfoModal } from './CatechizingInfoModal'
 
 interface ToolBarProps {
   catechizing: catechizing
@@ -16,8 +22,15 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
     useState<boolean>(false)
   const [isUserTransferingCatechizing, setIsUserTransferingatechizing] =
     useState<boolean>(false)
+  const [isUserSeeingCatechizingInfo, setIsUserSeeingCatechizingInfo] =
+    useState<boolean>(false)
   return (
     <div className="flex items-center justify-center gap-2">
+      <CatechizingInfoModal
+        isOpen={isUserSeeingCatechizingInfo}
+        onClose={() => setIsUserSeeingCatechizingInfo(false)}
+        data={catechizing}
+      />
       <DeleteCatechizingModal
         data={catechizing}
         isOpen={isUserDeletingCatechizing}
@@ -56,6 +69,11 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         size={20}
         className="cursor-pointer duration-300 hover:text-red-500"
         onClick={() => setIsUserDeletingCatechizing(true)}
+      />
+      <Info
+        size={20}
+        className="cursor-pointer duration-300 hover:opacity-60"
+        onClick={() => setIsUserSeeingCatechizingInfo(true)}
       />
     </div>
   )
