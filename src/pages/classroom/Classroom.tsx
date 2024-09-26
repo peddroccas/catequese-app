@@ -17,30 +17,53 @@ export default function Classroom() {
   const { logout, user, isCheckingLocalStorage } = useAuth()
 
   useEffect(() => {
-    if (!user || !isCheckingLocalStorage) {
+    if (!user && !isCheckingLocalStorage) {
       navigate('/login')
     }
   }, [user, isCheckingLocalStorage, navigate])
 
-  if (user) {
+  if (user && !classroomId) {
     const { classroomId } = user
-    setClassroomId(classroomId!)
+
+    if (classroomId) {
+      setClassroomId(classroomId!)
+    }
   }
 
   useEffect(() => {
     async function getClassroom() {
-      const classroom = await ClassroomRepository.getClassroom(classroomId!)
-      if (classroom) {
-        setClassroom(classroom)
+      if (classroomId) {
+        const classroom = await ClassroomRepository.getClassroom(classroomId)
+        if (classroom) {
+          setClassroom(classroom)
+        }
       }
     }
     getClassroom().finally(throwClassroomHasAlreadyUpdated)
   }, [
     classrooms,
+    user,
     hasClassroomUpdate,
     throwClassroomHasAlreadyUpdated,
     classroomId,
   ])
+
+  if (!classroomId) {
+    return (
+      <div className="flex min-h-screen flex-col bg-bunker-950">
+        <header className="flex h-20 items-center justify-between bg-bunker-900 p-4 duration-300">
+          <img className="w-14" src={catequeseLogo} alt="" />
+          <Avatar
+            classNames={{ base: 'bg-bunker-300 mr-4', icon: 'text-bunker-800' }}
+            onClick={() => logout()}
+          />
+        </header>
+        <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
+          <p className="text-2xl">Turma não encontrada!</p>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-bunker-950">
@@ -51,8 +74,8 @@ export default function Classroom() {
           onClick={() => logout()}
         />
       </header>
-      <main>
-        {classroom.id && (
+      <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
+        {classroom.id && classrooms[0] && (
           <CatechizingsTable
             catechizings={classroom.catechizings!}
             hasPageClassroomInfo={true}
