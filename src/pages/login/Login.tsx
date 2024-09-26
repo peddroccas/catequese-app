@@ -1,9 +1,8 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
-import { AuthContext } from '@/contexts/AuthContext'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CircularProgress, Input } from '@nextui-org/react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -40,14 +39,18 @@ export function Login() {
     setHasUserSubmittedForm(true)
     try {
       const user = await login(email, password)
-      if (user) {
-        navigate('/classrooms')
+      if (user.role === 'MEMBER') {
+        navigate('/classroom')
       } else {
-        throw new Error()
+        if (user.role === 'COORDINATOR') {
+          navigate('/classrooms')
+        } else {
+          throw new Error()
+        }
       }
     } catch (error) {
       setHasUserSubmittedForm(false)
-      alert('Login inválido')
+      alert('Login inválido' + error)
       reset({ email: '', password: '' })
     }
   }

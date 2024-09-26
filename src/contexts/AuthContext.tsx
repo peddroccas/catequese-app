@@ -4,7 +4,7 @@ import { ReactNode, createContext, useEffect, useState } from 'react'
 
 export interface AuthType {
   user: catechist | null
-  login: (email: string, password: string) => Promise<catechist | void>
+  login: (email: string, password: string) => Promise<catechist>
   logout: () => void
   isCheckingLocalStorage: boolean
 }
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     getCatechist().finally(() => setIsCheckingLocalStorage(false))
   }, [])
 
-  async function login(email: string, password: string) {
+  async function login(email: string, password: string): Promise<catechist> {
     const { token } = await CatechistRepository.login(email, password)
     if (token) {
       localStorage.setItem('auth', token)
@@ -39,6 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(catechist)
       return catechist
     }
+    return {} as catechist
   }
 
   async function logout() {

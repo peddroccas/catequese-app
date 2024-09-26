@@ -6,12 +6,14 @@ import { Catechists } from './pages/catechists/Catechists'
 import { Rites } from './pages/rites/Rites'
 import { Classrooms } from './pages/classrooms/Classrooms'
 import { Login } from './pages/login/Login'
+import Classroom from './pages/classroom/Classroom'
 
 export function Router() {
   return (
     <Routes>
       <Route path="" element={<Navigate to={'/login'} />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/classroom" element={<Classroom />} />
       <Route path="/" element={<DefaultLayout />}>
         <Route path="payment" element={<Payment />} />
         <Route path="catechizing" element={<Catechizings />} />

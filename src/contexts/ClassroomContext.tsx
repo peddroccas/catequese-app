@@ -44,21 +44,28 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   // Consulta nome das turmas
   useEffect(() => {
     async function getClassroomNames() {
-      if (hasClassroomUpdate) {
+      if (hasClassroomUpdate || user) {
         const classroomNamesResponse =
           await ClassroomRepository.getClassroomNames()
         setClassrooms(classroomNamesResponse)
+        return true
       }
+      return false
     }
+
     if (user) {
-      getClassroomNames().finally(throwClassroomHasAlreadyUpdated)
+      getClassroomNames().then((response) => {
+        if (response) {
+          throwClassroomHasAlreadyUpdated()
+        }
+      })
     }
   }, [hasClassroomUpdate, user])
 
   // Consulta todos os catequistas
   useEffect(() => {
     async function getCatechists() {
-      if (hasCatechistUpdate && hasClassroomUpdate) {
+      if ((hasCatechistUpdate && hasClassroomUpdate) || user) {
         const catechists = await CatechistRepository.getAllCatechists()
         setCatechists(catechists)
       }
@@ -74,7 +81,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   // Consulta todos os catequizandos
   useEffect(() => {
     async function getCatechizings() {
-      if (hasCatechizingUpdate && hasClassroomUpdate) {
+      if ((hasCatechizingUpdate && hasClassroomUpdate) || user) {
         const catechizings = await CatechizingRepository.getAllCatechizings()
         setCatechizings(catechizings)
       }
