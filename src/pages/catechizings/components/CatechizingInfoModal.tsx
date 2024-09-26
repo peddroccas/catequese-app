@@ -40,6 +40,7 @@ export function CatechizingInfoModal({
 
             <DatePicker
               label="Data"
+              isReadOnly
               value={parseAbsoluteToLocal(data.birthday!)}
               dateInputClassNames={{
                 inputWrapper: 'border hover:border-2 focus:border-2',
