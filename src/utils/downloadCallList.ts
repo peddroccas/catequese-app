@@ -32,10 +32,7 @@ export async function downloadCallList({
 
     // Verifica se já existe algum texto na célula e adiciona o nome do catequista ao final
 
-    mergedCell.value = `ARQUIDIOCESE DE BRASÍLIA
-                   PARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF 
-FREQUÊNCIA ${classroom.segment?.toUpperCase()} (1º SEMESTRE - 2025)
-CATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' e ')}` // Adiciona o nome do catequista ao texto existente
+    mergedCell.value = `ARQUIDIOCESE DE BRASÍLIA\nPARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF\nFREQUÊNCIA ${classroom.segment?.toUpperCase()} (1º SEMESTRE - 2025)\nCATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' E ')}` // Adiciona o nome do catequista ao texto existente
 
     mergedCell.alignment = { horizontal: 'center', vertical: 'middle' } // Centraliza o texto na célula mesclada
 
