@@ -1,14 +1,16 @@
-import { catechizing } from '@/Types'
+import { classroom } from '@/Types'
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 
 interface DownloadCallListProps {
-  catechizings: catechizing[]
+  classroom: classroom
 }
 
 export async function downloadCallList({
-  catechizings,
+  classroom, // Captura o nome do catequista
 }: DownloadCallListProps) {
+  const { catechists, catechizings } = classroom
+
   if (!catechizings || catechizings.length === 0) {
     console.warn('A lista de catequizandos está vazia.')
     return // Adiciona aviso se a lista estiver vazia
@@ -26,6 +28,18 @@ export async function downloadCallList({
     )
 
     const worksheet = workbook.worksheets[0]
+
+    // Mesclar as células da primeira linha das colunas A à R
+    const mergedCell = worksheet.getCell('A1')
+
+    // Verifica se já existe algum texto na célula e adiciona o nome do catequista ao final
+
+    mergedCell.value = `ARQUIDIOCESE DE BRASÍLIA
+                   PARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF 
+FREQUÊNCIA ${classroom.segment?.toUpperCase()} (1º SEMESTRE - 2025)
+CATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' e ')}` // Adiciona o nome do catequista ao texto existente
+
+    mergedCell.alignment = { horizontal: 'center', vertical: 'middle' } // Centraliza o texto na célula mesclada
 
     // Preencher os dados
     catechizings.forEach((catechizing, index) => {

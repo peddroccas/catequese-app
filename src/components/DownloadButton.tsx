@@ -12,9 +12,7 @@ export default function DownloadButton({ classroom }: DownloadButtonProps) {
     <Button
       isDisabled={!classroom}
       isIconOnly
-      onPress={() =>
-        downloadCallList({ catechizings: classroom.catechizings! })
-      }
+      onPress={() => downloadCallList({ classroom })}
       className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
     >
       <DownloadSimple size={28} className="text-white" />
