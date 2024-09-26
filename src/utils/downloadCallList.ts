@@ -51,6 +51,26 @@ CATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpp
       worksheet.getCell(cellNameRef).value = catechizing.name // Preenche o nome
     })
 
+    const startRow = 4 // A primeira linha de dados
+    const endRow = startRow + catechizings.length - 1 // A última linha de dados
+
+    // Aplicar bordas somente nas linhas que têm dados
+    for (let row = startRow; row <= endRow; row++) {
+      const hasCatechizing = worksheet.getCell(row, 2)
+      for (let col = 1; col <= 18; col++) {
+        const cell = worksheet.getCell(row, col)
+
+        if (hasCatechizing) {
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+          }
+        }
+      }
+    }
+
     // Salvar o arquivo Excel com os catequizandos preenchidos
     const buffer = await workbook.xlsx.writeBuffer()
     const blob = new Blob([buffer], {
