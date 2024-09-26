@@ -89,6 +89,8 @@ export function CatechizingsTable({
         <TableColumn align="center" hidden={hasPageClassroomInfo}>
           CATEQUISTA
         </TableColumn>
+        <TableColumn align="center">RESPONSÁVEL</TableColumn>
+        <TableColumn align="center">TEL. RESPONSÁVEL</TableColumn>
         <TableColumn
           onClick={() => handleSort('CARNÊ')}
           align="center"
@@ -126,6 +128,8 @@ export function CatechizingsTable({
                   ?.map((catechist) => catechist.name.split(' ')[0])
                   .join(' e ')}
               </TableCell>
+              <TableCell>{catechizing.parents?.name}</TableCell>
+              <TableCell>{catechizing.parents?.phone}</TableCell>
               <TableCell>
                 <div className="flex justify-center text-red-500">
                   {catechizing.payments![0].toBePaid ? (
