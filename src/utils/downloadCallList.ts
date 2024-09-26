@@ -34,7 +34,11 @@ export async function downloadCallList({
 
     mergedCell.value = `ARQUIDIOCESE DE BRASÍLIA\nPARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF\nFREQUÊNCIA ${classroom.segment?.toUpperCase()} (1º SEMESTRE - 2025)\nCATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' E ')}` // Adiciona o nome do catequista ao texto existente
 
-    mergedCell.alignment = { horizontal: 'center', vertical: 'middle' } // Centraliza o texto na célula mesclada
+    mergedCell.alignment = {
+      horizontal: 'center',
+      vertical: 'middle',
+      wrapText: true,
+    } // Centraliza o texto na célula mesclada
 
     // Preencher os dados
     catechizings.forEach((catechizing, index) => {
