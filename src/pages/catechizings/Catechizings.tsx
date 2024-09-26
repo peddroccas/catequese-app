@@ -1,27 +1,12 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { Button, Tooltip } from '@nextui-org/react'
 import { UserPlus } from '@phosphor-icons/react'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { AddNewCatechizingModal } from './components/AddNewCatechizingModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
-import { useAuth } from '@/hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
 
 export function Catechizings() {
   const { catechizings } = useContext(ClassroomContext)
-  const navigate = useNavigate()
-  const { user, isCheckingLocalStorage } = useAuth()
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'MEMBER') {
-        navigate('/classroom')
-      }
-    }
-    if (!user && !isCheckingLocalStorage) {
-      navigate('/login')
-    }
-  }, [user, isCheckingLocalStorage, navigate])
 
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)

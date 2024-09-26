@@ -8,22 +8,45 @@ import {
   NavbarMenuItem,
 } from '@nextui-org/react'
 import catequeseLogo from '../assets/catequese-logo.svg'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { List } from '@phosphor-icons/react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 
 export function Header() {
-  const { logout } = useAuth()
+  const { logout, user, isCheckingLocalStorage } = useAuth()
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'MEMBER') {
+        const currentPath = window.location.pathname
+        if (currentPath !== '/classroom' && currentPath !== '/catechizing') {
+          navigate('/classroom') // Redireciona para a rota permitida
+        }
+      }
+    } else {
+      navigate('/login')
+    }
+    if (!user && !isCheckingLocalStorage) {
+      navigate('/login')
+    }
+  }, [user, isCheckingLocalStorage, navigate])
+
   const menuItems = [
-    { name: 'Turmas', link: '/classrooms' },
-    { name: 'Carnês', link: '/payment' },
-    { name: 'Catequizandos', link: '/catechizing' },
-    { name: 'Catequistas', link: '/catechist' },
-    { name: 'Ritos', link: '/rites' },
+    { permission: 'MEMBER', name: 'Turma', link: '/classroom' },
+    { permission: 'COORDINATOR', name: 'Turmas', link: '/classrooms' },
+    { permission: 'COORDINATOR', name: 'Carnês', link: '/payment' },
+    { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
+    { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
+    { permission: 'COORDINATOR', name: 'Ritos', link: '/rites' },
   ]
+
+  if (!user) {
+    return <></>
+  }
+
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -47,22 +70,25 @@ export function Header() {
       </NavbarContent>
 
       <NavbarContent className="hidden gap-8 sm:flex" justify="center">
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <NavLink
-              className={({ isActive }) =>
-                `flex transform items-center gap-2 p-2 transition-all duration-150 ${
-                  isActive
-                    ? 'scale-105 border-b-2 border-bunker-300 font-bold text-bunker-300'
-                    : 'text-bunker-100 hover:scale-105 hover:border-b-1 hover:border-bunker-300 hover:text-bunker-300'
-                }`
-              }
-              to={item.link}
-            >
-              {item.name}
-            </NavLink>
-          </NavbarMenuItem>
-        ))}
+        {menuItems.map(
+          (item, index) =>
+            (user!.role === item.permission || item.permission === 'ALL') && (
+              <NavbarMenuItem key={`${item}-${index}`}>
+                <NavLink
+                  className={({ isActive }) =>
+                    `flex transform items-center gap-2 p-2 transition-all duration-150 ${
+                      isActive
+                        ? 'scale-105 border-b-2 border-bunker-300 font-bold text-bunker-300'
+                        : 'text-bunker-100 hover:scale-105 hover:border-b-1 hover:border-bunker-300 hover:text-bunker-300'
+                    }`
+                  }
+                  to={item.link}
+                >
+                  {item.name}
+                </NavLink>
+              </NavbarMenuItem>
+            ),
+        )}
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">

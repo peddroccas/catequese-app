@@ -21,15 +21,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     async function getCatechist() {
-      setIsCheckingLocalStorage(true)
-      const token = localStorage.getItem('auth')
-      if (token) {
-        const catechist = await CatechistRepository.getCatechist(token)
-        setUser(catechist)
+      if (!user) {
+        setIsCheckingLocalStorage(true)
+        const token = localStorage.getItem('auth')
+        if (token) {
+          const catechist = await CatechistRepository.getCatechist(token)
+          setUser(catechist)
+        }
       }
     }
     getCatechist().finally(() => setIsCheckingLocalStorage(false))
-  }, [])
+  }, [user])
 
   async function login(email: string, password: string): Promise<catechist> {
     const { token } = await CatechistRepository.login(email, password)

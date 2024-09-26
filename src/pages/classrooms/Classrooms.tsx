@@ -6,24 +6,8 @@ import { classroom } from '@/Types'
 import { useContext, useEffect, useState } from 'react'
 import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
 import { classroomInitialState } from '@/reducer/classroom/classroomReducer'
-import { useAuth } from '@/hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
 
 export function Classrooms() {
-  const navigate = useNavigate()
-  const { user, isCheckingLocalStorage } = useAuth()
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'MEMBER') {
-        navigate('/classroom')
-      }
-    }
-    if (!user && !isCheckingLocalStorage) {
-      navigate('/login')
-    }
-  }, [user, isCheckingLocalStorage, navigate])
-
   const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
     useContext(ClassroomContext)
   const [classroom, setClassroom] = useState<classroom>(classroomInitialState)
