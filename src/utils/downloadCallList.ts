@@ -22,9 +22,7 @@ export async function downloadCallList({
 
     // Carregar o template XLSX
     await workbook.xlsx.load(
-      await fetch('src/templates/frequency.xlsx').then((res) =>
-        res.arrayBuffer(),
-      ),
+      await fetch('/templates/frequency.xlsx').then((res) => res.arrayBuffer()),
     )
 
     const worksheet = workbook.worksheets[0]
