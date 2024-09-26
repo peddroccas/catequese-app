@@ -51,7 +51,20 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
         onClose={() => setIsUserDeletingClassroom(false)}
         data={classroom!}
       />
-      <DownloadButton classroom={classroom!} />
+      <Tooltip
+        content="Baixar lista de chamada"
+        className="text-bunker-950"
+        closeDelay={0}
+      >
+        <Button
+          isDisabled={!classroom?.id}
+          isIconOnly
+          onPress={() => downloadCallList({ classroom: classroom! })}
+          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
+        >
+          <DownloadSimple size={28} className="text-white" />
+        </Button>
+      </Tooltip>
       <Tooltip
         content="Adicionar novo catequizando a sala"
         className="text-bunker-950"
