@@ -13,9 +13,9 @@ import {
 import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
-import { CatechizingRepository } from '../../../services/repositories/catechizingRepository'
+import { CatechizingRepository } from '../../../../services/repositories/catechizingRepository'
 import { useContext, useState } from 'react'
-import { InstallmentContext } from '../../../contexts/InstallmentContext'
+import { InstallmentContext } from '../../../../contexts/InstallmentContext'
 
 interface NewInstallmentModalProps {
   catechizing: string
