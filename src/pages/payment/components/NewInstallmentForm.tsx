@@ -7,7 +7,7 @@ import { ClassroomRepository } from '@/services/repositories/classroomRepository
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { Plus } from '@phosphor-icons/react'
 import { Installment } from './Installment'
-import NewInstallmentModal from './NewInstallmentModal'
+import NewInstallmentModal from './modals/NewInstallmentModal'
 
 export function NewInstallmentForm() {
   const { throwInstallmentHasAlreadyUpdated, hasInstallmentUpdate } =
