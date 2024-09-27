@@ -8,10 +8,10 @@ import {
   UserPlus,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { AddNewClassroomModal } from './AddNewClassroomModal'
-import { EditClassroomModal } from './EditClassroomModal'
+import { AddNewClassroomModal } from './modals/AddNewClassroomModal'
+import { EditClassroomModal } from './modals/EditClassroomModal'
 import { classroom } from '@/Types'
-import { DeleteClassroomModal } from './DeleteClassroomModal'
+import { DeleteClassroomModal } from './modals/DeleteClassroomModal'
 import { downloadCallList } from '@/utils/downloadCallList'
 import DownloadButton from '@/components/DownloadButton'
 
