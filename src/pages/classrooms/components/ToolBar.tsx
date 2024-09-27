@@ -1,4 +1,4 @@
-import { AddNewCatechizingModal } from '@/pages/catechizings/components/AddNewCatechizingModal'
+import { AddNewCatechizingModal } from '@/pages/catechizings/components/modals/AddNewCatechizingModal'
 import { Button, Tooltip } from '@nextui-org/react'
 import {
   DownloadSimple,

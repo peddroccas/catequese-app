@@ -11,7 +11,7 @@ import {
 } from '@nextui-org/react'
 import { UserPlus } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
-import { AddNewCatechistModal } from './components/AddNewCatechistModal'
+import { AddNewCatechistModal } from './components/modals/AddNewCatechistModal'
 import ToolBar from './components/ToolBar'
 
 export function Catechists() {

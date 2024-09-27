@@ -7,10 +7,10 @@ import {
   Trash,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { EditCatechizingModal } from './EditCatechizingModal'
+import { EditCatechizingModal } from './modals/EditCatechizingModal'
 import { TransferModal } from '@/components/TransferModal'
-import { DeleteCatechizingModal } from './DeleteCatechizingModal'
-import { CatechizingInfoModal } from './CatechizingInfoModal'
+import { DeleteCatechizingModal } from './modals/DeleteCatechizingModal'
+import { CatechizingInfoModal } from './modals/CatechizingInfoModal'
 import { useAuth } from '@/hooks/useAuth'
 
 interface ToolBarProps {

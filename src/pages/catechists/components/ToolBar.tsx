@@ -2,8 +2,8 @@ import { catechist } from '@/Types'
 import { Tooltip } from '@nextui-org/react'
 import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { EditCatechistModal } from './EditCatechistModal'
-import { DeleteCatechistModal } from './DeleteCatechistModal'
+import { EditCatechistModal } from './modals/EditCatechistModal'
+import { DeleteCatechistModal } from './modals/DeleteCatechistModal'
 import { TransferModal } from '@/components/TransferModal'
 
 interface ToolBarProps {

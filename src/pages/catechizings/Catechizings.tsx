@@ -2,7 +2,7 @@ import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { Button, Input, Tooltip } from '@nextui-org/react'
 import { MagnifyingGlass, UserPlus } from '@phosphor-icons/react'
 import { useContext, useEffect, useState } from 'react'
-import { AddNewCatechizingModal } from './components/AddNewCatechizingModal'
+import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
 import { catechizing } from '@/Types'
 
