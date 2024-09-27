@@ -24,6 +24,11 @@ import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { classroom } from '@/Types'
+import {
+  parentInitialState,
+  parentReducer,
+} from '@/reducer/parent/parentReducer'
+import { ParentActionTypes } from '@/reducer/parent/ParentActionTypes'
 
 const addNewCatechizingFormSchema = z.object({
   name: z
@@ -43,6 +48,10 @@ const addNewCatechizingFormSchema = z.object({
       return false
     }
   }, 'Campo obrigatório'),
+  responsibleName: z
+    .string({ message: 'Insira um valor válido' })
+    .min(1, 'Campo obrigatoŕio'),
+  responsiblePhone: z.string({ message: 'Insira um valor válido' }),
 })
 
 interface AddNewCatechizingFormProps {
@@ -69,6 +78,7 @@ export function AddNewCatechizingModal({
     catechizingReducer,
     catechizingInitialState,
   )
+  const [parent, parentDispatch] = useReducer(parentReducer, parentInitialState)
   const [selectedClassroom, setSelectedClassroom] = useState<classroom>()
 
   useEffect(() => {
@@ -87,7 +97,10 @@ export function AddNewCatechizingModal({
   async function handleSubmitNewCatechizingForm() {
     setHasUserSubmittedForm(true)
     try {
-      await CatechizingRepository.createNewCatechizing(state)
+      await CatechizingRepository.createNewCatechizing({
+        ...state,
+        parents: parent,
+      })
         .finally(() => {
           setHasUserSubmittedForm(false)
           dispatch({ type: CatechizingActionTypes.RESET })
@@ -105,7 +118,7 @@ export function AddNewCatechizingModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      placement="center"
+      placement="top"
       className="flex w-9/12 flex-col rounded-xl bg-bunker-900 py-4 md:w-5/12 lg:w-3/12 2xl:w-3/12"
     >
       <ModalContent>
@@ -176,6 +189,59 @@ export function AddNewCatechizingModal({
                 dispatch({
                   type: CatechizingActionTypes.SET_ADDRESS,
                   payload: { address: e.target.value },
+                })
+              }
+            />
+            <Controller
+              name="responsibleName"
+              control={control}
+              rules={{
+                value: parent?.name,
+                required: true,
+                onChange: (e) =>
+                  parentDispatch({
+                    type: ParentActionTypes.SET_NAME,
+                    payload: { name: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Nome do responsável"
+                  {...field}
+                  isInvalid={Boolean(errors.responsibleName)}
+                  errorMessage={String(errors.responsibleName?.message)}
+                />
+              )}
+            />
+            <Controller
+              name="responsiblePhone"
+              control={control}
+              rules={{
+                value: parent?.phone,
+                required: true,
+                onChange: (e) =>
+                  parentDispatch({
+                    type: ParentActionTypes.SET_PHONE,
+                    payload: { phone: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Telefone do responsável"
+                  {...field}
+                  isInvalid={Boolean(errors.responsiblePhone)}
+                  errorMessage={String(errors.responsiblePhone?.message)}
+                />
+              )}
+            />
+
+            <Input
+              label="Parentesco"
+              value={parent.kinship}
+              onChange={(e) =>
+                parentDispatch({
+                  type: ParentActionTypes.SET_KINSHIP,
+                  payload: { kinship: e.target.value },
                 })
               }
             />

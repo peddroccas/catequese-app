@@ -116,7 +116,6 @@ export function CatechizingsTable({
             (classroom) => classroom.id === catechizing.classroomId,
           )
           const { catechists } = classroom!
-
           return (
             <TableRow key={catechizing.id}>
               <TableCell>{catechizing.name}</TableCell>
@@ -128,8 +127,8 @@ export function CatechizingsTable({
                   ?.map((catechist) => catechist.name.split(' ')[0])
                   .join(' e ')}
               </TableCell>
-              <TableCell>{catechizing.parents?.name}</TableCell>
-              <TableCell>{catechizing.parents?.phone}</TableCell>
+              <TableCell>{catechizing.parents!.name}</TableCell>
+              <TableCell>{catechizing.parents!.phone}</TableCell>
               <TableCell>
                 <div className="flex justify-center text-red-500">
                   {catechizing.payments![0].toBePaid ? (

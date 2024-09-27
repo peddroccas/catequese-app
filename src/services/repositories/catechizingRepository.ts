@@ -1,4 +1,3 @@
-import { getLocalTimeZone } from '@internationalized/date'
 import { catechizing, payment } from '../../Types'
 import { api } from '../api'
 
@@ -46,10 +45,7 @@ export class CatechizingRepository {
 
   static async createNewCatechizing(data: catechizing) {
     return api
-      .post('/catechizings/new', {
-        ...data,
-        parents: { name: '', phone: '', kinship: '' },
-      })
+      .post('/catechizings/new', data)
       .then((response) => {
         return response.data
       })
