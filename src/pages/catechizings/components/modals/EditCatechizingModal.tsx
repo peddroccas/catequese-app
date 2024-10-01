@@ -20,6 +20,11 @@ import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { catechizing } from '@/Types'
 import { parseAbsoluteToLocal } from '@internationalized/date'
+import {
+  parentReducer,
+  parentInitialState,
+} from '@/reducer/parent/parentReducer'
+import { ParentActionTypes } from '@/reducer/parent/ParentActionTypes'
 
 const EditCatechizingFormSchema = z.object({
   name: z
@@ -56,6 +61,7 @@ export function EditCatechizingModal({
   const { throwCatechizingUpdate, throwClassroomUpdate } =
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechizingReducer, data)
+  const [parent, parentDispatch] = useReducer(parentReducer, data.parents!)
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
@@ -63,7 +69,10 @@ export function EditCatechizingModal({
   async function handleSubmitEditCatechizingForm() {
     setHasUserSubmittedForm(true)
     try {
-      await CatechizingRepository.updateCatechizing(state)
+      await CatechizingRepository.updateCatechizing({
+        ...state,
+        parents: parent,
+      })
         .then(() => {
           throwCatechizingUpdate()
           throwClassroomUpdate()
@@ -154,6 +163,61 @@ export function EditCatechizingModal({
                 dispatch({
                   type: CatechizingActionTypes.SET_ADDRESS,
                   payload: { address: e.target.value },
+                })
+              }
+            />
+            <Controller
+              name="responsibleName"
+              control={control}
+              defaultValue={parent.name}
+              rules={{
+                value: parent?.name,
+                required: true,
+                onChange: (e) =>
+                  parentDispatch({
+                    type: ParentActionTypes.SET_NAME,
+                    payload: { name: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Nome do responsável"
+                  {...field}
+                  isInvalid={Boolean(errors.responsibleName)}
+                  errorMessage={String(errors.responsibleName?.message)}
+                />
+              )}
+            />
+            <Controller
+              name="responsiblePhone"
+              control={control}
+              defaultValue={parent.phone}
+              rules={{
+                value: parent?.phone,
+                required: true,
+                onChange: (e) =>
+                  parentDispatch({
+                    type: ParentActionTypes.SET_PHONE,
+                    payload: { phone: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Telefone do responsável"
+                  {...field}
+                  isInvalid={Boolean(errors.responsiblePhone)}
+                  errorMessage={String(errors.responsiblePhone?.message)}
+                />
+              )}
+            />
+
+            <Input
+              label="Parentesco"
+              value={parent.kinship}
+              onChange={(e) =>
+                parentDispatch({
+                  type: ParentActionTypes.SET_KINSHIP,
+                  payload: { kinship: e.target.value },
                 })
               }
             />
