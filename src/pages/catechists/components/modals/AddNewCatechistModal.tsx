@@ -203,6 +203,7 @@ export function AddNewCatechistModal({
             <Input
               label="Telefone"
               value={state.phone}
+              description={'Escreva no formato (DD) 9XXXX-XXXX'}
               onChange={(e) =>
                 dispatch({
                   type: CatechistActionTypes.SET_PHONE,
