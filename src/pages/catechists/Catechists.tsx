@@ -52,6 +52,9 @@ export function Catechists() {
         >
           <TableHeader>
             <TableColumn align="start">NOME</TableColumn>
+            <TableColumn align="start">EMAIL</TableColumn>
+            <TableColumn align="center">TELEFONE</TableColumn>
+            <TableColumn align="center">NASCIMENTO</TableColumn>
             <TableColumn align="center">TURMA</TableColumn>
             <TableColumn align="center">AÇÕES</TableColumn>
           </TableHeader>
@@ -63,6 +66,11 @@ export function Catechists() {
               return (
                 <TableRow key={catechist.id}>
                   <TableCell>{catechist.name}</TableCell>
+                  <TableCell>{catechist.email}</TableCell>
+                  <TableCell>{catechist.phone}</TableCell>
+                  <TableCell>
+                    {new Date(catechist.birthday!).toLocaleDateString('pt-BR')}
+                  </TableCell>
                   <TableCell>{classroom?.roomNumber}</TableCell>
                   <TableCell>
                     <ToolBar catechist={catechist} />
