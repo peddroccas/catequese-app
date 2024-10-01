@@ -26,8 +26,6 @@ export function Header() {
           navigate('/classroom') // Redireciona para a rota permitida
         }
       }
-    } else {
-      navigate('/login')
     }
     if (!user && !isCheckingLocalStorage) {
       navigate('/login')
