@@ -27,7 +27,7 @@ export function Catechists() {
           isOpen={isUserAddingNewCatechist}
           onClose={() => setIsUserAddingNewCatechist(false)}
         />
-        <h1 className="text-2xl">Catequistas</h1>
+        <h1 className="text-3xl">Catequistas</h1>
         <Tooltip
           content="Adicionar novo catequista"
           className="text-bunker-950"
