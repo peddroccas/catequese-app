@@ -29,6 +29,9 @@ const addNewCatechistFormSchema = z.object({
   name: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
+  nickname: z
+    .string({ message: 'Insira um valor válido' })
+    .min(1, 'Campo obrigatoŕio'),
   birthday: z.custom((value) => {
     if (value) {
       return true
@@ -123,6 +126,26 @@ export function AddNewCatechistModal({
                   {...field}
                   isInvalid={Boolean(errors.name)}
                   errorMessage={String(errors.name?.message)}
+                />
+              )}
+            />
+            <Controller
+              name="nickname"
+              control={control}
+              rules={{
+                required: true,
+                onChange: (e) =>
+                  dispatch({
+                    type: CatechistActionTypes.SET_NICKNAME,
+                    payload: { nickname: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Apelido"
+                  {...field}
+                  isInvalid={Boolean(errors.nickname)}
+                  errorMessage={String(errors.nickname?.message)}
                 />
               )}
             />

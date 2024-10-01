@@ -3,6 +3,7 @@ import { CatechistActionTypes } from './catechistActionTypes'
 
 export const catechistInitialState = {
   name: '', // Nome inicial como string vazia
+  nickname: '',
   birthday: undefined, // Data inicial (utiliza epoch time)
   phone: '',
   address: '', // Endereço inicial como string vazia
@@ -24,6 +25,8 @@ export function catechistReducer(
       return catechistInitialState
     case CatechistActionTypes.SET_NAME:
       return { ...state, name: action.payload.name }
+    case CatechistActionTypes.SET_NICKNAME:
+      return { ...state, nickname: action.payload.nickname }
     case CatechistActionTypes.SET_BIRTHDAY:
       return { ...state, birthday: action.payload.birthday }
     case CatechistActionTypes.SET_ADDRESS:

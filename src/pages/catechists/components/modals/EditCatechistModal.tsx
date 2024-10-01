@@ -8,17 +8,12 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  Select,
-  SelectItem,
 } from '@nextui-org/react'
 import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import {
-  catechistReducer,
-  catechistInitialState,
-} from '@/reducer/catechist/catechistReducer'
+import { catechistReducer } from '@/reducer/catechist/catechistReducer'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
@@ -28,6 +23,9 @@ import { catechist } from '@/Types'
 
 const editCatechistFormSchema = z.object({
   name: z
+    .string({ message: 'Insira um valor válido' })
+    .min(1, 'Campo obrigatoŕio'),
+  nickname: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
   birthday: z.custom((value) => {
@@ -121,6 +119,28 @@ export function EditCatechistModal({
                   {...field}
                   isInvalid={Boolean(errors.name)}
                   errorMessage={String(errors.name?.message)}
+                />
+              )}
+            />
+            <Controller
+              name="nickname"
+              control={control}
+              defaultValue={state.nickname}
+              rules={{
+                value: state.nickname,
+                required: true,
+                onChange: (e) =>
+                  dispatch({
+                    type: CatechistActionTypes.SET_NICKNAME,
+                    payload: { nickname: e.target.value },
+                  }),
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Apelido"
+                  {...field}
+                  isInvalid={Boolean(errors.nickname)}
+                  errorMessage={String(errors.nickname?.message)}
                 />
               )}
             />

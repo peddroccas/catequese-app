@@ -2,6 +2,7 @@ export enum CatechistActionTypes {
   SET_ALL = 'SET_ALL',
   RESET = 'RESET',
   SET_NAME = 'SET_NAME',
+  SET_NICKNAME = 'SET_NICKNAME',
   SET_BIRTHDAY = 'SET_BIRTHDAY',
   SET_ADDRESS = 'SET_ADDRESS',
   SET_PHONE = 'SET_PHONE',

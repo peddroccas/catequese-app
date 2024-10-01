@@ -1,6 +1,7 @@
 export interface catechist {
   id?: string
   name: string
+  nickname: string
   birthday: string | undefined
   phone: string
   address: string

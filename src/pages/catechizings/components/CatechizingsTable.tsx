@@ -123,9 +123,7 @@ export function CatechizingsTable({
                 {classroom?.roomNumber}
               </TableCell>
               <TableCell hidden={hasPageClassroomInfo}>
-                {catechists
-                  ?.map((catechist) => catechist.name.split(' ')[0])
-                  .join(' e ')}
+                {catechists?.map((catechist) => catechist.nickname).join(' e ')}
               </TableCell>
               <TableCell>{catechizing.parents!.name}</TableCell>
               <TableCell>{catechizing.parents!.phone}</TableCell>
