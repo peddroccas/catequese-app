@@ -9,10 +9,13 @@ import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { catechistReducer } from '@/reducer/catechist/catechistReducer'
+import {
+  catechistInitialState,
+  catechistReducer,
+} from '@/reducer/catechist/catechistReducer'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext, useReducer, useState } from 'react'
+import { useContext, useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 import { useAuth } from '@/hooks/useAuth'
@@ -48,10 +51,19 @@ export function Profile() {
   const { user } = useAuth()
   const { throwClassroomUpdate, throwCatechistUpdate } =
     useContext(ClassroomContext)
-  const [state, dispatch] = useReducer(catechistReducer, user!)
+  const [state, dispatch] = useReducer(
+    catechistReducer,
+    user || catechistInitialState,
+  )
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
     useState<boolean>(false)
+
+  useEffect(() => {
+    if (user.id) {
+      dispatch({ type: CatechistActionTypes.SET_ALL, payload: user })
+    }
+  }, [user])
 
   async function handleSubmitEditCatechistForm() {
     setHasUserSubmittedForm(true)

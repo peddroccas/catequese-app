@@ -149,7 +149,6 @@ export function AddNewCatechistModal({
                 />
               )}
             />
-
             <I18nProvider locale="pt-BR">
               <Controller
                 name="birthday"

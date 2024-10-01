@@ -4,7 +4,7 @@ import { CatechistActionTypes } from './catechistActionTypes'
 export const catechistInitialState = {
   name: '', // Nome inicial como string vazia
   nickname: '',
-  birthday: undefined, // Data inicial (utiliza epoch time)
+  birthday: '1970-01-01T00:00:00.000Z', // Data inicial (utiliza epoch time)
   phone: '',
   address: '', // Endereço inicial como string vazia
   classroomId: undefined,

@@ -94,7 +94,7 @@ export function Header() {
         )}
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
+        <NavbarItem className="lg:flex">
           <User />
         </NavbarItem>
         <NavbarItem></NavbarItem>
