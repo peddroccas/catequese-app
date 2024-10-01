@@ -11,6 +11,7 @@ export const catechistInitialState = {
   hasReceivedEucharist: false, // Inicialmente como false
   hasReceivedConfirmation: false,
   hasReceivedMarriage: false,
+  role: undefined,
 }
 export function catechistReducer(
   state: catechist,
@@ -33,6 +34,8 @@ export function catechistReducer(
       return { ...state, email: action.payload.email }
     case CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM:
       return { ...state, classroomId: action.payload.classroomId }
+    case CatechistActionTypes.SET_ROLE:
+      return { ...state, role: action.payload.role }
     case CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM:
       return { ...state, hasReceivedBaptism: action.payload.hasReceivedBaptism }
     case CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST:

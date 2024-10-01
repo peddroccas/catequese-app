@@ -23,7 +23,6 @@ import { CatechistRepository } from '@/services/repositories/catechistRepository
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
-import { parseAbsoluteToLocal } from '@internationalized/date'
 import { classroom } from '@/Types'
 
 const addNewCatechistFormSchema = z.object({
@@ -198,6 +197,33 @@ export function AddNewCatechistModal({
                 })
               }
             />
+
+            <Select
+              label="Função"
+              value={state.role !== 'COORDINATOR' ? 'MEMBER' : state.role}
+              onChange={(e) =>
+                dispatch({
+                  type: CatechistActionTypes.SET_ROLE,
+                  payload: { role: e.target.value },
+                })
+              }
+              size="md"
+              className="max-w-prose"
+              classNames={{
+                listbox: '!text-bunker-950',
+                selectorIcon: 'text-bunker-950',
+              }}
+              selectedKeys={[
+                state.role !== 'COORDINATOR' ? 'MEMBER' : state.role,
+              ]}
+            >
+              {['COORDINATOR', 'MEMBER'].map((role) => (
+                <SelectItem key={role} value={role}>
+                  {role !== 'COORDINATOR' ? 'Membro' : 'Coordenador'}
+                </SelectItem>
+              ))}
+            </Select>
+
             <Checkbox
               value="Batismo"
               checked={state.hasReceivedBaptism}
