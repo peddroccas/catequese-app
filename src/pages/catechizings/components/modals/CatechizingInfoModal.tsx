@@ -51,6 +51,17 @@ export function CatechizingInfoModal({
             />
 
             <Input readOnly label="Endereço" value={data.address} />
+            <Input
+              readOnly
+              label="Nome do responsável"
+              value={data.parents?.name}
+            />
+            <Input
+              readOnly
+              label="Telefone do responsável"
+              value={data.parents?.phone}
+            />
+            <Input readOnly label="Parentesco" value={data.parents?.kinship} />
             <Checkbox
               readOnly
               value="Batismo"
