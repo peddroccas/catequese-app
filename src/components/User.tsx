@@ -23,11 +23,7 @@ export default function User() {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions">
-          <DropdownItem
-            key="settings"
-            startContent={<UserCircle size={20} />}
-            onClick={() => navigate('/profile')}
-          >
+          <DropdownItem key="settings" startContent={<UserCircle size={20} />}>
             Meu perfil
           </DropdownItem>
           <DropdownItem

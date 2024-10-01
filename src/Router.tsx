@@ -15,7 +15,6 @@ export function Router() {
       <Route path="" element={<Navigate to={'/login'} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayout />}>
-        <Route path="/profile" element={<Profile />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route path="payment" element={<Payment />} />
         <Route path="catechizing" element={<Catechizings />} />
