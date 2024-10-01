@@ -12,9 +12,10 @@ import { useEffect, useState } from 'react'
 import { List } from '@phosphor-icons/react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import User from './User'
 
 export function Header() {
-  const { logout, user, isCheckingLocalStorage } = useAuth()
+  const { user, isCheckingLocalStorage } = useAuth()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -22,7 +23,11 @@ export function Header() {
     if (user) {
       if (user.role === 'MEMBER') {
         const currentPath = window.location.pathname
-        if (currentPath !== '/classroom' && currentPath !== '/catechizing') {
+        if (
+          currentPath !== '/classroom' &&
+          currentPath !== '/catechizing' &&
+          currentPath !== '/profile'
+        ) {
           navigate('/classroom') // Redireciona para a rota permitida
         }
       }
@@ -90,10 +95,7 @@ export function Header() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Avatar
-            classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
-            onClick={() => logout()}
-          />
+          <User />
         </NavbarItem>
         <NavbarItem></NavbarItem>
       </NavbarContent>

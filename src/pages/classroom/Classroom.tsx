@@ -50,7 +50,6 @@ export default function Classroom() {
   if (!classroomId) {
     return (
       <div className="flex min-h-screen flex-col bg-bunker-950">
-        <Header />
         <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
           <p className="text-2xl">Turma não encontrada!</p>
         </main>
@@ -60,7 +59,6 @@ export default function Classroom() {
 
   return (
     <div className="flex min-h-screen flex-col bg-bunker-950">
-      <Header />
       <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
         {classroom.id && classrooms[0] && (
           <CatechizingsTable
