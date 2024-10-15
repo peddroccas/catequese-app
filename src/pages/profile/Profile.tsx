@@ -60,7 +60,7 @@ export function Profile() {
     useState<boolean>(false)
 
   useEffect(() => {
-    if (user.id) {
+    if (user) {
       dispatch({ type: CatechistActionTypes.SET_ALL, payload: user })
     }
   }, [user])
