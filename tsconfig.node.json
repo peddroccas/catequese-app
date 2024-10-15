@@ -9,7 +9,8 @@
     "strict": true,
     "noEmit": true,
     "noUnusedParameters": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": ["vite.config.ts"]
 }
