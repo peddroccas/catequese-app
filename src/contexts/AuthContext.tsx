@@ -4,7 +4,7 @@ import { catechist } from '@/Types'
 import { ReactNode, createContext, useEffect, useState } from 'react'
 
 export interface AuthType {
-  user: catechist
+  user: catechist | null
   login: (email: string, password: string) => Promise<catechist>
   logout: () => void
   isCheckingLocalStorage: boolean
@@ -17,7 +17,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<catechist>(catechistInitialState)
+  const [user, setUser] = useState<catechist | null>(null)
   const [isCheckingLocalStorage, setIsCheckingLocalStorage] =
     useState<boolean>(true)
   const [hasUserUpdate, setHasUserUpdate] = useState<boolean>(false)
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function logout() {
-    setUser({} as catechist)
+    setUser(null)
     localStorage.removeItem('auth')
   }
 
