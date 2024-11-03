@@ -18,6 +18,9 @@ export const ClassroomSelect = forwardRef<
 >(({ onChange, props, value, size, disabledOptions }, ref) => {
   const { classrooms } = useContext(ClassroomContext)
 
+  if (!classrooms) {
+    return <></>
+  }
   return (
     value && (
       <Select
