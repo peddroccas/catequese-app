@@ -245,15 +245,11 @@ export function AddNewCatechistModal({
                 listbox: '!text-bunker-950',
                 selectorIcon: 'text-bunker-950',
               }}
-              selectedKeys={roleSelected() && undefined}
+              selectedKeys={roleSelected()}
             >
               {['COORDINATOR', 'MEMBER'].map((role) => (
                 <SelectItem key={role} value={role}>
-                  {role !== 'COORDINATOR'
-                    ? role !== 'Membro'
-                      ? ''
-                      : 'MEMBER'
-                    : 'Coordenador'}
+                  {role !== 'COORDINATOR' ? 'Membro' : 'Coordenador'}
                 </SelectItem>
               ))}
             </Select>
