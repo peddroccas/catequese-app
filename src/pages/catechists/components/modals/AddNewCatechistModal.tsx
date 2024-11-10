@@ -232,7 +232,7 @@ export function AddNewCatechistModal({
 
             <Select
               label="Função"
-              value={state.role !== 'COORDINATOR' ? 'MEMBER' : state.role}
+              value={state.role}
               onChange={(e) =>
                 dispatch({
                   type: CatechistActionTypes.SET_ROLE,
