@@ -245,7 +245,7 @@ export function AddNewCatechistModal({
                 listbox: '!text-bunker-950',
                 selectorIcon: 'text-bunker-950',
               }}
-              selectedKeys={roleSelected()}
+              selectedKeys={state.role ? [roleSelected()!] : undefined}
             >
               {['COORDINATOR', 'MEMBER'].map((role) => (
                 <SelectItem key={role} value={role}>
