@@ -92,6 +92,15 @@ export function AddNewCatechistModal({
       console.error(error)
     }
   }
+
+  const roleSelected = () => {
+    switch (state.role) {
+      case 'COORDINATOR':
+        return 'COORDINATOR'
+      case 'MEMBER':
+        return 'MEMBER'
+    }
+  }
   return (
     <Modal
       isOpen={isOpen}
@@ -236,13 +245,15 @@ export function AddNewCatechistModal({
                 listbox: '!text-bunker-950',
                 selectorIcon: 'text-bunker-950',
               }}
-              selectedKeys={[
-                state.role !== 'COORDINATOR' ? 'MEMBER' : state.role,
-              ]}
+              selectedKeys={roleSelected() && undefined}
             >
               {['COORDINATOR', 'MEMBER'].map((role) => (
                 <SelectItem key={role} value={role}>
-                  {role !== 'COORDINATOR' ? 'Membro' : 'Coordenador'}
+                  {role !== 'COORDINATOR'
+                    ? role !== 'Membro'
+                      ? ''
+                      : 'MEMBER'
+                    : 'Coordenador'}
                 </SelectItem>
               ))}
             </Select>
