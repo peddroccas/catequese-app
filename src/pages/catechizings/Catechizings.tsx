@@ -5,8 +5,10 @@ import { useContext, useEffect, useState } from 'react'
 import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
 import { catechizing } from '@/Types'
+import { useAuth } from '@/hooks/useAuth'
 
 export function Catechizings() {
+  const { user } = useAuth()
   const { catechizings } = useContext(ClassroomContext)
   const [filteredCatechizing, setFilteredCatechizing] =
     useState<catechizing[]>(catechizings)
@@ -28,10 +30,13 @@ export function Catechizings() {
   return (
     <div className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
       <nav className="flex flex-col items-center justify-between gap-8 sm:flex-row">
-        <AddNewCatechizingModal
-          isOpen={isUserAddingNewCatechizing}
-          onClose={() => setIsUserAddingNewCatechizing(false)}
-        />
+        {user?.role === 'COORDINATOR' && (
+          <AddNewCatechizingModal
+            isOpen={isUserAddingNewCatechizing}
+            onClose={() => setIsUserAddingNewCatechizing(false)}
+          />
+        )}
+
         <h1 className="text-3xl">Catequizandos</h1>
         <div className="flex items-center gap-8">
           <Input
