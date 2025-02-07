@@ -47,12 +47,13 @@ export function Catechizings() {
             }
           />
           <Tooltip
-            content="Adicionar novo catequista"
+            content="Adicionar novo catequizando"
             className="text-bunker-950"
             closeDelay={0}
           >
             <Button
               isIconOnly
+              disabled={user?.role !== 'COORDINATOR'}
               onPress={() => setIsUserAddingNewCatechizing(true)}
               className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
             >
