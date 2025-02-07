@@ -75,7 +75,7 @@ export function CatechizingsTable({
       }}
     >
       <TableHeader>
-        <TableColumn align="start" hidden={hasPageClassroomInfo}>
+        <TableColumn align="center" hidden={hasPageClassroomInfo}>
           NÚMERO
         </TableColumn>
         <TableColumn
