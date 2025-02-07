@@ -75,6 +75,9 @@ export function CatechizingsTable({
       }}
     >
       <TableHeader>
+        <TableColumn align="center" hidden={hasPageClassroomInfo}>
+          Número
+        </TableColumn>
         <TableColumn
           onClick={() => handleSort('NOME')}
           align="start"
@@ -111,13 +114,14 @@ export function CatechizingsTable({
         </TableColumn>
       </TableHeader>
       <TableBody>
-        {sortedCatechizings.map((catechizing) => {
+        {sortedCatechizings.map((catechizing, index) => {
           const classroom = classrooms.find(
             (classroom) => classroom.id === catechizing.classroomId,
           )
           const { catechists } = classroom!
           return (
             <TableRow key={catechizing.id}>
+              <TableCell>{index + 1}</TableCell>
               <TableCell>{catechizing.name}</TableCell>
               <TableCell hidden={hasPageClassroomInfo}>
                 {classroom?.roomNumber}
