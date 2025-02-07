@@ -76,7 +76,7 @@ export function CatechizingsTable({
     >
       <TableHeader>
         <TableColumn align="start" hidden={hasPageClassroomInfo}>
-          Número
+          NÚMERO
         </TableColumn>
         <TableColumn
           onClick={() => handleSort('NOME')}
