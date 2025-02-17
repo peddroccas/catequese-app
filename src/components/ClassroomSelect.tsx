@@ -1,6 +1,6 @@
 import { forwardRef, ChangeEvent, useContext } from 'react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { Select, SelectItem, SelectProps } from '@nextui-org/react'
+import { Select, SelectItem, SelectProps } from '@heroui/react'
 import { classroom } from '@/Types'
 
 interface ClassroomSelectProps {
@@ -39,7 +39,7 @@ export const ClassroomSelect = forwardRef<
         }}
         selectedKeys={[value.id!]}
       >
-        {classrooms.map((classroom) => (
+        {classrooms.map(classroom => (
           <SelectItem key={classroom.id!} value={classroom.name}>
             {classroom.name}
           </SelectItem>

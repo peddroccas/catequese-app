@@ -6,9 +6,9 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 
-import { catechizing } from '@/Types'
+import type { catechizing } from '@/Types'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 
 interface CatechizingInfoProps {

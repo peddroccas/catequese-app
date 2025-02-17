@@ -1,7 +1,7 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, CircularProgress, Input } from '@nextui-org/react'
+import { Button, CircularProgress, Input } from '@heroui/react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -50,7 +50,7 @@ export function Login() {
       }
     } catch (error) {
       setHasUserSubmittedForm(false)
-      alert('Login inválido' + error)
+      alert('Credenciais inválidas')
       reset({ email: '', password: '' })
     }
   }
@@ -72,7 +72,7 @@ export function Login() {
             rules={{
               required: true,
               value: email,
-              onChange: (e) => setEmail(e.target.value),
+              onChange: e => setEmail(e.target.value),
             }}
             render={({ field }) => (
               <Input
@@ -89,7 +89,7 @@ export function Login() {
             control={control}
             rules={{
               value: password,
-              onChange: (e) => setPassword(e.target.value),
+              onChange: e => setPassword(e.target.value),
             }}
             render={({ field }) => (
               <Input

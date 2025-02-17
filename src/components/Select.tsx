@@ -1,4 +1,4 @@
-import { Select, SelectItem } from '@nextui-org/react'
+import { Select, SelectItem } from '@heroui/react'
 import { ChangeEvent } from 'react'
 
 interface SelectProps {
@@ -29,7 +29,7 @@ export default function BasicSelect({
       }}
       selectedKeys={[value]}
     >
-      {options.map((option) => (
+      {options.map(option => (
         <SelectItem key={option} value={option}>
           {option}
         </SelectItem>

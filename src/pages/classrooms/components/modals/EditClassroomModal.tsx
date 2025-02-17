@@ -8,7 +8,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { ClassroomActionTypes } from '@/reducer/classroom/classroomActionTypes'
 import {
@@ -36,7 +36,7 @@ const EditClassroomFormSchema = z.object({
       'Sementinha',
       'Pré-Eucaristia',
     ],
-    { message: 'Campo obrigatório' },
+    { message: 'Campo obrigatório' }
   ),
   startedAt: z.coerce
     .number()
@@ -46,7 +46,7 @@ const EditClassroomFormSchema = z.object({
     .max(2025, {
       message: 'Digite um dos anos 2023, 2024, 2025',
     }),
-  catechists: z.custom((value) => {
+  catechists: z.custom(value => {
     if (value) {
       return true
     } else {
@@ -78,7 +78,7 @@ export function EditClassroomModal({
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(classroomReducer, data)
   const [selectedCatechists, setSelectedCatechists] = useState<catechist[]>(
-    data.catechists!,
+    data.catechists!
   )
   const [hasChangedCatechists, setHasChangedCatechists] =
     useState<boolean>(false)
@@ -143,7 +143,7 @@ export function EditClassroomModal({
               rules={{
                 value: state.roomNumber,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: ClassroomActionTypes.SET_ROOM_NUMBER,
                     payload: { roomNumber: e.target.value },
@@ -167,7 +167,7 @@ export function EditClassroomModal({
               rules={{
                 required: true,
                 value: state.segment!,
-                onChange: (e) => {
+                onChange: e => {
                   dispatch({
                     type: ClassroomActionTypes.SET_SEGMENT,
                     payload: { segment: e.target.value },
@@ -200,7 +200,7 @@ export function EditClassroomModal({
                     'Catecúmenos Adultos',
                     'Sementinha',
                     'Pré-Eucaristia',
-                  ].map((segment) => (
+                  ].map(segment => (
                     <SelectItem key={segment} value={segment}>
                       {segment}
                     </SelectItem>
@@ -215,7 +215,7 @@ export function EditClassroomModal({
               rules={{
                 value: state.startedAt,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: ClassroomActionTypes.SET_STARTED_AT,
                     payload: { startedAt: e.target.value },
@@ -239,11 +239,11 @@ export function EditClassroomModal({
               rules={{
                 required: true,
                 value: selectedCatechists,
-                onChange: (e) => {
+                onChange: e => {
                   setSelectedCatechists(
-                    catechists.filter((catechist) =>
-                      String(e.target.value).includes(catechist.id!),
-                    ),
+                    catechists.filter(catechist =>
+                      String(e.target.value).includes(catechist.id!)
+                    )
                   )
                   setHasChangedCatechists(true)
 
@@ -278,12 +278,12 @@ export function EditClassroomModal({
                     isEnabled: false,
                   }}
                   selectedKeys={selectedCatechists.map(
-                    (catechist) => catechist.id!,
+                    catechist => catechist.id!
                   )}
                   isInvalid={Boolean(errors.catechists)}
                   errorMessage={String(errors.catechists?.message)}
                 >
-                  {catechists.map((catechist) => (
+                  {catechists.map(catechist => (
                     <SelectItem key={catechist.id!} value={catechist.name}>
                       {catechist.name}
                     </SelectItem>

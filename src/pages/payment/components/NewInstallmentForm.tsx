@@ -4,7 +4,7 @@ import { payment } from '@/Types'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
 import { InstallmentContext } from '@/contexts/InstallmentContext'
 import { ClassroomRepository } from '@/services/repositories/classroomRepository'
-import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Button } from '@heroui/react'
 import { Plus } from '@phosphor-icons/react'
 import { Installment } from './Installment'
 import NewInstallmentModal from './modals/NewInstallmentModal'
@@ -45,7 +45,7 @@ export function NewInstallmentForm() {
   useEffect(() => {
     async function getCatechizingByClassroom() {
       if (classroom) {
-        const classroomId = classroomsBySegment.map((classroomObj) => {
+        const classroomId = classroomsBySegment.map(classroomObj => {
           if (classroomObj.classroomName === classroom) {
             return classroomObj.id
           }
@@ -95,7 +95,7 @@ export function NewInstallmentForm() {
             'Sementinha',
             'Pré-Eucaristia',
           ]}
-          onChange={(e) => {
+          onChange={e => {
             setSegment(e.target.value)
             setClassroomsBySegment([])
             setClassroom('')
@@ -107,14 +107,14 @@ export function NewInstallmentForm() {
         <Select
           label="Turma"
           value={classroom}
-          onChange={(e) => {
+          onChange={e => {
             setClassroom(e.target.value)
             setCatechizingsByClassroom([])
             setCatechizing('')
             setPayment(null)
           }}
           options={classroomsBySegment.map(
-            (classroom) => classroom.classroomName,
+            classroom => classroom.classroomName
           )}
         />
         <Autocomplete
@@ -124,9 +124,9 @@ export function NewInstallmentForm() {
           className="!text-bunker-950"
           classNames={{ listboxWrapper: '!text-bunker-950' }}
           isClearable={false}
-          onSelectionChange={(selected) => setCatechizing(String(selected))}
+          onSelectionChange={selected => setCatechizing(String(selected))}
         >
-          {catechizingsByClassroom.map((catechizing) => (
+          {catechizingsByClassroom.map(catechizing => (
             <AutocompleteItem key={catechizing.id} value={catechizing.name}>
               {catechizing.name}
             </AutocompleteItem>

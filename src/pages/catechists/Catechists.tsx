@@ -8,7 +8,7 @@ import {
   TableCell,
   Button,
   Tooltip,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { UserPlus } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { AddNewCatechistModal } from './components/modals/AddNewCatechistModal'
@@ -59,9 +59,9 @@ export function Catechists() {
             <TableColumn align="center">AÇÕES</TableColumn>
           </TableHeader>
           <TableBody>
-            {catechists.map((catechist) => {
+            {catechists.map(catechist => {
               const classroom = classrooms.find(
-                (classroom) => classroom.id === catechist.classroomId,
+                classroom => classroom.id === catechist.classroomId
               )
               return (
                 <TableRow key={catechist.id}>

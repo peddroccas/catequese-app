@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
@@ -53,10 +53,11 @@ export function UpdateCatechistModal({
   async function handleSubmitNewCatechistForm() {
     setHasUserSubmittedForm(true)
     try {
-      // console.log(state)
+      console.log(password)
       await CatechistRepository.updatePassword(user!.id!, password).finally(
         () => {
           setHasUserSubmittedForm(false)
+          setPassword('')
           onClose()
         }
       )
@@ -87,11 +88,12 @@ export function UpdateCatechistModal({
               rules={{
                 value: password,
                 required: true,
-                onChange: e => setPassword(e),
+                onChange: e => setPassword(e.target.value),
               }}
               render={({ field }) => (
                 <Input
-                  label="Nome"
+                  label="Nova senha"
+                  type="password"
                   {...field}
                   isInvalid={Boolean(errors.name)}
                   errorMessage={String(errors.name?.message)}

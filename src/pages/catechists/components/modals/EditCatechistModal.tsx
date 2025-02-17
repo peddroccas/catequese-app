@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
@@ -19,7 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
 import { parseAbsoluteToLocal } from '@internationalized/date'
-import { catechist } from '@/Types'
+import type { catechist } from '@/Types'
 
 const editCatechistFormSchema = z.object({
   name: z
@@ -28,12 +28,11 @@ const editCatechistFormSchema = z.object({
   nickname: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
-  birthday: z.custom((value) => {
+  birthday: z.custom(value => {
     if (value) {
       return true
-    } else {
-      return false
     }
+    return false
   }, 'Campo obrigatório'),
   classroom: z.string().uuid().optional(),
   email: z
@@ -107,7 +106,7 @@ export function EditCatechistModal({
               rules={{
                 value: state.name,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_NAME,
                     payload: { name: e.target.value },
@@ -129,7 +128,7 @@ export function EditCatechistModal({
               rules={{
                 value: state.nickname,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_NICKNAME,
                     payload: { nickname: e.target.value },
@@ -153,7 +152,7 @@ export function EditCatechistModal({
                 rules={{
                   required: true,
                   value: parseAbsoluteToLocal(state.birthday!),
-                  onChange: (e) =>
+                  onChange: e =>
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: e.target.value.toAbsoluteString() },
@@ -182,7 +181,7 @@ export function EditCatechistModal({
               rules={{
                 value: state.email,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_EMAIL,
                     payload: { email: e.target.value },
@@ -200,7 +199,7 @@ export function EditCatechistModal({
             <Input
               label="Telefone"
               value={state.phone}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechistActionTypes.SET_PHONE,
                   payload: { phone: e.target.value },
@@ -210,7 +209,7 @@ export function EditCatechistModal({
             <Input
               label="Endereço"
               value={state.address}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechistActionTypes.SET_ADDRESS,
                   payload: { address: e.target.value },
@@ -221,7 +220,7 @@ export function EditCatechistModal({
               value="Batismo"
               isSelected={state.hasReceivedBaptism}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
                   payload: { hasReceivedBaptism: e.target.checked },
@@ -234,7 +233,7 @@ export function EditCatechistModal({
               value="1° Eucaristia"
               isSelected={state.hasReceivedEucharist}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
                   payload: { hasReceivedEucharist: e.target.checked },
@@ -247,7 +246,7 @@ export function EditCatechistModal({
               value="Crisma"
               isSelected={state.hasReceivedConfirmation}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
                   payload: { hasReceivedConfirmation: e.target.checked },
@@ -261,7 +260,7 @@ export function EditCatechistModal({
               value="Sacramento do Matrimônio"
               isSelected={state.hasReceivedMarriage}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
                   payload: { hasReceivedMarriage: e.target.checked },

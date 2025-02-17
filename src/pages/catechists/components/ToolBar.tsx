@@ -1,5 +1,5 @@
 import { catechist } from '@/Types'
-import { Tooltip } from '@nextui-org/react'
+import { Tooltip } from '@heroui/react'
 import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechistModal } from './modals/EditCatechistModal'

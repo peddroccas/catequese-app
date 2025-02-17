@@ -8,7 +8,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { useContext } from 'react'
 
 interface DeleteClassroomFormModal {
@@ -54,7 +54,7 @@ export function DeleteClassroomModal({
             <p>Segmento: {data.segment}</p>
             <p>
               Catequistas:{' '}
-              {data.catechists.map((catechist) => catechist.name).join(' e ')}
+              {data.catechists.map(catechist => catechist.name).join(' e ')}
             </p>
           </ModalBody>
           <ModalFooter>

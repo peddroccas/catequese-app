@@ -9,6 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@heroui/react": "^2.6.14",
 		"@hookform/resolvers": "^3.9.0",
 		"@internationalized/date": "^3.5.5",
 		"@nextui-org/react": "^2.4.6",
@@ -19,7 +20,7 @@
 		"exceljs": "^4.4.0",
 		"file-saver": "^2.0.5",
 		"firebase": "^10.12.5",
-		"framer-motion": "^11.3.21",
+		"framer-motion": "^11.18.2",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-hook-form": "^7.53.0",

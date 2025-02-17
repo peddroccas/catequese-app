@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { CatechizingActionTypes } from '@/reducer/catechizing/catechizingActionTypes'
 import { catechizingReducer } from '@/reducer/catechizing/catechizingReducer'
@@ -30,7 +30,7 @@ const EditCatechizingFormSchema = z.object({
   name: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
-  birthday: z.custom((value) => {
+  birthday: z.custom(value => {
     if (value) {
       return true
     } else {
@@ -108,7 +108,7 @@ export function EditCatechizingModal({
               rules={{
                 value: state.name,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechizingActionTypes.SET_NAME,
                     payload: { name: e.target.value },
@@ -132,7 +132,7 @@ export function EditCatechizingModal({
                 rules={{
                   required: true,
                   value: parseAbsoluteToLocal(state.birthday!),
-                  onChange: (e) => {
+                  onChange: e => {
                     dispatch({
                       type: CatechizingActionTypes.SET_BIRTHDAY,
                       payload: { birthday: e.target.value.toAbsoluteString() },
@@ -159,7 +159,7 @@ export function EditCatechizingModal({
               label="Endereço"
               defaultValue={state.address}
               value={state.address}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechizingActionTypes.SET_ADDRESS,
                   payload: { address: e.target.value },
@@ -173,7 +173,7 @@ export function EditCatechizingModal({
               rules={{
                 value: parent?.name,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   parentDispatch({
                     type: ParentActionTypes.SET_NAME,
                     payload: { name: e.target.value },
@@ -195,7 +195,7 @@ export function EditCatechizingModal({
               rules={{
                 value: parent?.phone,
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   parentDispatch({
                     type: ParentActionTypes.SET_PHONE,
                     payload: { phone: e.target.value },
@@ -214,7 +214,7 @@ export function EditCatechizingModal({
             <Input
               label="Parentesco"
               value={parent.kinship}
-              onChange={(e) =>
+              onChange={e =>
                 parentDispatch({
                   type: ParentActionTypes.SET_KINSHIP,
                   payload: { kinship: e.target.value },
@@ -225,7 +225,7 @@ export function EditCatechizingModal({
               value="Batismo"
               isSelected={state.hasReceivedBaptism}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechizingActionTypes.SET_HAS_RECEIVED_BAPTISM,
                   payload: { hasReceivedBaptism: e.target.checked },
@@ -238,7 +238,7 @@ export function EditCatechizingModal({
               value="1° Eucaristia"
               isSelected={state.hasReceivedEucharist}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechizingActionTypes.SET_HAS_RECEIVED_EUCHARIST,
                   payload: { hasReceivedEucharist: e.target.checked },
@@ -251,7 +251,7 @@ export function EditCatechizingModal({
               value="Sacramento do Matrimônio"
               isSelected={state.hasReceivedMarriage}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechizingActionTypes.SET_HAS_RECEIVED_MARRIAGE,
                   payload: { hasReceivedMarriage: e.target.checked },
@@ -264,7 +264,7 @@ export function EditCatechizingModal({
               value="Pessoa com necessidade especial"
               isSelected={state.personWithSpecialNeeds}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechizingActionTypes.SET_PERSON_WITH_SPECIAL_NEEDS,
                   payload: { personWithSpecialNeeds: e.target.checked },

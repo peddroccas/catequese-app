@@ -1,5 +1,5 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { Button, Input, Tooltip } from '@nextui-org/react'
+import { Button, Input, Tooltip } from '@heroui/react'
 import { MagnifyingGlass, UserPlus } from '@phosphor-icons/react'
 import { useContext, useEffect, useState } from 'react'
 import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
@@ -19,11 +19,11 @@ export function Catechizings() {
 
   useEffect(() => {
     setFilteredCatechizing(
-      catechizings.filter((catechizing) =>
+      catechizings.filter(catechizing =>
         catechizing.name
           .toLocaleLowerCase()
-          .includes(search.toLocaleLowerCase()),
-      ),
+          .includes(search.toLocaleLowerCase())
+      )
     )
   }, [catechizings, search])
 
@@ -41,7 +41,7 @@ export function Catechizings() {
         <div className="flex items-center gap-8">
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             startContent={
               <MagnifyingGlass className="text-bunker-950" size={20} />
             }

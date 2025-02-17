@@ -10,7 +10,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
@@ -32,7 +32,7 @@ const addNewCatechistFormSchema = z.object({
   nickname: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
-  birthday: z.custom((value) => {
+  birthday: z.custom(value => {
     if (value) {
       return true
     } else {
@@ -66,7 +66,7 @@ export function AddNewCatechistModal({
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(catechistReducer, catechistInitialState)
   const [selectedClassroom, setSelectedClassroom] = useState<classroom>(
-    {} as classroom,
+    {} as classroom
   )
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -123,7 +123,7 @@ export function AddNewCatechistModal({
               control={control}
               rules={{
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_NAME,
                     payload: { name: e.target.value },
@@ -143,7 +143,7 @@ export function AddNewCatechistModal({
               control={control}
               rules={{
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_NICKNAME,
                     payload: { nickname: e.target.value },
@@ -165,7 +165,7 @@ export function AddNewCatechistModal({
                 rules={{
                   required: true,
                   value: state.birthday!,
-                  onChange: (e) => {
+                  onChange: e => {
                     console.log(e.target.value.toString())
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
@@ -193,7 +193,7 @@ export function AddNewCatechistModal({
               control={control}
               rules={{
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: CatechistActionTypes.SET_EMAIL,
                     payload: { email: e.target.value },
@@ -212,7 +212,7 @@ export function AddNewCatechistModal({
               label="Telefone"
               value={state.phone}
               description={'Escreva no formato (DD) 9XXXX-XXXX'}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechistActionTypes.SET_PHONE,
                   payload: { phone: e.target.value },
@@ -222,7 +222,7 @@ export function AddNewCatechistModal({
             <Input
               label="Endereço"
               value={state.address}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechistActionTypes.SET_ADDRESS,
                   payload: { address: e.target.value },
@@ -233,7 +233,7 @@ export function AddNewCatechistModal({
             <Select
               label="Função"
               value={state.role}
-              onChange={(e) =>
+              onChange={e =>
                 dispatch({
                   type: CatechistActionTypes.SET_ROLE,
                   payload: { role: e.target.value },
@@ -247,7 +247,7 @@ export function AddNewCatechistModal({
               }}
               selectedKeys={state.role ? [roleSelected()!] : undefined}
             >
-              {['COORDINATOR', 'MEMBER'].map((role) => (
+              {['COORDINATOR', 'MEMBER'].map(role => (
                 <SelectItem key={role} value={role}>
                   {role !== 'COORDINATOR' ? 'Membro' : 'Coordenador'}
                 </SelectItem>
@@ -258,7 +258,7 @@ export function AddNewCatechistModal({
               value="Batismo"
               checked={state.hasReceivedBaptism}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
                   payload: { hasReceivedBaptism: e.target.checked },
@@ -271,7 +271,7 @@ export function AddNewCatechistModal({
               value="1° Eucaristia"
               checked={state.hasReceivedEucharist}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
                   payload: { hasReceivedEucharist: e.target.checked },
@@ -284,7 +284,7 @@ export function AddNewCatechistModal({
               value="Crisma"
               checked={state.hasReceivedConfirmation}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
                   payload: { hasReceivedConfirmation: e.target.checked },
@@ -298,7 +298,7 @@ export function AddNewCatechistModal({
               value="Sacramento do Matrimônio"
               checked={state.hasReceivedMarriage}
               classNames={{ label: 'text-white' }}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
                   payload: { hasReceivedMarriage: e.target.checked },
@@ -313,11 +313,11 @@ export function AddNewCatechistModal({
               rules={{
                 required: false,
                 value: selectedClassroom!,
-                onChange: (e) => {
+                onChange: e => {
                   setSelectedClassroom(
                     classrooms.find(
-                      (classroom) => classroom.id === e.target.value,
-                    )!,
+                      classroom => classroom.id === e.target.value
+                    )!
                   )
                   dispatch({
                     type: CatechistActionTypes.SET_CATECHIST_TO_CLASSROOM,
@@ -339,7 +339,7 @@ export function AddNewCatechistModal({
                   isInvalid={Boolean(errors.classroom)}
                   errorMessage={String(errors.classroom?.message)}
                 >
-                  {classrooms.map((classroom) => (
+                  {classrooms.map(classroom => (
                     <SelectItem key={classroom.id!} value={classroom.name}>
                       {classroom.name}
                     </SelectItem>

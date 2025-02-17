@@ -90,9 +90,7 @@ export class CatechistRepository {
     password: string
   ): Promise<catechist> {
     return api
-      .patch(`/update-password/${catechistId}`, {
-        data: { password },
-      })
+      .patch(`/update-password/${catechistId}`, { password })
       .then(response => {
         return response.data
       })

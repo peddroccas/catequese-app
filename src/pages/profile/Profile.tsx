@@ -4,7 +4,7 @@ import {
   CircularProgress,
   DatePicker,
   Input,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { CatechistActionTypes } from '@/reducer/catechist/catechistActionTypes'
 import { I18nProvider } from '@react-aria/i18n'
 import { Controller, useForm } from 'react-hook-form'
@@ -27,7 +27,7 @@ const editCatechistFormSchema = z.object({
   nickname: z
     .string({ message: 'Insira um valor válido' })
     .min(1, 'Campo obrigatoŕio'),
-  birthday: z.custom((value) => {
+  birthday: z.custom(value => {
     if (value) {
       return true
     } else {
@@ -53,7 +53,7 @@ export function Profile() {
     useContext(ClassroomContext)
   const [state, dispatch] = useReducer(
     catechistReducer,
-    user || catechistInitialState,
+    user || catechistInitialState
   )
 
   const [hasUserSubmittedForm, setHasUserSubmittedForm] =
@@ -99,7 +99,7 @@ export function Profile() {
             rules={{
               value: state.name,
               required: true,
-              onChange: (e) =>
+              onChange: e =>
                 dispatch({
                   type: CatechistActionTypes.SET_NAME,
                   payload: { name: e.target.value },
@@ -121,7 +121,7 @@ export function Profile() {
             rules={{
               value: state.nickname,
               required: true,
-              onChange: (e) =>
+              onChange: e =>
                 dispatch({
                   type: CatechistActionTypes.SET_NICKNAME,
                   payload: { nickname: e.target.value },
@@ -145,7 +145,7 @@ export function Profile() {
             rules={{
               required: true,
               value: parseAbsoluteToLocal(state.birthday!),
-              onChange: (e) =>
+              onChange: e =>
                 dispatch({
                   type: CatechistActionTypes.SET_BIRTHDAY,
                   payload: { birthday: e.target.value.toAbsoluteString() },
@@ -175,7 +175,7 @@ export function Profile() {
             rules={{
               value: state.email,
               required: true,
-              onChange: (e) =>
+              onChange: e =>
                 dispatch({
                   type: CatechistActionTypes.SET_EMAIL,
                   payload: { email: e.target.value },
@@ -193,7 +193,7 @@ export function Profile() {
           <Input
             label="Telefone"
             value={state.phone}
-            onChange={(e) =>
+            onChange={e =>
               dispatch({
                 type: CatechistActionTypes.SET_PHONE,
                 payload: { phone: e.target.value },
@@ -204,7 +204,7 @@ export function Profile() {
         <Input
           label="Endereço"
           value={state.address}
-          onChange={(e) =>
+          onChange={e =>
             dispatch({
               type: CatechistActionTypes.SET_ADDRESS,
               payload: { address: e.target.value },
@@ -216,7 +216,7 @@ export function Profile() {
           value="Batismo"
           isSelected={state.hasReceivedBaptism}
           classNames={{ label: 'text-white' }}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: CatechistActionTypes.SET_HAS_RECEIVED_BAPTISM,
               payload: { hasReceivedBaptism: e.target.checked },
@@ -229,7 +229,7 @@ export function Profile() {
           value="1° Eucaristia"
           isSelected={state.hasReceivedEucharist}
           classNames={{ label: 'text-white' }}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: CatechistActionTypes.SET_HAS_RECEIVED_EUCHARIST,
               payload: { hasReceivedEucharist: e.target.checked },
@@ -242,7 +242,7 @@ export function Profile() {
           value="Crisma"
           isSelected={state.hasReceivedConfirmation}
           classNames={{ label: 'text-white' }}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: CatechistActionTypes.SET_HAS_RECEIVED_CONFIRMATION,
               payload: { hasReceivedConfirmation: e.target.checked },
@@ -256,7 +256,7 @@ export function Profile() {
           value="Sacramento do Matrimônio"
           isSelected={state.hasReceivedMarriage}
           classNames={{ label: 'text-white' }}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: CatechistActionTypes.SET_HAS_RECEIVED_MARRIAGE,
               payload: { hasReceivedMarriage: e.target.checked },

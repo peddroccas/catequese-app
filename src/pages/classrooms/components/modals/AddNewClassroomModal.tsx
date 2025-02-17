@@ -8,7 +8,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { ClassroomActionTypes } from '@/reducer/classroom/classroomActionTypes'
 import {
@@ -36,12 +36,12 @@ const addNewClassroomFormSchema = z.object({
       'Sementinha',
       'Pré-Eucaristia',
     ],
-    { message: 'Campo obrigatório' },
+    { message: 'Campo obrigatório' }
   ),
   startedAt: z.enum(['2023', '2024', '2025'], {
     message: 'Digite um dos anos 2023, 2024, 2025',
   }),
-  catechists: z.custom((value) => {
+  catechists: z.custom(value => {
     if (value) {
       return true
     } else {
@@ -115,7 +115,7 @@ export function AddNewClassroomModal({
               control={control}
               rules={{
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: ClassroomActionTypes.SET_ROOM_NUMBER,
                     payload: { roomNumber: e.target.value },
@@ -138,7 +138,7 @@ export function AddNewClassroomModal({
               rules={{
                 required: true,
                 value: state.segment!,
-                onChange: (e) => {
+                onChange: e => {
                   dispatch({
                     type: ClassroomActionTypes.SET_SEGMENT,
                     payload: { segment: e.target.value },
@@ -171,7 +171,7 @@ export function AddNewClassroomModal({
                     'Catecúmenos Adultos',
                     'Sementinha',
                     'Pré-Eucaristia',
-                  ].map((segment) => (
+                  ].map(segment => (
                     <SelectItem key={segment} value={segment}>
                       {segment}
                     </SelectItem>
@@ -184,7 +184,7 @@ export function AddNewClassroomModal({
               control={control}
               rules={{
                 required: true,
-                onChange: (e) =>
+                onChange: e =>
                   dispatch({
                     type: ClassroomActionTypes.SET_STARTED_AT,
                     payload: { startedAt: e.target.value },
@@ -207,11 +207,11 @@ export function AddNewClassroomModal({
               rules={{
                 required: true,
                 value: selectedCatechists!,
-                onChange: (e) => {
+                onChange: e => {
                   setSelectedCatechists(
-                    catechists.filter((catechist) =>
-                      String(e.target.value).includes(catechist.id!),
-                    ),
+                    catechists.filter(catechist =>
+                      String(e.target.value).includes(catechist.id!)
+                    )
                   )
                   dispatch({
                     type: ClassroomActionTypes.SET_CATECHISTS,
@@ -241,7 +241,7 @@ export function AddNewClassroomModal({
                   isInvalid={Boolean(errors.catechists)}
                   errorMessage={String(errors.catechists?.message)}
                 >
-                  {catechists.map((catechist) => (
+                  {catechists.map(catechist => (
                     <SelectItem key={catechist.id!} value={catechist.name}>
                       {catechist.name}
                     </SelectItem>

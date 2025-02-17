@@ -6,7 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { Check, X } from '@phosphor-icons/react'
 import ToolBar from './ToolBar'
 import { useContext, useState } from 'react'
@@ -29,7 +29,7 @@ export function CatechizingsTable({
   })
 
   const handleSort = (column: string) => {
-    setSortDescriptor((prev) => {
+    setSortDescriptor(prev => {
       const direction =
         prev.column === column && prev.direction === 'ascending'
           ? 'descending'
@@ -114,7 +114,7 @@ export function CatechizingsTable({
       <TableBody>
         {sortedCatechizings.map((catechizing, index) => {
           const classroom = classrooms.find(
-            (classroom) => classroom.id === catechizing.classroomId,
+            classroom => classroom.id === catechizing.classroomId
           )
           const { catechists } = classroom!
           return (
@@ -125,7 +125,7 @@ export function CatechizingsTable({
                 {classroom?.roomNumber}
               </TableCell>
               <TableCell hidden={hasPageClassroomInfo}>
-                {catechists?.map((catechist) => catechist.nickname).join(' e ')}
+                {catechists?.map(catechist => catechist.nickname).join(' e ')}
               </TableCell>
               <TableCell>{catechizing.parents!.name}</TableCell>
               <TableCell>{catechizing.parents!.phone}</TableCell>

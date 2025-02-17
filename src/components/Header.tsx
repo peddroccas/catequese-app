@@ -6,7 +6,7 @@ import {
   NavbarItem,
   NavbarMenu,
   NavbarMenuItem,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import catequeseLogo from '../assets/catequese-logo.svg'
 import { useEffect, useState } from 'react'
 import { List } from '@phosphor-icons/react'

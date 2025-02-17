@@ -1,5 +1,5 @@
 import { catechizing } from '@/Types'
-import { Tooltip } from '@nextui-org/react'
+import { Tooltip } from '@heroui/react'
 import {
   ArrowsLeftRight,
   Info,

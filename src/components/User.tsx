@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { SignOut, UserCircle } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 import { UpdateCatechistModal } from './updatePasswordDialog'
@@ -17,6 +17,7 @@ export default function User() {
   const { logout } = useAuth()
   return (
     <div className="flex items-center gap-4">
+      <UpdateCatechistModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <Dropdown placement="bottom-end" className="bg-bunker-900">
         <DropdownTrigger>
           <Avatar
@@ -27,20 +28,17 @@ export default function User() {
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions">
           <DropdownItem
-            onClick={() => setIsOpen(true)}
+            onPress={() => setIsOpen(true)}
             key="settings"
             startContent={<UserCircle size={20} />}
           >
             Mudar senha
           </DropdownItem>
-          <UpdateCatechistModal
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
+
           <DropdownItem
             key="logout"
             color="danger"
-            onClick={logout}
+            onPress={logout}
             startContent={<SignOut size={20} />}
           >
             Sair

@@ -9,7 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
   DateValue,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
 import { getLocalTimeZone } from '@internationalized/date'
@@ -36,7 +36,7 @@ export default function NewInstallmentModal({
   async function handleOnSubmitNewInstallmentModal() {
     const formattedDate = format(
       payedAt!.toDate(getLocalTimeZone()),
-      'dd/MM/yyyy',
+      'dd/MM/yyyy'
     )
     await CatechizingRepository.addNewInstallment(catechizing, {
       payedAt: new Date(formattedDate),
@@ -53,7 +53,7 @@ export default function NewInstallmentModal({
       placement="center"
     >
       <ModalContent>
-        {(onClose) => (
+        {onClose => (
           <>
             <ModalHeader className="flex flex-col gap-1">
               Nova parcela
@@ -64,7 +64,7 @@ export default function NewInstallmentModal({
                 label="Valor"
                 className="text-bunker-950"
                 value={value}
-                onChange={(e) => setValue(e.target.value)}
+                onChange={e => setValue(e.target.value)}
                 type="number"
                 placeholder="Digite o valor"
                 variant="bordered"
@@ -81,7 +81,7 @@ export default function NewInstallmentModal({
                     segment: '!text-brown-500',
                   }}
                   classNames={{ input: '!text-brown-500' }}
-                  onChange={(newDate) => setPayedAt(newDate)}
+                  onChange={newDate => setPayedAt(newDate)}
                   showMonthAndYearPickers
                   isRequired
                 />

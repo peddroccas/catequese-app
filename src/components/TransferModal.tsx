@@ -8,7 +8,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { useContext, useState } from 'react'
 import { ClassroomSelect } from './ClassroomSelect'
 import { CatechizingRepository } from '@/services/repositories/catechizingRepository'
@@ -29,7 +29,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
   } = useContext(ClassroomContext)
 
   const [selectedClassroom, setSelectedClassroom] = useState<classroom>(
-    classrooms.find((classroom) => classroom.id === data.classroomId)!,
+    classrooms.find(classroom => classroom.id === data.classroomId)!
   )
 
   async function handleTransfer() {
@@ -39,7 +39,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
           // console.log(state)
           await CatechistRepository.transferCatechist(
             data.id!,
-            selectedClassroom.id!,
+            selectedClassroom.id!
           )
             .then(() => {
               throwCatechistUpdate()
@@ -52,7 +52,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
         case 'catechizing':
           await CatechizingRepository.transferCatechizing(
             data.id!,
-            selectedClassroom.id!,
+            selectedClassroom.id!
           )
             .then(() => {
               throwCatechizingUpdate()
@@ -77,7 +77,7 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
       onClose={() => {
         onClose()
         setSelectedClassroom(
-          classrooms.find((classroom) => classroom.id === data.classroomId)!,
+          classrooms.find(classroom => classroom.id === data.classroomId)!
         )
       }}
       className="bg-bunker-900"
@@ -88,16 +88,14 @@ export function TransferModal({ data, isOpen, onClose, type }: TransferModal) {
           <p>Nome: {data.name}</p>
           <p>
             Turma:{' '}
-            {classrooms.find((classroom) => classroom.id === data.classroomId)
+            {classrooms.find(classroom => classroom.id === data.classroomId)
               ?.roomNumber || 'Sem turma'}
           </p>
           <ClassroomSelect
             value={selectedClassroom || ({} as classroom)}
-            onChange={(e) =>
+            onChange={e =>
               setSelectedClassroom(
-                classrooms.find(
-                  (classroom) => classroom.id === e.target.value,
-                )!,
+                classrooms.find(classroom => classroom.id === e.target.value)!
               )
             }
           />

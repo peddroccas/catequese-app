@@ -1,6 +1,6 @@
 import { classroom } from '@/Types'
 import { downloadCallList } from '@/utils/downloadCallList'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 import { DownloadSimple } from '@phosphor-icons/react'
 import { forwardRef } from 'react'
 
@@ -22,7 +22,7 @@ const DownloadButton = forwardRef<HTMLButtonElement, DownloadButtonProps>(
         <DownloadSimple size={28} className="text-white" />
       </Button>
     )
-  },
+  }
 )
 
 export default DownloadButton
