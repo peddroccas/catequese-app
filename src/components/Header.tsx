@@ -7,7 +7,9 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from '@heroui/react'
-import catequeseLogo from '../assets/catequese-logo.svg'
+
+import catequeseLogo from '@/assets/catequese-logo.svg'
+
 import { useEffect, useState } from 'react'
 import { List } from '@phosphor-icons/react'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -97,7 +99,6 @@ export function Header() {
         <NavbarItem className="lg:flex">
           <User />
         </NavbarItem>
-        <NavbarItem></NavbarItem>
       </NavbarContent>
       <NavbarMenu className="w-fit bg-bunker-950 opacity-95">
         {menuItems.map(
