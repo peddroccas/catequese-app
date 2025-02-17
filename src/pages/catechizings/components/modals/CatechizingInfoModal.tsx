@@ -9,7 +9,8 @@ import {
 } from '@heroui/react'
 
 import type { catechizing } from '@/Types'
-import { parseAbsoluteToLocal } from '@internationalized/date'
+import { parseAbsoluteToLocal, parseDate } from '@internationalized/date'
+import { I18nProvider } from '@react-aria/i18n'
 
 interface CatechizingInfoProps {
   data: catechizing
@@ -38,17 +39,19 @@ export function CatechizingInfoModal({
           <div className="flex flex-col gap-4">
             <Input isReadOnly label="Nome" value={data.name} />
 
-            <DatePicker
-              label="Data"
-              isReadOnly
-              value={parseAbsoluteToLocal(data.birthday!)}
-              dateInputClassNames={{
-                inputWrapper: 'border hover:border-2 focus:border-2',
-              }}
-              classNames={{ input: '!text-brown-500' }}
-              showMonthAndYearPickers
-              granularity="day"
-            />
+            <I18nProvider locale="pt-BR">
+              <DatePicker
+                label="Data"
+                isReadOnly
+                value={parseAbsoluteToLocal(data.birthday!)}
+                dateInputClassNames={{
+                  inputWrapper: 'border hover:border-2 focus:border-2',
+                }}
+                classNames={{ input: '!text-brown-500' }}
+                showMonthAndYearPickers
+                granularity="day"
+              />
+            </I18nProvider>
 
             <Input readOnly label="Endereço" value={data.address} />
             <Input

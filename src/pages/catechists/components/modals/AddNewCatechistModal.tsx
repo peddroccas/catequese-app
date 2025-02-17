@@ -23,7 +23,11 @@ import { CatechistRepository } from '@/services/repositories/catechistRepository
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
-import { classroom } from '@/Types'
+import type { classroom } from '@/Types'
+import {
+  parseAbsoluteToLocal,
+  parseZonedDateTime,
+} from '@internationalized/date'
 
 const addNewCatechistFormSchema = z.object({
   name: z
@@ -35,9 +39,8 @@ const addNewCatechistFormSchema = z.object({
   birthday: z.custom(value => {
     if (value) {
       return true
-    } else {
-      return false
     }
+    return false
   }, 'Campo obrigatório'),
   classroom: z.string().uuid().optional(),
   email: z
@@ -166,10 +169,11 @@ export function AddNewCatechistModal({
                   required: true,
                   value: state.birthday!,
                   onChange: e => {
-                    console.log(e.target.value.toString())
+                    const date = new Date(e.target.value.toDate())
+                    console.log(e.target.value.toDate().toISOString())
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value.toString() },
+                      payload: { birthday: date.toISOString() },
                     })
                   },
                 }}

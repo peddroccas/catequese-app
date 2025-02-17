@@ -18,7 +18,7 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
-import { catechizing } from '@/Types'
+import type { catechizing } from '@/Types'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 import {
   parentReducer,
@@ -33,9 +33,8 @@ const EditCatechizingFormSchema = z.object({
   birthday: z.custom(value => {
     if (value) {
       return true
-    } else {
-      return false
     }
+    return false
   }, 'Campo obrigatório'),
 })
 
@@ -85,6 +84,7 @@ export function EditCatechizingModal({
       console.error(error)
     }
   }
+
   return (
     <Modal
       isOpen={isOpen}

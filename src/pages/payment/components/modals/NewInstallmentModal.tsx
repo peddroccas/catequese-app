@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  DateValue,
+  type DateValue,
 } from '@heroui/react'
 import { I18nProvider } from '@react-aria/i18n'
 import { format } from 'date-fns'
@@ -81,7 +81,7 @@ export default function NewInstallmentModal({
                     segment: '!text-brown-500',
                   }}
                   classNames={{ input: '!text-brown-500' }}
-                  onChange={newDate => setPayedAt(newDate)}
+                  onChange={newDate => setPayedAt(newDate!)}
                   showMonthAndYearPickers
                   isRequired
                 />

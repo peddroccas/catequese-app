@@ -82,6 +82,7 @@ export function EditCatechistModal({
       console.error(error)
     }
   }
+
   return (
     <Modal
       isOpen={isOpen}

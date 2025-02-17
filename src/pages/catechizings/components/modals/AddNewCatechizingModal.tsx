@@ -23,7 +23,7 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useEffect, useReducer, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
-import { classroom } from '@/Types'
+import type { classroom } from '@/Types'
 import {
   parentInitialState,
   parentReducer,
@@ -37,16 +37,14 @@ const addNewCatechizingFormSchema = z.object({
   birthday: z.custom(value => {
     if (value) {
       return true
-    } else {
-      return false
     }
+    return false
   }, 'Campo obrigatório'),
   classroom: z.custom(value => {
     if (value) {
       return true
-    } else {
-      return false
     }
+    return false
   }, 'Campo obrigatório'),
   responsibleName: z
     .string({ message: 'Insira um valor válido' })
@@ -161,10 +159,10 @@ export function AddNewCatechizingModal({
                   required: true,
                   value: state.birthday,
                   onChange: e => {
-                    console.log(e.target.value)
+                    const date = new Date(e.target.value.toDate())
                     dispatch({
                       type: CatechizingActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value.toString() },
+                      payload: { birthday: date.toISOString() },
                     })
                   },
                 }}
