@@ -23,11 +23,19 @@ import type { catechist } from '@/Types'
 import { AuthContext } from '@/contexts/AuthContext'
 import { Eye, EyeSlash } from '@phosphor-icons/react'
 
-const editCatechistFormSchema = z.object({
-  password: z
-    .string({ message: 'Insira um valor válido' })
-    .min(1, 'Campo obrigatoŕio'),
-})
+const editCatechistFormSchema = z
+  .object({
+    password: z
+      .string({ message: 'Insira um valor válido' })
+      .min(6, 'Campo obrigatoŕio'),
+    confirmPassword: z
+      .string({ message: 'Insira um valor válido' })
+      .min(6, 'Campo obrigatório'),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmPassword'],
+  })
 
 interface EditCatechistFormModal {
   isOpen: boolean
@@ -62,7 +70,7 @@ export function UpdateCatechistModal({
       await CatechistRepository.updatePassword(user!.id!, password).finally(
         () => {
           setHasUserSubmittedForm(false)
-          setPassword('')
+          reset()
           onClose()
         }
       )
@@ -106,8 +114,8 @@ export function UpdateCatechistModal({
                   {...field}
                   classNames={{ base: 'text-center' }}
                   type={isVisible ? 'text' : 'password'}
-                  isInvalid={Boolean(errors.name)}
-                  errorMessage={String(errors.name?.message)}
+                  isInvalid={Boolean(errors.password)}
+                  errorMessage={String(errors.password?.message)}
                   endContent={
                     <button
                       aria-label="toggle password visibility"
@@ -125,7 +133,37 @@ export function UpdateCatechistModal({
                 />
               )}
             />
-
+            <Controller
+              name="confirmPassword"
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field }) => (
+                <Input
+                  label="Confirme senha"
+                  {...field}
+                  classNames={{ base: 'text-center' }}
+                  type={isVisible ? 'text' : 'password'}
+                  isInvalid={Boolean(errors.confirmPassword)}
+                  errorMessage={String(errors.confirmPassword?.message)}
+                  endContent={
+                    <button
+                      aria-label="toggle password visibility"
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <EyeSlash size={24} className="text-bunker-900" />
+                      ) : (
+                        <Eye size={24} className="text-bunker-900" />
+                      )}
+                    </button>
+                  }
+                />
+              )}
+            />
             <Button
               variant="solid"
               aria-labelledby="cadastro de catequizando"
