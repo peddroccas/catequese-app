@@ -8,8 +8,11 @@ import {
 } from '@nextui-org/react'
 import { SignOut, UserCircle } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
+import { UpdateCatechistModal } from './updatePasswordDialog'
+import { useState } from 'react'
 
 export default function User() {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const navigate = useNavigate()
   const { logout } = useAuth()
   return (
@@ -23,9 +26,17 @@ export default function User() {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions">
-          <DropdownItem key="settings" startContent={<UserCircle size={20} />}>
-            Meu perfil
+          <DropdownItem
+            onClick={() => setIsOpen(true)}
+            key="settings"
+            startContent={<UserCircle size={20} />}
+          >
+            Mudar senha
           </DropdownItem>
+          <UpdateCatechistModal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
           <DropdownItem
             key="logout"
             color="danger"

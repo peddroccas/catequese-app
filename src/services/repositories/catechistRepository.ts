@@ -13,10 +13,10 @@ export class CatechistRepository {
   static async getAllCatechists(): Promise<catechist[]> {
     return api
       .get(`/catechists`)
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -25,10 +25,10 @@ export class CatechistRepository {
   static async createNewCatechist(catechist: catechist) {
     return api
       .post(`/catechists`, catechist)
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -37,10 +37,10 @@ export class CatechistRepository {
   static async updateCatechist(catechist: catechist) {
     return api
       .put(`/catechists/${encodeURIComponent(catechist.id!)}`, catechist)
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -52,10 +52,10 @@ export class CatechistRepository {
         id: catechistId,
         classroomId,
       })
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -64,10 +64,10 @@ export class CatechistRepository {
   static async deleteCatechist(catechistId: string) {
     return api
       .delete(`/catechists/${encodeURIComponent(catechistId)}`)
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -76,10 +76,27 @@ export class CatechistRepository {
   static async getCatechist(token: string): Promise<catechist> {
     return api
       .get(`/profile`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
+        // Manipular erros na requisição
+        console.error('Erro na requisição:', error)
+      })
+  }
+
+  static async updatePassword(
+    catechistId: string,
+    password: string
+  ): Promise<catechist> {
+    return api
+      .patch(`/update-password/${catechistId}`, {
+        data: { password },
+      })
+      .then(response => {
+        return response.data
+      })
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })
@@ -87,14 +104,14 @@ export class CatechistRepository {
 
   static async login(
     email: string,
-    password: string,
+    password: string
   ): Promise<{ token: string }> {
     const response = api
       .post(`/login`, { email, password })
-      .then((response) => {
+      .then(response => {
         return response.data
       })
-      .catch((error) => {
+      .catch(error => {
         // Manipular erros na requisição
         console.error('Erro na requisição:', error)
       })

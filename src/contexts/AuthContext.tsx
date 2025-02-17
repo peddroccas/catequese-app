@@ -1,7 +1,7 @@
 import { catechistInitialState } from '@/reducer/catechist/catechistReducer'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
-import { catechist } from '@/Types'
-import { ReactNode, createContext, useEffect, useState } from 'react'
+import type { catechist } from '@/Types'
+import { type ReactNode, createContext, useEffect, useState } from 'react'
 
 export interface AuthType {
   user: catechist | null

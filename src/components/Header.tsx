@@ -43,7 +43,7 @@ export function Header() {
     { permission: 'COORDINATOR', name: 'Carnês', link: '/payment' },
     { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
     { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
-    { permission: 'COORDINATOR', name: 'Ritos', link: '/rites' },
+    // { permission: 'COORDINATOR', name: 'Ritos', link: '/rites' },
   ]
 
   if (!user) {
@@ -90,7 +90,7 @@ export function Header() {
                   {item.name}
                 </NavLink>
               </NavbarMenuItem>
-            ),
+            )
         )}
       </NavbarContent>
       <NavbarContent justify="end">
@@ -117,7 +117,7 @@ export function Header() {
                   {item.name}
                 </NavLink>
               </NavbarMenuItem>
-            ),
+            )
         )}
       </NavbarMenu>
     </Navbar>
