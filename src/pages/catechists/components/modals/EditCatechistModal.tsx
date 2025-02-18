@@ -155,7 +155,7 @@ export function EditCatechistModal({
                   value: parseAbsoluteToLocal(state.birthday!),
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
-
+                    console.log(date.toISOString())
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: date.toISOString() },
