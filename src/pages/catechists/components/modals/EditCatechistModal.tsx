@@ -18,7 +18,7 @@ import { CatechistRepository } from '@/services/repositories/catechistRepository
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
-import { parseAbsoluteToLocal } from '@internationalized/date'
+import { parseAbsoluteToLocal, parseDate } from '@internationalized/date'
 import type { catechist } from '@/Types'
 
 const editCatechistFormSchema = z.object({
@@ -149,10 +149,10 @@ export function EditCatechistModal({
               <Controller
                 name="birthday"
                 control={control}
-                defaultValue={parseAbsoluteToLocal(state.birthday!)}
+                defaultValue={parseDate(state.birthday!)}
                 rules={{
                   required: true,
-                  value: parseAbsoluteToLocal(state.birthday!),
+                  value: parseDate(state.birthday!),
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
                     console.log(date.toISOString())
