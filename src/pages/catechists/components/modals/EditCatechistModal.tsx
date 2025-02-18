@@ -19,6 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
 import {
+  fromDate,
   parseAbsolute,
   parseAbsoluteToLocal,
   parseDate,
@@ -154,10 +155,16 @@ export function EditCatechistModal({
               <Controller
                 name="birthday"
                 control={control}
-                defaultValue={parseAbsoluteToLocal(state.birthday!)}
+                defaultValue={fromDate(
+                  new Date(state.birthday!),
+                  'America/Sao_Paulo'
+                )}
                 rules={{
                   required: true,
-                  value: parseAbsoluteToLocal(state.birthday!),
+                  value: fromDate(
+                    new Date(state.birthday!),
+                    'America/Sao_Paulo'
+                  ),
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
                     console.log(date)
