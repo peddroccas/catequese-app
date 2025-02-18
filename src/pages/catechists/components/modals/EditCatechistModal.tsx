@@ -18,13 +18,7 @@ import { CatechistRepository } from '@/services/repositories/catechistRepository
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useReducer, useState } from 'react'
 import { z } from 'zod'
-import {
-  fromDate,
-  parseAbsolute,
-  parseAbsoluteToLocal,
-  parseDate,
-} from '@internationalized/date'
-
+import { parseAbsoluteToLocal } from '@internationalized/date'
 import type { catechist } from '@/Types'
 
 const editCatechistFormSchema = z.object({
@@ -155,25 +149,15 @@ export function EditCatechistModal({
               <Controller
                 name="birthday"
                 control={control}
-                defaultValue={fromDate(
-                  new Date(state.birthday!),
-                  'America/Sao_Paulo'
-                )}
+                defaultValue={parseAbsoluteToLocal(state.birthday!)}
                 rules={{
                   required: true,
-                  value: fromDate(
-                    new Date(state.birthday!),
-                    'America/Sao_Paulo'
-                  ),
-                  onChange: e => {
-                    const date = new Date(e.target.value.toDate())
-                    console.log(e.target.value.toAbsoluteString())
-
+                  value: parseAbsoluteToLocal(state.birthday!),
+                  onChange: e =>
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: e.target.value.toAbsoluteString() },
-                    })
-                  },
+                    }),
                 }}
                 render={({ field }) => (
                   <DatePicker
