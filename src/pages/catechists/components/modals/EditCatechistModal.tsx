@@ -23,6 +23,7 @@ import {
   parseAbsoluteToLocal,
   parseDate,
 } from '@internationalized/date'
+
 import type { catechist } from '@/Types'
 
 const editCatechistFormSchema = z.object({
@@ -153,17 +154,13 @@ export function EditCatechistModal({
               <Controller
                 name="birthday"
                 control={control}
-                defaultValue={parseAbsoluteToLocal(
-                  new Date(state.birthday!).toISOString()
-                )}
+                defaultValue={parseAbsoluteToLocal(state.birthday!)}
                 rules={{
                   required: true,
-                  value: parseAbsoluteToLocal(
-                    new Date(state.birthday!).toISOString()
-                  ),
+                  value: parseAbsoluteToLocal(state.birthday!),
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
-                    console.log(date.toISOString())
+                    console.log(date)
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: date.toISOString() },
