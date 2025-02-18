@@ -153,11 +153,14 @@ export function EditCatechistModal({
                 rules={{
                   required: true,
                   value: parseAbsoluteToLocal(state.birthday!),
-                  onChange: e =>
+                  onChange: e => {
+                    const date = new Date(e.target.value.toDate())
+
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
-                      payload: { birthday: e.target.value.toAbsoluteString() },
-                    }),
+                      payload: { birthday: date.toISOString() },
+                    })
+                  },
                 }}
                 render={({ field }) => (
                   <DatePicker

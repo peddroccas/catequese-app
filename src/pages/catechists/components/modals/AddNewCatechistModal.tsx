@@ -170,7 +170,6 @@ export function AddNewCatechistModal({
                   value: state.birthday!,
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
-                    console.log(e.target.value.toDate().toISOString())
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: date.toISOString() },
