@@ -167,7 +167,7 @@ export function EditCatechistModal({
                   ),
                   onChange: e => {
                     const date = new Date(e.target.value.toDate())
-                    console.log(date)
+                    console.log(e.target.value)
                     dispatch({
                       type: CatechistActionTypes.SET_BIRTHDAY,
                       payload: { birthday: date.toISOString() },
