@@ -26,7 +26,7 @@ export function ClassroomList({
       {/* Celular: faixa horizontal que rola de lado */}
       <nav
         aria-label="Turmas"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:hidden"
+        className="scrollbar-thin -mx-4 flex gap-2 overflow-x-auto px-4 pb-3 md:hidden"
       >
         {orderedClassrooms.map((classroom) => {
           const isSelected = classroom.id === selectedClassroomId

@@ -34,7 +34,7 @@ export function Classrooms() {
         isOpen={isUserAddingNewClassroom}
         onClose={() => setIsUserAddingNewClassroom(false)}
       />
-      <aside className="space-y-3 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:w-56 md:shrink-0 md:overflow-y-auto lg:w-64">
+      <aside className="scrollbar-thin space-y-3 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:w-56 md:shrink-0 md:overflow-y-auto md:pr-2 lg:w-64">
         <Button
           onPress={() => setIsUserAddingNewClassroom(true)}
           color="primary"

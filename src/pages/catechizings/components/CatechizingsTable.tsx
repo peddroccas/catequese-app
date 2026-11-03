@@ -31,15 +31,16 @@ interface column {
   sticky?: 'left' | 'right'
 }
 
-// Nome e ações ficam presos nas bordas enquanto a tabela rola para o lado
+// Nome e ações ficam presos nas bordas enquanto a tabela rola para o lado.
+// Só a partir de tablet: no celular as duas colunas ocupariam a tela toda.
 const stickyHeaderClassName = {
-  left: 'sticky left-0 z-20',
-  right: 'sticky right-0 z-20',
+  left: 'md:sticky md:left-0 md:z-20',
+  right: 'md:sticky md:right-0 md:z-20',
 }
 const stickyCellClassName = {
-  left: 'sticky left-0 z-10 bg-white group-hover:bg-bunker-50 shadow-[8px_0_8px_-8px_rgba(46,59,76,0.15)]',
+  left: 'md:sticky md:left-0 md:z-10 md:bg-white md:group-hover:bg-bunker-50 md:shadow-[8px_0_8px_-8px_rgba(46,59,76,0.15)]',
   right:
-    'sticky right-0 z-10 bg-white group-hover:bg-bunker-50 shadow-[-8px_0_8px_-8px_rgba(46,59,76,0.15)]',
+    'md:sticky md:right-0 md:z-10 md:bg-white md:group-hover:bg-bunker-50 md:shadow-[-8px_0_8px_-8px_rgba(46,59,76,0.15)]',
 }
 
 function BooleanIcon({ value }: { value: boolean | null }) {

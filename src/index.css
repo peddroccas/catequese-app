@@ -7,3 +7,22 @@
     @apply bg-bunker-50 text-bunker-900 antialiased;
   }
 }
+
+@layer utilities {
+  /* Barra de rolagem fina e discreta (listas de turmas) */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.bunker.300') transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: theme('colors.bunker.300');
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
