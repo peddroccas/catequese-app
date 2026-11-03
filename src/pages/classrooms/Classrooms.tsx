@@ -29,16 +29,17 @@ export function Classrooms() {
   const classroom = useClassroomDetails(selectedId)
 
   return (
-    <div className="mx-4 mt-4 flex flex-grow flex-col gap-6 pb-8 pt-4 sm:mx-10 lg:flex-row lg:items-start">
+    <div className="flex flex-grow flex-col gap-6 md:flex-row md:items-start">
       <AddNewClassroomModal
         isOpen={isUserAddingNewClassroom}
         onClose={() => setIsUserAddingNewClassroom(false)}
       />
-      <aside className="space-y-3 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:w-60 lg:shrink-0 lg:overflow-y-auto">
+      <aside className="space-y-3 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:w-56 md:shrink-0 md:overflow-y-auto lg:w-64">
         <Button
           onPress={() => setIsUserAddingNewClassroom(true)}
+          color="primary"
           startContent={<Plus size={18} />}
-          className="bg-bunker-900 text-white shadow shadow-black"
+          className="w-full"
         >
           Nova turma
         </Button>

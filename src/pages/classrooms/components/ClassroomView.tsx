@@ -1,7 +1,9 @@
 import { SearchInput } from '@/components/SearchInput'
+import { PageHeader } from '@/components/PageHeader'
 import { matchesSearch } from '@/utils/search'
 import { CatechizingsTable } from '@/pages/catechizings/components/CatechizingsTable'
 import { classroom, isAdultSegment } from '@/Types'
+import { Chip } from '@nextui-org/react'
 import { useState } from 'react'
 import { ToolBar } from './ToolBar'
 
@@ -18,17 +20,29 @@ export function ClassroomView({ classroom }: ClassroomViewProps) {
   )
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <h1 className="text-2xl">{classroom.name}</h1>
-          <p className="text-sm text-bunker-300">
-            {classroom.segment} · início em {classroom.startedAt} ·{' '}
-            {classroom.catechizings?.length ?? 0} catequizandos
-          </p>
-        </div>
+    <section className="flex flex-col gap-5">
+      <PageHeader
+        title={classroom.name ?? classroom.location}
+        description={
+          <span className="flex flex-wrap items-center gap-2">
+            <Chip
+              size="sm"
+              variant="flat"
+              classNames={{
+                base: 'bg-bunker-100',
+                content: 'font-medium text-bunker-700',
+              }}
+            >
+              {classroom.segment}
+            </Chip>
+            <span>Início em {classroom.startedAt}</span>
+            <span aria-hidden>·</span>
+            <span>{classroom.catechizings?.length ?? 0} catequizandos</span>
+          </span>
+        }
+      >
         <ToolBar classroom={classroom} />
-      </div>
+      </PageHeader>
       <SearchInput value={search} onChange={setSearch} />
       <CatechizingsTable
         catechizings={catechizings}

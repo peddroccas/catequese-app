@@ -93,10 +93,10 @@ export function FormationModal({
       placement="top"
       size="2xl"
       scrollBehavior="outside"
-      className="rounded-xl bg-bunker-900 py-4"
+      className="py-2"
     >
       <ModalContent>
-        <ModalHeader className="flex justify-center text-xl">
+        <ModalHeader className="text-xl font-semibold text-bunker-900">
           {data ? 'Editar formação' : 'Nova formação'}
         </ModalHeader>
         <ModalBody>
@@ -133,8 +133,8 @@ export function FormationModal({
               />
             </I18nProvider>
 
-            <fieldset className="flex flex-col gap-2 rounded-xl border border-bunker-700 p-3">
-              <legend className="px-1 text-sm text-bunker-300">
+            <fieldset className="flex flex-col gap-2 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4">
+              <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-bunker-500">
                 Chamada ({presentCatechistIds.length} de {catechists.length}{' '}
                 presentes)
               </legend>
@@ -142,7 +142,7 @@ export function FormationModal({
                 <Button
                   size="sm"
                   variant="flat"
-                  className="text-white"
+                  color="primary"
                   onPress={() =>
                     setValue(
                       'presentCatechistIds',
@@ -155,7 +155,7 @@ export function FormationModal({
                 <Button
                   size="sm"
                   variant="flat"
-                  className="text-white"
+                  color="primary"
                   onPress={() => setValue('presentCatechistIds', [])}
                 >
                   Desmarcar todos
@@ -177,7 +177,7 @@ export function FormationModal({
                               : field.value.filter((id) => id !== catechist.id),
                           )
                         }
-                        classNames={{ label: 'text-white' }}
+                        classNames={{ label: 'text-sm text-bunker-800' }}
                       >
                         {catechist.name}
                       </Checkbox>
@@ -194,7 +194,8 @@ export function FormationModal({
             <Button
               type="submit"
               size="lg"
-              className="w-full font-medium shadow shadow-black"
+              color="primary"
+              className="w-full font-medium"
               isLoading={isSubmitting}
             >
               Salvar

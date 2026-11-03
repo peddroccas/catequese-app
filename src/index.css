@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-    body{
-        @apply bg-blue-100 text-white
-    }
+@layer base {
+  body {
+    @apply bg-bunker-50 text-bunker-900 antialiased;
+  }
 }

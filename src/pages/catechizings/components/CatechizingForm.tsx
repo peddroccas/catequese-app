@@ -152,7 +152,7 @@ export function CatechizingForm({
     }
   }
 
-  const checkboxClassNames = { label: 'text-white' }
+  const checkboxClassNames = { label: 'text-sm text-bunker-800' }
 
   return (
     <form
@@ -214,8 +214,8 @@ export function CatechizingForm({
           <Select
             label="Turma"
             classNames={{
-              listbox: '!text-bunker-950',
-              selectorIcon: 'text-bunker-950',
+              listbox: 'text-bunker-800',
+              selectorIcon: 'text-bunker-500',
             }}
             selectedKeys={field.value ? [field.value] : []}
             onChange={(e) => field.onChange(e.target.value)}
@@ -230,17 +230,17 @@ export function CatechizingForm({
         )}
       />
 
-      <fieldset className="flex flex-col gap-3 rounded-xl border border-bunker-700 p-3">
-        <legend className="px-1 text-sm text-bunker-300">
+      <fieldset className="flex flex-col gap-3 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4">
+        <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-bunker-500">
           Responsáveis{isAdult && ' (opcional para adultos)'}
         </legend>
         {fields.map((parentField, index) => (
           <div
             key={parentField.id}
-            className="flex flex-col gap-2 border-b border-bunker-800 pb-3 last:border-none last:pb-0"
+            className="flex flex-col gap-2 border-b border-bunker-200 pb-3 last:border-none last:pb-0"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm text-bunker-200">
+              <span className="text-sm font-medium text-bunker-700">
                 Responsável {index + 1}
               </span>
               {!isReadOnly && (
@@ -304,7 +304,8 @@ export function CatechizingForm({
             variant="flat"
             startContent={<Plus size={16} />}
             onPress={() => append(emptyParent)}
-            className="self-start text-white"
+            color="primary"
+            className="self-start"
           >
             Adicionar responsável
           </Button>
@@ -368,8 +369,10 @@ export function CatechizingForm({
       )}
 
       {isAdult && (
-        <fieldset className="flex flex-col gap-3 rounded-xl border border-bunker-700 p-3">
-          <legend className="px-1 text-sm text-bunker-300">Adultos</legend>
+        <fieldset className="flex flex-col gap-3 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4">
+          <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-bunker-500">
+            Adultos
+          </legend>
           <Controller
             name="maritalStatus"
             control={control}
@@ -377,8 +380,8 @@ export function CatechizingForm({
               <Select
                 label="Estado civil"
                 classNames={{
-                  listbox: '!text-bunker-950',
-                  selectorIcon: 'text-bunker-950',
+                  listbox: 'text-bunker-800',
+                  selectorIcon: 'text-bunker-500',
                 }}
                 selectedKeys={field.value ? [field.value] : []}
                 onChange={(e) => field.onChange(e.target.value)}
@@ -400,12 +403,18 @@ export function CatechizingForm({
                 value={field.value}
                 onValueChange={field.onChange}
                 isReadOnly={isReadOnly}
-                classNames={{ label: 'text-bunker-200' }}
+                classNames={{ label: 'text-sm text-bunker-600' }}
               >
-                <Radio value="true" classNames={{ label: 'text-white' }}>
+                <Radio
+                  value="true"
+                  classNames={{ label: 'text-sm text-bunker-800' }}
+                >
                   Sim
                 </Radio>
-                <Radio value="false" classNames={{ label: 'text-white' }}>
+                <Radio
+                  value="false"
+                  classNames={{ label: 'text-sm text-bunker-800' }}
+                >
                   Não
                 </Radio>
               </RadioGroup>
@@ -418,8 +427,8 @@ export function CatechizingForm({
 
       {!isReadOnly && (
         <Button
-          variant="solid"
-          className="w-full p-2 font-medium shadow shadow-black"
+          color="primary"
+          className="w-full font-medium"
           type="submit"
           size="lg"
           isDisabled={isSubmitting}

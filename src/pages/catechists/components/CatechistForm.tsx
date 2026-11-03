@@ -44,8 +44,8 @@ interface CatechistFormProps {
 }
 
 const selectClassNames = {
-  listbox: '!text-bunker-950',
-  selectorIcon: 'text-bunker-950',
+  listbox: 'text-bunker-800',
+  selectorIcon: 'text-bunker-500',
 }
 
 export function CatechistForm({
@@ -244,7 +244,7 @@ export function CatechistForm({
                 isSelected={field.value}
                 onValueChange={field.onChange}
                 isReadOnly={isReadOnly}
-                classNames={{ label: 'text-white' }}
+                classNames={{ label: 'text-sm text-bunker-800' }}
               >
                 {label}
               </Checkbox>
@@ -257,8 +257,8 @@ export function CatechistForm({
 
       {!isReadOnly && (
         <Button
-          variant="solid"
-          className="w-full p-2 font-medium shadow shadow-black"
+          color="primary"
+          className="w-full font-medium"
           type="submit"
           size="lg"
           isDisabled={isSubmitting}

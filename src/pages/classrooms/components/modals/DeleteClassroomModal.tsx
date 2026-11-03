@@ -42,12 +42,7 @@ export function DeleteClassroomModal({
 
   return (
     data.catechists && (
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        className="bg-bunker-900"
-        placement="center"
-      >
+      <Modal isOpen={isOpen} onClose={onClose} placement="center">
         <ModalContent>
           <ModalHeader>Deseja realmente deletar turma?</ModalHeader>
           <ModalBody>

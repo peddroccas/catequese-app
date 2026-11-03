@@ -1,7 +1,7 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, CircularProgress, Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -49,16 +49,29 @@ export function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-950">
-      <header className="flex h-20 items-center bg-bunker-900 p-4 duration-300">
-        <img className="w-14" src={catequeseLogo} alt="" />
+    <div className="flex min-h-screen flex-col bg-bunker-50">
+      <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
+        <img className="w-11" src={catequeseLogo} alt="" />
+        <span className="text-sm font-semibold tracking-wide text-white">
+          Catequese
+        </span>
       </header>
-      <main className="mx-10 mt-4 flex flex-col items-center gap-8 pb-8 pt-4">
+      <main className="flex flex-1 items-center justify-center px-4 py-12">
         <form
           onSubmit={handleSubmit(handlelogin)}
-          className="flex w-11/12 flex-col gap-4 rounded-xl bg-bunker-900 p-4 text-bunker-950 md:w-6/12 lg:w-5/12 2xl:w-3/12"
+          className="flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-bunker-200/70 bg-white p-8 shadow-lg shadow-bunker-900/5"
         >
-          <h1 className="text-center text-2xl text-white">Login</h1>
+          <div className="flex flex-col items-center gap-3 text-center">
+            <img className="w-16" src={catequeseLogo} alt="" />
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
+                Bem-vindo(a)
+              </h1>
+              <p className="text-sm text-bunker-500">
+                Entre com seu email e senha
+              </p>
+            </div>
+          </div>
           <Controller
             name="email"
             control={control}
@@ -95,14 +108,13 @@ export function Login() {
             )}
           />
           <Button
-            variant="solid"
-            aria-labelledby="cadastro de catequizando"
-            aria-label="cadastro de catequizando"
-            className="w-full p-2 font-medium shadow shadow-black"
+            color="primary"
+            className="w-full font-medium"
             type="submit"
             size="lg"
+            isLoading={hasUserSubmittedForm}
           >
-            {hasUserSubmittedForm ? <CircularProgress /> : 'Entrar'}
+            Entrar
           </Button>
         </form>
       </main>

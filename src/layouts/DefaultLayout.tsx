@@ -3,9 +3,11 @@ import { Header } from '../components/Header'
 
 export function DefaultLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-950">
+    <div className="flex min-h-screen flex-col bg-bunker-50">
       <Header />
-      <Outlet />
+      <div className="mx-auto flex w-full max-w-screen-2xl flex-grow flex-col px-4 py-6 sm:px-8 sm:py-8">
+        <Outlet />
+      </div>
     </div>
   )
 }

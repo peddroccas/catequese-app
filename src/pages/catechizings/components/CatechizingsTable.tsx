@@ -31,18 +31,22 @@ interface column {
 
 function BooleanIcon({ value }: { value: boolean | null }) {
   if (value === null) {
-    return <span className="text-bunker-400">-</span>
+    return <span className="text-bunker-300">–</span>
   }
   return value ? (
-    <Check size={20} className="text-green-500" />
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+      <Check size={14} weight="bold" />
+    </span>
   ) : (
-    <X size={20} className="text-red-500" />
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-red-50 text-red-400">
+      <X size={14} weight="bold" />
+    </span>
   )
 }
 
 function Lines({ items }: { items: string[] }) {
   if (!items.length) {
-    return <span className="text-bunker-400">-</span>
+    return <span className="text-bunker-300">–</span>
   }
   return (
     <div className="flex flex-col">
@@ -118,13 +122,21 @@ export function CatechizingsTable({
     )
     switch (key) {
       case 'index':
-        return index + 1
+        return <span className="tabular-nums text-bunker-400">{index + 1}</span>
       case 'name':
-        return <span className="whitespace-nowrap">{catechizing.name}</span>
+        return (
+          <span className="whitespace-nowrap font-medium text-bunker-900">
+            {catechizing.name}
+          </span>
+        )
       case 'age':
         return calculateAge(catechizing.birthday) ?? '-'
       case 'classroom':
-        return classroom?.location ?? '-'
+        return (
+          <span className="whitespace-nowrap">
+            {classroom?.location ?? '–'}
+          </span>
+        )
       case 'catechists':
         return (
           classroom?.catechists

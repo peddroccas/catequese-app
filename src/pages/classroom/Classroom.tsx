@@ -18,16 +18,16 @@ export default function Classroom() {
 
   if (!myClassrooms.length) {
     return (
-      <main className="mx-4 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4 sm:mx-10">
+      <main className="flex flex-grow flex-col gap-6">
         <p className="text-2xl">Você ainda não está em nenhuma turma.</p>
       </main>
     )
   }
 
   return (
-    <div className="mx-4 mt-4 flex flex-grow flex-col gap-6 pb-8 pt-4 sm:mx-10 lg:flex-row lg:items-start">
+    <div className="flex flex-grow flex-col gap-6 md:flex-row md:items-start">
       {myClassrooms.length > 1 && (
-        <aside className="lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
+        <aside className="md:sticky md:top-24 md:w-56 md:shrink-0 lg:w-64">
           <ClassroomList
             classrooms={myClassrooms}
             selectedClassroomId={selectedId}

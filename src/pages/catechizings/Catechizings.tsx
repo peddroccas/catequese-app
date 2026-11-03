@@ -1,5 +1,6 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { Button, Tooltip } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { PageHeader } from '@/components/PageHeader'
 import { UserPlus } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
@@ -44,40 +45,33 @@ export function Catechizings() {
   )
 
   return (
-    <div className="mx-4 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4 sm:mx-10">
-      <nav className="flex flex-col items-center justify-between gap-8 sm:flex-row">
+    <div className="flex flex-grow flex-col gap-6">
+      {user?.role === 'COORDINATOR' && (
+        <AddNewCatechizingModal
+          isOpen={isUserAddingNewCatechizing}
+          onClose={() => setIsUserAddingNewCatechizing(false)}
+        />
+      )}
+      <PageHeader
+        title="Catequizandos"
+        description="Todos os catequizandos da paróquia"
+      >
         {user?.role === 'COORDINATOR' && (
-          <AddNewCatechizingModal
-            isOpen={isUserAddingNewCatechizing}
-            onClose={() => setIsUserAddingNewCatechizing(false)}
-          />
+          <Button
+            color="primary"
+            startContent={<UserPlus size={18} />}
+            onPress={() => setIsUserAddingNewCatechizing(true)}
+          >
+            Novo catequizando
+          </Button>
         )}
-
-        <h1 className="text-3xl">Catequizandos</h1>
-        <div className="flex w-full items-center gap-4 sm:w-auto">
-          <SearchInput value={search} onChange={setSearch} />
-          {user?.role === 'COORDINATOR' && (
-            <Tooltip
-              content="Adicionar novo catequizando"
-              className="text-bunker-950"
-              closeDelay={0}
-            >
-              <Button
-                isIconOnly
-                onPress={() => setIsUserAddingNewCatechizing(true)}
-                className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
-              >
-                <UserPlus size={28} className="text-white" />
-              </Button>
-            </Tooltip>
-          )}
-        </div>
-      </nav>
+      </PageHeader>
       <CatechizingsSummary
         counts={counts}
         selectedGroup={selectedGroup}
         onSelect={setSelectedGroup}
       />
+      <SearchInput value={search} onChange={setSearch} />
       <CatechizingsTable
         catechizings={filteredCatechizings}
         isAdultClassroom={selectedGroup === 'adults'}

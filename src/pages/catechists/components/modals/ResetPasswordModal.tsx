@@ -38,12 +38,7 @@ export function ResetPasswordModal({
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      className="bg-bunker-900"
-      placement="center"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} placement="center">
       <ModalContent>
         <ModalHeader>Resetar senha?</ModalHeader>
         <ModalBody>

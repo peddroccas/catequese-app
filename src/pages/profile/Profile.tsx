@@ -53,11 +53,14 @@ function ChangePasswordForm() {
   }
 
   return (
-    <Card className="w-full bg-bunker-900">
+    <Card
+      shadow="none"
+      className="w-full border border-bunker-200/70 bg-white p-2 shadow-sm"
+    >
       <CardHeader className="flex flex-col items-start gap-1">
-        <h2 className="text-xl text-white">Trocar senha</h2>
+        <h2 className="text-lg font-semibold text-bunker-900">Trocar senha</h2>
         {mustChangePassword && (
-          <p className="text-sm text-yellow-400">
+          <p className="text-sm text-amber-600">
             Você está usando a senha padrão. Crie uma nova senha para continuar.
           </p>
         )}
@@ -93,10 +96,11 @@ function ChangePasswordForm() {
               />
             )}
           />
-          {message && <p className="text-sm text-bunker-200">{message}</p>}
+          {message && <p className="text-sm text-bunker-600">{message}</p>}
           <Button
             type="submit"
-            className="font-medium shadow shadow-black"
+            color="primary"
+            className="font-medium"
             isLoading={isSubmitting}
           >
             Salvar nova senha
@@ -115,13 +119,18 @@ export function Profile() {
   }
 
   return (
-    <div className="mx-4 mt-4 flex flex-col items-center gap-8 pb-8 pt-4">
+    <div className="flex flex-col items-center">
       <div className="flex w-full max-w-2xl flex-col gap-8">
         <ChangePasswordForm />
-        <Card className="w-full bg-bunker-900">
+        <Card
+          shadow="none"
+          className="w-full border border-bunker-200/70 bg-white p-2 shadow-sm"
+        >
           <CardHeader className="flex flex-col items-start gap-1">
-            <h2 className="text-xl text-white">Meus dados</h2>
-            <p className="text-sm text-bunker-300">
+            <h2 className="text-lg font-semibold text-bunker-900">
+              Meus dados
+            </h2>
+            <p className="text-sm text-bunker-500">
               Para corrigir algum dado, fale com a coordenação.
             </p>
           </CardHeader>

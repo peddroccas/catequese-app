@@ -1,5 +1,5 @@
 import { catechist } from '@/Types'
-import { Tooltip } from '@nextui-org/react'
+import { RowAction } from '@/components/IconButton'
 import { Key, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechistModal } from './modals/EditCatechistModal'
@@ -17,7 +17,7 @@ export default function ToolBar({ catechist }: ToolBarProps) {
   const [isUserResettingPassword, setIsUserResettingPassword] =
     useState<boolean>(false)
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-0.5">
       <EditCatechistModal
         isOpen={isUserEditingCatechist}
         data={catechist}
@@ -33,31 +33,22 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         onClose={() => setIsUserResettingPassword(false)}
         data={catechist}
       />
-      <Tooltip content="Editar" className="text-bunker-950" closeDelay={0}>
-        <PencilSimple
-          size={20}
-          className="cursor-pointer duration-300 hover:opacity-60"
-          onClick={() => setIsUserEditingCatechist(true)}
-        />
-      </Tooltip>
-      <Tooltip
-        content="Resetar senha"
-        className="text-bunker-950"
-        closeDelay={0}
-      >
-        <Key
-          size={20}
-          className="cursor-pointer duration-300 hover:text-yellow-400"
-          onClick={() => setIsUserResettingPassword(true)}
-        />
-      </Tooltip>
-      <Tooltip content="Deletar" className="text-bunker-950" closeDelay={0}>
-        <Trash
-          size={20}
-          className="cursor-pointer duration-300 hover:text-red-500"
-          onClick={() => setIsUserDeletingCatechist(true)}
-        />
-      </Tooltip>
+      <RowAction
+        label="Editar"
+        icon={<PencilSimple size={18} />}
+        onPress={() => setIsUserEditingCatechist(true)}
+      />
+      <RowAction
+        label="Resetar senha"
+        icon={<Key size={18} />}
+        onPress={() => setIsUserResettingPassword(true)}
+      />
+      <RowAction
+        label="Deletar"
+        variant="danger"
+        icon={<Trash size={18} />}
+        onPress={() => setIsUserDeletingCatechist(true)}
+      />
     </div>
   )
 }

@@ -65,5 +65,33 @@ export default {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      defaultTheme: 'light',
+      themes: {
+        // Tema claro com o azul-ardósia (bunker) do cabeçalho como cor principal
+        light: {
+          colors: {
+            background: '#f5f7fa',
+            foreground: '#2e3b4c',
+            focus: '#7b97b5',
+            primary: {
+              50: '#f5f7fa',
+              100: '#eaeef4',
+              200: '#d1dae6',
+              300: '#a9bbd0',
+              400: '#7b97b5',
+              500: '#5a7a9d',
+              600: '#466183',
+              700: '#3a4f6a',
+              800: '#334459',
+              900: '#2e3b4c',
+              DEFAULT: '#3a4f6a',
+              foreground: '#ffffff',
+            },
+          },
+        },
+      },
+    }),
+  ],
 }

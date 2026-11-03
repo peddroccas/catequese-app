@@ -20,8 +20,9 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
 } from '@nextui-org/react'
+import { PageHeader } from '@/components/PageHeader'
+import { RowAction } from '@/components/IconButton'
 import { FilePdf, PencilSimple, Plus, Trash } from '@phosphor-icons/react'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { FormationModal } from './components/FormationModal'
@@ -59,7 +60,7 @@ export function Formations() {
   )
 
   return (
-    <div className="mx-4 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4 sm:mx-10">
+    <div className="flex flex-grow flex-col gap-6">
       {isAdding && (
         <FormationModal
           isOpen
@@ -78,7 +79,6 @@ export function Formations() {
       <Modal
         isOpen={Boolean(deleting)}
         onClose={() => setDeleting(undefined)}
-        className="bg-bunker-900"
         placement="center"
       >
         <ModalContent>
@@ -97,30 +97,23 @@ export function Formations() {
         </ModalContent>
       </Modal>
 
-      <nav className="flex flex-col items-center justify-between gap-8 sm:flex-row">
-        <h1 className="text-3xl">Formações</h1>
-        <div className="flex w-full items-center gap-4 sm:w-auto">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Pesquisar tema"
-          />
-          <Tooltip
-            content="Nova formação"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <Button
-              isIconOnly
-              aria-label="Nova formação"
-              onPress={() => setIsAdding(true)}
-              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
-            >
-              <Plus size={28} className="text-white" />
-            </Button>
-          </Tooltip>
-        </div>
-      </nav>
+      <PageHeader
+        title="Formações"
+        description="Encontros de formação e chamada dos catequistas"
+      >
+        <Button
+          color="primary"
+          startContent={<Plus size={18} />}
+          onPress={() => setIsAdding(true)}
+        >
+          Nova formação
+        </Button>
+      </PageHeader>
+      <SearchInput
+        value={search}
+        onChange={setSearch}
+        placeholder="Pesquisar tema"
+      />
 
       <Table aria-label="Formações" classNames={tableClassNames}>
         <TableHeader>
@@ -138,46 +131,41 @@ export function Formations() {
             return (
               <TableRow key={formation.id}>
                 <TableCell>{formatDate(formation.date)}</TableCell>
-                <TableCell>{formation.theme}</TableCell>
-                <TableCell>{present}</TableCell>
-                <TableCell>{formation.attendances.length - present}</TableCell>
                 <TableCell>
-                  <div className="flex items-center justify-center gap-2">
-                    <Tooltip
-                      content="Baixar PDF da chamada"
-                      className="text-bunker-950"
-                      closeDelay={0}
-                    >
-                      <FilePdf
-                        size={20}
-                        className="cursor-pointer duration-300 hover:text-green-500"
-                        onClick={() =>
-                          downloadFormationPdf(formation, catechists)
-                        }
-                      />
-                    </Tooltip>
-                    <Tooltip
-                      content="Editar"
-                      className="text-bunker-950"
-                      closeDelay={0}
-                    >
-                      <PencilSimple
-                        size={20}
-                        className="cursor-pointer duration-300 hover:opacity-60"
-                        onClick={() => setEditing(formation)}
-                      />
-                    </Tooltip>
-                    <Tooltip
-                      content="Deletar"
-                      className="text-bunker-950"
-                      closeDelay={0}
-                    >
-                      <Trash
-                        size={20}
-                        className="cursor-pointer duration-300 hover:text-red-500"
-                        onClick={() => setDeleting(formation)}
-                      />
-                    </Tooltip>
+                  <span className="font-medium text-bunker-900">
+                    {formation.theme}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="font-medium tabular-nums text-emerald-600">
+                    {present}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="font-medium tabular-nums text-red-500">
+                    {formation.attendances.length - present}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-center gap-0.5">
+                    <RowAction
+                      label="Baixar PDF da chamada"
+                      icon={<FilePdf size={18} />}
+                      onPress={() =>
+                        downloadFormationPdf(formation, catechists)
+                      }
+                    />
+                    <RowAction
+                      label="Editar"
+                      icon={<PencilSimple size={18} />}
+                      onPress={() => setEditing(formation)}
+                    />
+                    <RowAction
+                      label="Deletar"
+                      variant="danger"
+                      icon={<Trash size={18} />}
+                      onPress={() => setDeleting(formation)}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

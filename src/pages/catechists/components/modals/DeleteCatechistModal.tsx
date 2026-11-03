@@ -40,7 +40,7 @@ export function DeleteCatechistModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="bg-bunker-900">
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalContent>
         <ModalHeader>Deseja realmente deletar catequista?</ModalHeader>
         <ModalBody>{data.name}</ModalBody>

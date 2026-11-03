@@ -15,16 +15,16 @@ export default function User() {
   const firstName = user?.nickname || user?.name.split(' ')[0]
 
   return (
-    <Dropdown placement="bottom-end" className="bg-bunker-900">
+    <Dropdown placement="bottom-end">
       <DropdownTrigger>
-        <button className="flex flex-col items-center gap-1 rounded-lg px-2 py-1 duration-150 hover:bg-bunker-800">
+        <button className="flex flex-col items-center gap-1 rounded-lg px-2 py-1 duration-150 hover:bg-white/10">
           <Avatar
             as="span"
             size="sm"
             className="transition-transform"
             classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
           />
-          <span className="max-w-32 truncate text-xs text-bunker-200">
+          <span className="max-w-32 truncate text-xs text-bunker-300">
             Olá, {firstName}
           </span>
         </button>

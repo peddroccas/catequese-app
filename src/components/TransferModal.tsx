@@ -56,7 +56,6 @@ export function TransferModal({ data, isOpen, onClose }: TransferModalProps) {
         onClose()
         setSelectedClassroom(currentClassroom)
       }}
-      className="bg-bunker-900"
     >
       <ModalContent>
         <ModalHeader>Transferência de turma</ModalHeader>

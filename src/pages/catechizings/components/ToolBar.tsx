@@ -1,5 +1,4 @@
 import { catechizing } from '@/Types'
-import { Tooltip } from '@nextui-org/react'
 import {
   ArrowsLeftRight,
   Info,
@@ -12,6 +11,7 @@ import { TransferModal } from '@/components/TransferModal'
 import { DeleteCatechizingModal } from './modals/DeleteCatechizingModal'
 import { CatechizingInfoModal } from './modals/CatechizingInfoModal'
 import { useAuth } from '@/hooks/useAuth'
+import { RowAction } from '@/components/IconButton'
 
 interface ToolBarProps {
   catechizing: catechizing
@@ -27,7 +27,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
   const [isUserSeeingCatechizingInfo, setIsUserSeeingCatechizingInfo] =
     useState<boolean>(false)
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-0.5">
       <CatechizingInfoModal
         isOpen={isUserSeeingCatechizingInfo}
         onClose={() => setIsUserSeeingCatechizingInfo(false)}
@@ -48,38 +48,31 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         isOpen={isUserTransferingCatechizing}
         onClose={() => setIsUserTransferingatechizing(false)}
       />
-      {user?.role === 'COORDINATOR' && (
-        <div className="flex items-center justify-center gap-2">
-          <Tooltip
-            content="Transferir de sala"
-            placement="left"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <ArrowsLeftRight
-              size={20}
-              className="cursor-pointer duration-300 hover:opacity-60"
-              onClick={() => setIsUserTransferingatechizing(true)}
-            />
-          </Tooltip>
-          <PencilSimple
-            size={20}
-            className="cursor-pointer duration-300 hover:opacity-60"
-            onClick={() => setIsUserEditingCatechizing(true)}
-          />
-
-          <Trash
-            size={20}
-            className="cursor-pointer duration-300 hover:text-red-500"
-            onClick={() => setIsUserDeletingCatechizing(true)}
-          />
-        </div>
-      )}
-      <Info
-        size={20}
-        className="cursor-pointer duration-300 hover:opacity-60"
-        onClick={() => setIsUserSeeingCatechizingInfo(true)}
+      <RowAction
+        label="Ver dados"
+        icon={<Info size={18} />}
+        onPress={() => setIsUserSeeingCatechizingInfo(true)}
       />
+      {user?.role === 'COORDINATOR' && (
+        <>
+          <RowAction
+            label="Editar"
+            icon={<PencilSimple size={18} />}
+            onPress={() => setIsUserEditingCatechizing(true)}
+          />
+          <RowAction
+            label="Transferir de turma"
+            icon={<ArrowsLeftRight size={18} />}
+            onPress={() => setIsUserTransferingatechizing(true)}
+          />
+          <RowAction
+            label="Deletar"
+            variant="danger"
+            icon={<Trash size={18} />}
+            onPress={() => setIsUserDeletingCatechizing(true)}
+          />
+        </>
+      )}
     </div>
   )
 }

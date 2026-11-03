@@ -25,10 +25,10 @@ export function EditClassroomModal({
       isOpen={isOpen}
       onClose={onClose}
       placement="center"
-      className="rounded-xl bg-bunker-900 py-4"
+      className="py-2"
     >
       <ModalContent>
-        <ModalHeader className="flex justify-center text-xl">
+        <ModalHeader className="text-xl font-semibold text-bunker-900">
           Editar Turma
         </ModalHeader>
         <ModalBody>

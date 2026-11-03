@@ -24,12 +24,12 @@ export function AddNewCatechistModal({
       placement="top"
       size="2xl"
       scrollBehavior="outside"
-      className="rounded-xl bg-bunker-900 py-2"
+      className="py-2"
     >
       <ModalContent>
-        <ModalHeader className="flex flex-col items-center gap-1 text-xl">
+        <ModalHeader className="flex flex-col gap-1 text-xl font-semibold text-bunker-900">
           Adicionar Novo Catequista
-          <span className="text-sm font-normal text-bunker-300">
+          <span className="text-sm font-normal text-bunker-500">
             A senha inicial é 123456; no primeiro acesso será pedida a troca.
           </span>
         </ModalHeader>

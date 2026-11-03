@@ -25,10 +25,10 @@ const menuItems = [
 const memberPaths = ['/classroom', '/catechizing', '/profile']
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  `flex transform items-center gap-2 p-2 transition-all duration-150 ${
+  `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${
     isActive
-      ? 'scale-105 border-b-2 border-bunker-300 font-bold text-bunker-300'
-      : 'text-bunker-100 hover:scale-105 hover:border-b-1 hover:border-bunker-300 hover:text-bunker-300'
+      ? 'bg-white/15 text-white'
+      : 'text-bunker-300 hover:bg-white/5 hover:text-white'
   }`
 
 export function Header() {
@@ -68,24 +68,27 @@ export function Header() {
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
-      height="5rem"
-      className="bg-bunker-900 duration-300"
-      classNames={{ wrapper: 'p-4' }}
+      height="4.5rem"
+      className="border-b border-white/5 bg-bunker-950"
+      classNames={{ wrapper: 'max-w-screen-2xl px-4 sm:px-8' }}
     >
       <NavbarContent>
         <NavbarBrand className="gap-4">
           <button
-            className="rounded-full p-2 duration-300 hover:bg-slate-800 sm:hidden"
+            className="rounded-full p-2 duration-300 hover:bg-white/10 sm:hidden"
             aria-label="Abrir menu"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <List color="#d1dae6" size={28} />
           </button>
-          <img className="w-14" src={catequeseLogo} alt="" />
+          <img className="w-11" src={catequeseLogo} alt="" />
+          <span className="hidden text-sm font-semibold tracking-wide text-white lg:block">
+            Catequese
+          </span>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-8 sm:flex" justify="center">
+      <NavbarContent className="hidden gap-1 sm:flex" justify="center">
         {visibleItems.map((item) => (
           <NavbarItem key={item.link}>
             <NavLink className={navLinkClassName} to={item.link}>
@@ -99,7 +102,7 @@ export function Header() {
           <User />
         </NavbarItem>
       </NavbarContent>
-      <NavbarMenu className="w-fit bg-bunker-950 opacity-95">
+      <NavbarMenu className="gap-1 bg-bunker-950/95 pt-4">
         {visibleItems.map((item) => (
           <NavbarMenuItem key={item.link}>
             <NavLink

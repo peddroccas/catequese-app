@@ -93,8 +93,8 @@ export function ClassroomForm({
           <Select
             label="Segmento"
             classNames={{
-              listbox: '!text-bunker-950',
-              selectorIcon: 'text-bunker-950',
+              listbox: 'text-bunker-800',
+              selectorIcon: 'text-bunker-500',
             }}
             selectedKeys={field.value ? [field.value] : []}
             onChange={(e) => field.onChange(e.target.value as segment)}
@@ -133,8 +133,8 @@ export function ClassroomForm({
             selectionMode="multiple"
             isMultiline
             classNames={{
-              listbox: '!text-bunker-950',
-              selectorIcon: 'text-bunker-950',
+              listbox: 'text-bunker-800',
+              selectorIcon: 'text-bunker-500',
             }}
             selectedKeys={field.value}
             onSelectionChange={(keys) =>
@@ -151,8 +151,8 @@ export function ClassroomForm({
       {submitError && <p className="text-sm text-danger">{submitError}</p>}
 
       <Button
-        variant="solid"
-        className="w-full p-2 font-medium shadow shadow-black"
+        color="primary"
+        className="w-full font-medium"
         type="submit"
         size="lg"
         isDisabled={isSubmitting}

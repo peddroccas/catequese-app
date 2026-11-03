@@ -26,10 +26,10 @@ export function AddNewCatechizingModal({
       placement="top"
       size="2xl"
       scrollBehavior="outside"
-      className="rounded-xl bg-bunker-900 py-4"
+      className="py-2"
     >
       <ModalContent>
-        <ModalHeader className="flex justify-center text-xl">
+        <ModalHeader className="text-xl font-semibold text-bunker-900">
           Adicionar Novo Catequizando
         </ModalHeader>
         <ModalBody>

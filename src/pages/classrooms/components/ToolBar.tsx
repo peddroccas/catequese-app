@@ -1,5 +1,4 @@
 import { AddNewCatechizingModal } from '@/pages/catechizings/components/modals/AddNewCatechizingModal'
-import { Button, Tooltip } from '@nextui-org/react'
 import {
   DownloadSimple,
   FilePdf,
@@ -14,13 +13,11 @@ import { DeleteClassroomModal } from './modals/DeleteClassroomModal'
 import { downloadCallList } from '@/utils/downloadCallList'
 import { downloadClassroomPdf } from '@/utils/pdf'
 import { useAuth } from '@/hooks/useAuth'
+import { IconButton } from '@/components/IconButton'
 
 interface ToolBarProps {
   classroom: classroom
 }
-
-const buttonClassName =
-  'bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500'
 
 export function ToolBar({ classroom }: ToolBarProps) {
   const { user } = useAuth()
@@ -53,78 +50,34 @@ export function ToolBar({ classroom }: ToolBarProps) {
           />
         </>
       )}
-      <Tooltip
-        content="Baixar lista de chamada"
-        className="text-bunker-950"
-        closeDelay={0}
-      >
-        <Button
-          isIconOnly
-          aria-label="Baixar lista de chamada"
-          onPress={() => downloadCallList({ classroom })}
-          className={buttonClassName}
-        >
-          <DownloadSimple size={28} className="text-white" />
-        </Button>
-      </Tooltip>
-      <Tooltip
-        content="Gerar PDF com os dados dos catequizandos"
-        className="text-bunker-950"
-        closeDelay={0}
-      >
-        <Button
-          isIconOnly
-          aria-label="Gerar PDF da turma"
-          onPress={() => downloadClassroomPdf(classroom)}
-          className={buttonClassName}
-        >
-          <FilePdf size={28} className="text-white" />
-        </Button>
-      </Tooltip>
+      <IconButton
+        label="Baixar lista de chamada"
+        icon={<DownloadSimple size={20} />}
+        onPress={() => downloadCallList({ classroom })}
+      />
+      <IconButton
+        label="Gerar PDF com os dados dos catequizandos"
+        icon={<FilePdf size={20} />}
+        onPress={() => downloadClassroomPdf(classroom)}
+      />
       {isCoordinator && (
         <>
-          <Tooltip
-            content="Adicionar novo catequizando à turma"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <Button
-              isIconOnly
-              aria-label="Adicionar catequizando"
-              onPress={() => setIsUserAddingNewCatechizing(true)}
-              className={buttonClassName}
-            >
-              <UserPlus size={28} className="text-white" />
-            </Button>
-          </Tooltip>
-          <Tooltip
-            content="Editar turma"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <Button
-              isIconOnly
-              aria-label="Editar turma"
-              onPress={() => setIsUserEditingClassroom(true)}
-              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-orange-400"
-            >
-              <PencilSimple size={28} className="text-white" />
-            </Button>
-          </Tooltip>
-          <Tooltip
-            content="Deletar turma"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <Button
-              isIconOnly
-              aria-label="Deletar turma"
-              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-red-600"
-              onPress={() => setIsUserDeletingClassroom(true)}
-            >
-              <Trash size={28} className="text-white" />
-            </Button>
-          </Tooltip>
+          <IconButton
+            label="Editar turma"
+            icon={<PencilSimple size={20} />}
+            onPress={() => setIsUserEditingClassroom(true)}
+          />
+          <IconButton
+            label="Deletar turma"
+            variant="danger"
+            icon={<Trash size={20} />}
+            onPress={() => setIsUserDeletingClassroom(true)}
+          />
+          <IconButton
+            label="Adicionar catequizando à turma"
+            icon={<UserPlus size={20} />}
+            onPress={() => setIsUserAddingNewCatechizing(true)}
+          />
         </>
       )}
     </div>

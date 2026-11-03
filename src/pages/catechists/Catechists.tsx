@@ -7,8 +7,9 @@ import {
   TableRow,
   TableCell,
   Button,
-  Tooltip,
+  Chip,
 } from '@nextui-org/react'
+import { PageHeader } from '@/components/PageHeader'
 import { UserPlus } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { AddNewCatechistModal } from './components/modals/AddNewCatechistModal'
@@ -33,35 +34,28 @@ export function Catechists() {
   )
 
   return (
-    <div className="mx-4 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4 sm:mx-10">
-      <nav className="flex flex-col items-center justify-between gap-8 sm:flex-row">
-        <AddNewCatechistModal
-          isOpen={isUserAddingNewCatechist}
-          onClose={() => setIsUserAddingNewCatechist(false)}
-        />
-        <h1 className="text-3xl">Catequistas</h1>
-        <div className="flex w-full items-center gap-4 sm:w-auto">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Pesquisar catequista"
-          />
-          <Tooltip
-            content="Adicionar novo catequista"
-            className="text-bunker-950"
-            closeDelay={0}
-          >
-            <Button
-              isIconOnly
-              aria-label="Adicionar novo catequista"
-              onPress={() => setIsUserAddingNewCatechist(true)}
-              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
-            >
-              <UserPlus size={28} className="text-white" />
-            </Button>
-          </Tooltip>
-        </div>
-      </nav>
+    <div className="flex flex-grow flex-col gap-6">
+      <AddNewCatechistModal
+        isOpen={isUserAddingNewCatechist}
+        onClose={() => setIsUserAddingNewCatechist(false)}
+      />
+      <PageHeader
+        title="Catequistas"
+        description={`${catechists.length} catequistas cadastrados`}
+      >
+        <Button
+          color="primary"
+          startContent={<UserPlus size={18} />}
+          onPress={() => setIsUserAddingNewCatechist(true)}
+        >
+          Novo catequista
+        </Button>
+      </PageHeader>
+      <SearchInput
+        value={search}
+        onChange={setSearch}
+        placeholder="Pesquisar catequista"
+      />
       <Table aria-label="Catequistas" classNames={tableClassNames}>
         <TableHeader>
           <TableColumn align="center">Nº</TableColumn>
@@ -81,8 +75,16 @@ export function Catechists() {
             )
             return (
               <TableRow key={catechist.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{catechist.name}</TableCell>
+                <TableCell>
+                  <span className="tabular-nums text-bunker-400">
+                    {index + 1}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="whitespace-nowrap font-medium text-bunker-900">
+                    {catechist.name}
+                  </span>
+                </TableCell>
                 <TableCell>{catechist.email}</TableCell>
                 <TableCell className="whitespace-nowrap">
                   {maskPhone(catechist.phone) || '-'}
@@ -90,18 +92,43 @@ export function Catechists() {
                 <TableCell>{formatDate(catechist.birthday)}</TableCell>
                 <TableCell>{calculateAge(catechist.birthday) ?? '-'}</TableCell>
                 <TableCell>
-                  <div className="flex flex-col items-center">
-                    {catechistClassrooms.length
-                      ? catechistClassrooms.map((classroom) => (
-                          <span key={classroom.id}>
-                            {classroom.location} ({classroom.segment})
-                          </span>
-                        ))
-                      : '-'}
+                  <div className="flex flex-wrap justify-center gap-1">
+                    {catechistClassrooms.length ? (
+                      catechistClassrooms.map((classroom) => (
+                        <Chip
+                          key={classroom.id}
+                          size="sm"
+                          variant="flat"
+                          title={classroom.segment}
+                          classNames={{
+                            base: 'bg-bunker-100',
+                            content: 'whitespace-nowrap text-bunker-700',
+                          }}
+                        >
+                          {classroom.location}
+                        </Chip>
+                      ))
+                    ) : (
+                      <span className="text-bunker-300">–</span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  {catechist.role === 'COORDINATOR' ? 'Coordenador' : 'Membro'}
+                  <Chip
+                    size="sm"
+                    variant="flat"
+                    classNames={{
+                      base:
+                        catechist.role === 'COORDINATOR'
+                          ? 'bg-bunker-800'
+                          : 'bg-bunker-100',
+                      content: `font-medium ${catechist.role === 'COORDINATOR' ? 'text-white' : 'text-bunker-700'}`,
+                    }}
+                  >
+                    {catechist.role === 'COORDINATOR'
+                      ? 'Coordenador'
+                      : 'Membro'}
+                  </Chip>
                 </TableCell>
                 <TableCell>
                   <ToolBar catechist={catechist} />

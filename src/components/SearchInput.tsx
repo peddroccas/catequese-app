@@ -20,8 +20,13 @@ export function SearchInput({
       onValueChange={onChange}
       isClearable
       onClear={() => onChange('')}
-      className="sm:max-w-xs"
-      startContent={<MagnifyingGlass className="text-bunker-950" size={20} />}
+      variant="bordered"
+      className="sm:max-w-sm"
+      classNames={{
+        inputWrapper:
+          'border-1 border-bunker-200 bg-white shadow-sm data-[hover=true]:border-bunker-300',
+      }}
+      startContent={<MagnifyingGlass className="text-bunker-400" size={18} />}
     />
   )
 }
