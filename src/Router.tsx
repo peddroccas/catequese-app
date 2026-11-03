@@ -8,6 +8,7 @@ import { Login } from './pages/login/Login'
 import Classroom from './pages/classroom/Classroom'
 import { Profile } from './pages/profile/Profile'
 import { Formations } from './pages/formations/Formations'
+import { Archive } from './pages/archive/Archive'
 
 export function Router() {
   return (
@@ -22,6 +23,7 @@ export function Router() {
         <Route path="rites" element={<Rites />} />
         <Route path="classrooms" element={<Classrooms />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="archive" element={<Archive />} />
       </Route>
     </Routes>
   )

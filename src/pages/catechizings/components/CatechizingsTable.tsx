@@ -20,6 +20,7 @@ interface CatechizingsTableProps {
   catechizings: catechizing[]
   hasPageClassroomInfo?: boolean
   isAdultClassroom?: boolean
+  isReadOnly?: boolean
 }
 
 interface column {
@@ -63,6 +64,7 @@ export function CatechizingsTable({
   catechizings,
   hasPageClassroomInfo,
   isAdultClassroom,
+  isReadOnly,
 }: CatechizingsTableProps) {
   const { classrooms } = useContext(ClassroomContext)
 
@@ -166,7 +168,7 @@ export function CatechizingsTable({
       case 'marriage':
         return <BooleanIcon value={catechizing.hasReceivedMarriage} />
       case 'actions':
-        return <ToolBar catechizing={catechizing} />
+        return <ToolBar catechizing={catechizing} isReadOnly={isReadOnly} />
       default:
         return null
     }

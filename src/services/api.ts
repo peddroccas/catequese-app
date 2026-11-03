@@ -44,5 +44,8 @@ export function getErrorMessage(error: unknown) {
       return message
     }
   }
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
   return 'Erro inesperado, tente novamente'
 }

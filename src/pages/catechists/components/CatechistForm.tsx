@@ -70,7 +70,10 @@ export function CatechistForm({
       phone: data?.phone ?? '',
       address: data?.address ?? '',
       role: data?.role,
-      classroomIds: data?.classroomIds ?? [],
+      classroomIds:
+        data?.classroomIds.filter((id) =>
+          classrooms.some((classroom) => classroom.id === id),
+        ) ?? [],
       hasReceivedBaptism: data?.hasReceivedBaptism ?? false,
       hasReceivedEucharist: data?.hasReceivedEucharist ?? false,
       hasReceivedConfirmation: data?.hasReceivedConfirmation ?? false,

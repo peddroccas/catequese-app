@@ -1,7 +1,8 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { getErrorMessage } from '@/services/api'
 import { FormationRepository } from '@/services/repositories/formationRepository'
-import { formation } from '@/Types'
+import { catechist, formation } from '@/Types'
+import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { formatDate } from '@/utils/date'
 import { downloadFormationPdf } from '@/utils/pdf'
 import { SearchInput } from '@/components/SearchInput'
@@ -29,6 +30,8 @@ import { FormationModal } from './components/FormationModal'
 
 export function Formations() {
   const { catechists } = useContext(ClassroomContext)
+  // Catequistas arquivados ainda aparecem pelo nome nos PDFs de chamada
+  const [archivedCatechists, setArchivedCatechists] = useState<catechist[]>([])
   const [formations, setFormations] = useState<formation[]>([])
   const [search, setSearch] = useState<string>('')
   const [isAdding, setIsAdding] = useState<boolean>(false)
@@ -43,6 +46,9 @@ export function Formations() {
 
   useEffect(() => {
     loadFormations()
+    CatechistRepository.getArchivedCatechists()
+      .then(setArchivedCatechists)
+      .catch(console.error)
   }, [loadFormations])
 
   async function handleDelete() {
@@ -152,7 +158,10 @@ export function Formations() {
                       label="Baixar PDF da chamada"
                       icon={<FilePdf size={18} />}
                       onPress={() =>
-                        downloadFormationPdf(formation, catechists)
+                        downloadFormationPdf(formation, [
+                          ...catechists,
+                          ...archivedCatechists,
+                        ])
                       }
                     />
                     <RowAction

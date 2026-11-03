@@ -20,6 +20,7 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
   { permission: 'COORDINATOR', name: 'Formações', link: '/formations' },
   { permission: 'COORDINATOR', name: 'Ritos e eventos', link: '/rites' },
+  { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
 
 const memberPaths = ['/classroom', '/catechizing', '/profile']

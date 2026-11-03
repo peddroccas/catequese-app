@@ -15,6 +15,11 @@ export function formatDate(date?: string | null) {
   return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`
 }
 
+// Para datas com horário (ex.: quando algo foi arquivado), no fuso local
+export function formatTimestamp(timestamp?: string | null) {
+  return timestamp ? new Date(timestamp).toLocaleDateString('pt-BR') : ''
+}
+
 export function calculateAge(date?: string | null) {
   if (!date) {
     return undefined

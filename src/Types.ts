@@ -17,6 +17,8 @@ export interface catechist {
   hasReceivedMarriage: boolean
 
   email?: string
+  // Data em que foi para o arquivo; null enquanto está ativo
+  archivedAt?: string | null
 }
 
 export interface parent {
@@ -53,6 +55,7 @@ export interface catechizing {
   livesWithPartner: boolean | null
   classroomId?: string
   parents: parent[]
+  archivedAt?: string | null
 }
 
 export const segments = [
@@ -85,6 +88,7 @@ export interface classroom {
   startedAt: number | undefined
   catechists?: classroomCatechist[]
   catechizings?: catechizing[]
+  archivedAt?: string | null
 }
 
 export interface attendance {

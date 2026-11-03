@@ -16,6 +16,19 @@ export class CatechistRepository {
     await api.put('/catechists', catechist)
   }
 
+  static async getArchivedCatechists(): Promise<catechist[]> {
+    const response = await api.get('/catechists/archived')
+    return response.data
+  }
+
+  static async archiveCatechist(catechistId: string) {
+    await api.patch(`/catechists/${encodeURIComponent(catechistId)}/archive`)
+  }
+
+  static async restoreCatechist(catechistId: string) {
+    await api.patch(`/catechists/${encodeURIComponent(catechistId)}/restore`)
+  }
+
   static async deleteCatechist(catechistId: string) {
     await api.delete(`/catechists/${encodeURIComponent(catechistId)}`)
   }

@@ -32,6 +32,19 @@ export class ClassroomRepository {
     return response.data
   }
 
+  static async getArchivedClassrooms(): Promise<classroom[]> {
+    const response = await api.get('/classrooms/archived')
+    return response.data
+  }
+
+  static async archiveClassroom(classroomId: string) {
+    await api.patch(`/classrooms/${encodeURIComponent(classroomId)}/archive`)
+  }
+
+  static async restoreClassroom(classroomId: string) {
+    await api.patch(`/classrooms/${encodeURIComponent(classroomId)}/restore`)
+  }
+
   static async deleteClassroom(classroomId: string) {
     await api.delete(`/classrooms/${encodeURIComponent(classroomId)}`)
   }

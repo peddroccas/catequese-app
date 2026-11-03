@@ -3,13 +3,13 @@ import {
   DownloadSimple,
   FilePdf,
   PencilSimple,
-  Trash,
+  Archive,
   UserPlus,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditClassroomModal } from './modals/EditClassroomModal'
 import { classroom } from '@/Types'
-import { DeleteClassroomModal } from './modals/DeleteClassroomModal'
+import { ArchiveClassroomModal } from './modals/ArchiveClassroomModal'
 import { downloadCallList } from '@/utils/downloadCallList'
 import { downloadClassroomPdf } from '@/utils/pdf'
 import { useAuth } from '@/hooks/useAuth'
@@ -24,7 +24,7 @@ export function ToolBar({ classroom }: ToolBarProps) {
   const isCoordinator = user?.role === 'COORDINATOR'
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
-  const [isUserDeletingClassroom, setIsUserDeletingClassroom] =
+  const [isUserArchivingClassroom, setIsUserArchivingClassroom] =
     useState<boolean>(false)
   const [isUserEditingClassroom, setIsUserEditingClassroom] =
     useState<boolean>(false)
@@ -43,9 +43,9 @@ export function ToolBar({ classroom }: ToolBarProps) {
             onClose={() => setIsUserEditingClassroom(false)}
             data={classroom}
           />
-          <DeleteClassroomModal
-            isOpen={isUserDeletingClassroom}
-            onClose={() => setIsUserDeletingClassroom(false)}
+          <ArchiveClassroomModal
+            isOpen={isUserArchivingClassroom}
+            onClose={() => setIsUserArchivingClassroom(false)}
             data={classroom}
           />
         </>
@@ -68,10 +68,10 @@ export function ToolBar({ classroom }: ToolBarProps) {
             onPress={() => setIsUserEditingClassroom(true)}
           />
           <IconButton
-            label="Deletar turma"
+            label="Arquivar turma"
             variant="danger"
-            icon={<Trash size={20} />}
-            onPress={() => setIsUserDeletingClassroom(true)}
+            icon={<Archive size={20} />}
+            onPress={() => setIsUserArchivingClassroom(true)}
           />
           <IconButton
             label="Adicionar catequizando à turma"

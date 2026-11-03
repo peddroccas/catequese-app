@@ -3,24 +3,26 @@ import {
   ArrowsLeftRight,
   Info,
   PencilSimple,
-  Trash,
+  Archive,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechizingModal } from './modals/EditCatechizingModal'
 import { TransferModal } from '@/components/TransferModal'
-import { DeleteCatechizingModal } from './modals/DeleteCatechizingModal'
+import { ArchiveCatechizingModal } from './modals/ArchiveCatechizingModal'
 import { CatechizingInfoModal } from './modals/CatechizingInfoModal'
 import { useAuth } from '@/hooks/useAuth'
 import { RowAction } from '@/components/IconButton'
 
 interface ToolBarProps {
   catechizing: catechizing
+  // No arquivo só dá para ver os dados
+  isReadOnly?: boolean
 }
-export default function ToolBar({ catechizing }: ToolBarProps) {
+export default function ToolBar({ catechizing, isReadOnly }: ToolBarProps) {
   const { user } = useAuth()
   const [isUserEditingCatechizing, setIsUserEditingCatechizing] =
     useState<boolean>(false)
-  const [isUserDeletingCatechizing, setIsUserDeletingCatechizing] =
+  const [isUserArchivingCatechizing, setIsUserArchivingCatechizing] =
     useState<boolean>(false)
   const [isUserTransferingCatechizing, setIsUserTransferingatechizing] =
     useState<boolean>(false)
@@ -33,10 +35,10 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         onClose={() => setIsUserSeeingCatechizingInfo(false)}
         data={catechizing}
       />
-      <DeleteCatechizingModal
+      <ArchiveCatechizingModal
         data={catechizing}
-        isOpen={isUserDeletingCatechizing}
-        onClose={() => setIsUserDeletingCatechizing(false)}
+        isOpen={isUserArchivingCatechizing}
+        onClose={() => setIsUserArchivingCatechizing(false)}
       />
       <EditCatechizingModal
         isOpen={isUserEditingCatechizing}
@@ -53,7 +55,7 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         icon={<Info size={18} />}
         onPress={() => setIsUserSeeingCatechizingInfo(true)}
       />
-      {user?.role === 'COORDINATOR' && (
+      {user?.role === 'COORDINATOR' && !isReadOnly && (
         <>
           <RowAction
             label="Editar"
@@ -66,10 +68,10 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
             onPress={() => setIsUserTransferingatechizing(true)}
           />
           <RowAction
-            label="Deletar"
+            label="Arquivar"
             variant="danger"
-            icon={<Trash size={18} />}
-            onPress={() => setIsUserDeletingCatechizing(true)}
+            icon={<Archive size={18} />}
+            onPress={() => setIsUserArchivingCatechizing(true)}
           />
         </>
       )}

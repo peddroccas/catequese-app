@@ -68,10 +68,19 @@ export function FormationModal({
       id: data?.id,
       theme: form.theme,
       date: form.date,
-      attendances: catechists.map((catechist) => ({
-        catechistId: catechist.id!,
-        isPresent: form.presentCatechistIds.includes(catechist.id!),
-      })),
+      attendances: [
+        ...catechists.map((catechist) => ({
+          catechistId: catechist.id!,
+          isPresent: form.presentCatechistIds.includes(catechist.id!),
+        })),
+        // Mantém a presença de quem já foi arquivado
+        ...(data?.attendances ?? []).filter(
+          (attendance) =>
+            !catechists.some(
+              (catechist) => catechist.id === attendance.catechistId,
+            ),
+        ),
+      ],
     }
     try {
       if (data?.id) {

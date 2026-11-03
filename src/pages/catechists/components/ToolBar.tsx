@@ -1,9 +1,9 @@
 import { catechist } from '@/Types'
 import { RowAction } from '@/components/IconButton'
-import { Key, PencilSimple, Trash } from '@phosphor-icons/react'
+import { Archive, Key, PencilSimple } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechistModal } from './modals/EditCatechistModal'
-import { DeleteCatechistModal } from './modals/DeleteCatechistModal'
+import { ArchiveCatechistModal } from './modals/ArchiveCatechistModal'
 import { ResetPasswordModal } from './modals/ResetPasswordModal'
 
 interface ToolBarProps {
@@ -12,7 +12,7 @@ interface ToolBarProps {
 export default function ToolBar({ catechist }: ToolBarProps) {
   const [isUserEditingCatechist, setIsUserEditingCatechist] =
     useState<boolean>(false)
-  const [isUserDeletingCatechist, setIsUserDeletingCatechist] =
+  const [isUserArchivingCatechist, setIsUserArchivingCatechist] =
     useState<boolean>(false)
   const [isUserResettingPassword, setIsUserResettingPassword] =
     useState<boolean>(false)
@@ -23,9 +23,9 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         data={catechist}
         onClose={() => setIsUserEditingCatechist(false)}
       />
-      <DeleteCatechistModal
-        isOpen={isUserDeletingCatechist}
-        onClose={() => setIsUserDeletingCatechist(false)}
+      <ArchiveCatechistModal
+        isOpen={isUserArchivingCatechist}
+        onClose={() => setIsUserArchivingCatechist(false)}
         data={catechist}
       />
       <ResetPasswordModal
@@ -44,10 +44,10 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         onPress={() => setIsUserResettingPassword(true)}
       />
       <RowAction
-        label="Deletar"
+        label="Arquivar"
         variant="danger"
-        icon={<Trash size={18} />}
-        onPress={() => setIsUserDeletingCatechist(true)}
+        icon={<Archive size={18} />}
+        onPress={() => setIsUserArchivingCatechist(true)}
       />
     </div>
   )
