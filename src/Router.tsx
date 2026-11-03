@@ -6,6 +6,7 @@ import { Rites } from './pages/rites/Rites'
 import { Classrooms } from './pages/classrooms/Classrooms'
 import { Login } from './pages/login/Login'
 import Classroom from './pages/classroom/Classroom'
+import { Profile } from './pages/profile/Profile'
 
 export function Router() {
   return (
@@ -18,6 +19,7 @@ export function Router() {
         <Route path="catechist" element={<Catechists />} />
         <Route path="rites" element={<Rites />} />
         <Route path="classrooms" element={<Classrooms />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     </Routes>
   )

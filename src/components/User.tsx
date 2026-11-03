@@ -11,31 +11,44 @@ import { useNavigate } from 'react-router-dom'
 
 export default function User() {
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
+  const firstName = user?.nickname || user?.name.split(' ')[0]
+
   return (
-    <div className="flex items-center gap-4">
-      <Dropdown placement="bottom-end" className="bg-bunker-900">
-        <DropdownTrigger>
+    <Dropdown placement="bottom-end" className="bg-bunker-900">
+      <DropdownTrigger>
+        <button className="flex flex-col items-center gap-1 rounded-lg px-2 py-1 duration-150 hover:bg-bunker-800">
           <Avatar
-            as="button"
+            as="span"
+            size="sm"
             className="transition-transform"
             classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
           />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Profile Actions">
-          <DropdownItem key="settings" startContent={<UserCircle size={20} />}>
-            Meu perfil
-          </DropdownItem>
-          <DropdownItem
-            key="logout"
-            color="danger"
-            onClick={logout}
-            startContent={<SignOut size={20} />}
-          >
-            Sair
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </div>
+          <span className="max-w-32 truncate text-xs text-bunker-200">
+            Olá, {firstName}
+          </span>
+        </button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Ações do perfil">
+        <DropdownItem
+          key="profile"
+          startContent={<UserCircle size={20} />}
+          onPress={() => navigate('/profile')}
+        >
+          Meu perfil
+        </DropdownItem>
+        <DropdownItem
+          key="logout"
+          color="danger"
+          onPress={() => {
+            logout()
+            navigate('/login')
+          }}
+          startContent={<SignOut size={20} />}
+        >
+          Sair
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   )
 }
