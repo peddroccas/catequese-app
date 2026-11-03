@@ -1,13 +1,22 @@
 import { AddNewCatechizingModal } from '@/pages/catechizings/components/modals/AddNewCatechizingModal'
 import {
+  CaretDown,
   DownloadSimple,
   FilePdf,
+  MicrosoftExcelLogo,
   PencilSimple,
   Archive,
   PaperPlaneTilt,
   UserPlus,
   WhatsappLogo,
 } from '@phosphor-icons/react'
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from '@nextui-org/react'
 import { useState } from 'react'
 import { EditClassroomModal } from './modals/EditClassroomModal'
 import { classroom } from '@/Types'
@@ -84,16 +93,42 @@ export function ToolBar({ classroom }: ToolBarProps) {
         icon={<PaperPlaneTilt size={20} weight="fill" />}
         onPress={() => setIsUserInvitingParents(true)}
       />
-      <IconButton
-        label="Baixar lista de chamada"
-        icon={<DownloadSimple size={20} />}
-        onPress={() => downloadCallList({ classroom })}
-      />
-      <IconButton
-        label="Gerar PDF com os dados dos catequizandos"
-        icon={<FilePdf size={20} />}
-        onPress={() => downloadClassroomPdf(classroom)}
-      />
+      {/* Com texto e menu explicado: no celular não há tooltip nos ícones */}
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <Button
+            variant="bordered"
+            startContent={<DownloadSimple size={18} />}
+            endContent={<CaretDown size={14} />}
+            className="border-1 border-bunker-200 bg-white font-medium text-bunker-700 shadow-sm"
+          >
+            Baixar
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Baixar arquivos da turma"
+          classNames={{ base: 'min-w-64' }}
+        >
+          <DropdownItem
+            key="call-list"
+            description="Planilha para marcar a presença"
+            startContent={
+              <MicrosoftExcelLogo size={22} className="text-emerald-600" />
+            }
+            onPress={() => downloadCallList({ classroom })}
+          >
+            Lista de chamada (Excel)
+          </DropdownItem>
+          <DropdownItem
+            key="pdf"
+            description="Dados dos catequizandos e responsáveis"
+            startContent={<FilePdf size={22} className="text-red-500" />}
+            onPress={() => downloadClassroomPdf(classroom)}
+          >
+            Ficha da turma (PDF)
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
       {isCoordinator && (
         <>
           <IconButton
