@@ -1,4 +1,5 @@
 import { ClassroomSelect } from '@/components/ClassroomSelect'
+import { DragScroll } from '@/components/DragScroll'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { RowAction } from '@/components/IconButton'
 import { SearchInput } from '@/components/SearchInput'
@@ -112,72 +113,75 @@ export function ArchivedCatechizings({
       </ConfirmModal>
 
       <SearchInput value={search} onChange={setSearch} />
-      <Table
-        aria-label="Catequizandos arquivados"
-        classNames={tableClassNames}
-        isHeaderSticky
-      >
-        <TableHeader>
-          <TableColumn align="center">Nº</TableColumn>
-          <TableColumn align="start">NOME</TableColumn>
-          <TableColumn align="center">IDADE</TableColumn>
-          <TableColumn align="center">TURMA</TableColumn>
-          <TableColumn align="center">ARQUIVADO EM</TableColumn>
-          <TableColumn align="center">AÇÕES</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="Nenhum catequizando encontrado">
-          {filteredCatechizings.map((catechizing, index) => {
-            const classroom = allClassrooms.find(
-              (classroom) => classroom.id === catechizing.classroomId,
-            )
-            return (
-              <TableRow key={catechizing.id}>
-                <TableCell>
-                  <span className="tabular-nums text-bunker-400">
-                    {index + 1}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="whitespace-nowrap font-medium text-bunker-900">
-                    {catechizing.name}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {calculateAge(catechizing.birthday) ?? '–'}
-                </TableCell>
-                <TableCell>
-                  <span className="whitespace-nowrap">
-                    {classroom
-                      ? `${classroom.location} (${classroom.segment})${classroom.archivedAt ? ' · turma arquivada' : ''}`
-                      : '–'}
-                  </span>
-                </TableCell>
-                <TableCell>{formatTimestamp(catechizing.archivedAt)}</TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-center gap-0.5">
-                    <RowAction
-                      label="Ver dados"
-                      icon={<Info size={18} />}
-                      onPress={() => setSeeing(catechizing)}
-                    />
-                    <RowAction
-                      label="Restaurar"
-                      icon={<ArrowCounterClockwise size={18} />}
-                      onPress={() => openRestore(catechizing)}
-                    />
-                    <RowAction
-                      label="Excluir de vez"
-                      variant="danger"
-                      icon={<Trash size={18} />}
-                      onPress={() => setDeleting(catechizing)}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+      <DragScroll>
+        <Table
+          aria-label="Catequizandos arquivados"
+          classNames={tableClassNames}
+        >
+          <TableHeader>
+            <TableColumn align="center">Nº</TableColumn>
+            <TableColumn align="start">NOME</TableColumn>
+            <TableColumn align="center">IDADE</TableColumn>
+            <TableColumn align="center">TURMA</TableColumn>
+            <TableColumn align="center">ARQUIVADO EM</TableColumn>
+            <TableColumn align="center">AÇÕES</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="Nenhum catequizando encontrado">
+            {filteredCatechizings.map((catechizing, index) => {
+              const classroom = allClassrooms.find(
+                (classroom) => classroom.id === catechizing.classroomId,
+              )
+              return (
+                <TableRow key={catechizing.id}>
+                  <TableCell>
+                    <span className="tabular-nums text-bunker-400">
+                      {index + 1}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="whitespace-nowrap font-medium text-bunker-900">
+                      {catechizing.name}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {calculateAge(catechizing.birthday) ?? '–'}
+                  </TableCell>
+                  <TableCell>
+                    <span className="whitespace-nowrap">
+                      {classroom
+                        ? `${classroom.location} (${classroom.segment})${classroom.archivedAt ? ' · turma arquivada' : ''}`
+                        : '–'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {formatTimestamp(catechizing.archivedAt)}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-center gap-0.5">
+                      <RowAction
+                        label="Ver dados"
+                        icon={<Info size={18} />}
+                        onPress={() => setSeeing(catechizing)}
+                      />
+                      <RowAction
+                        label="Restaurar"
+                        icon={<ArrowCounterClockwise size={18} />}
+                        onPress={() => openRestore(catechizing)}
+                      />
+                      <RowAction
+                        label="Excluir de vez"
+                        variant="danger"
+                        icon={<Trash size={18} />}
+                        onPress={() => setDeleting(catechizing)}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </DragScroll>
     </div>
   )
 }

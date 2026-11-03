@@ -1,4 +1,5 @@
 import { ClassroomContext } from '@/contexts/ClassroomContext'
+import { DragScroll } from '@/components/DragScroll'
 import { getErrorMessage } from '@/services/api'
 import { FormationRepository } from '@/services/repositories/formationRepository'
 import { catechist, formation } from '@/Types'
@@ -121,67 +122,69 @@ export function Formations() {
         placeholder="Pesquisar tema"
       />
 
-      <Table aria-label="Formações" classNames={tableClassNames} isHeaderSticky>
-        <TableHeader>
-          <TableColumn align="center">DATA</TableColumn>
-          <TableColumn align="start">TEMA</TableColumn>
-          <TableColumn align="center">PRESENTES</TableColumn>
-          <TableColumn align="center">FALTAS</TableColumn>
-          <TableColumn align="center">AÇÕES</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="Nenhuma formação cadastrada">
-          {filteredFormations.map((formation) => {
-            const present = formation.attendances.filter(
-              (attendance) => attendance.isPresent,
-            ).length
-            return (
-              <TableRow key={formation.id}>
-                <TableCell>{formatDate(formation.date)}</TableCell>
-                <TableCell>
-                  <span className="font-medium text-bunker-900">
-                    {formation.theme}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="font-medium tabular-nums text-emerald-600">
-                    {present}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="font-medium tabular-nums text-red-500">
-                    {formation.attendances.length - present}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-center gap-0.5">
-                    <RowAction
-                      label="Baixar PDF da chamada"
-                      icon={<FilePdf size={18} />}
-                      onPress={() =>
-                        downloadFormationPdf(formation, [
-                          ...catechists,
-                          ...archivedCatechists,
-                        ])
-                      }
-                    />
-                    <RowAction
-                      label="Editar"
-                      icon={<PencilSimple size={18} />}
-                      onPress={() => setEditing(formation)}
-                    />
-                    <RowAction
-                      label="Deletar"
-                      variant="danger"
-                      icon={<Trash size={18} />}
-                      onPress={() => setDeleting(formation)}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+      <DragScroll>
+        <Table aria-label="Formações" classNames={tableClassNames}>
+          <TableHeader>
+            <TableColumn align="center">DATA</TableColumn>
+            <TableColumn align="start">TEMA</TableColumn>
+            <TableColumn align="center">PRESENTES</TableColumn>
+            <TableColumn align="center">FALTAS</TableColumn>
+            <TableColumn align="center">AÇÕES</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="Nenhuma formação cadastrada">
+            {filteredFormations.map((formation) => {
+              const present = formation.attendances.filter(
+                (attendance) => attendance.isPresent,
+              ).length
+              return (
+                <TableRow key={formation.id}>
+                  <TableCell>{formatDate(formation.date)}</TableCell>
+                  <TableCell>
+                    <span className="font-medium text-bunker-900">
+                      {formation.theme}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium tabular-nums text-emerald-600">
+                      {present}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium tabular-nums text-red-500">
+                      {formation.attendances.length - present}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-center gap-0.5">
+                      <RowAction
+                        label="Baixar PDF da chamada"
+                        icon={<FilePdf size={18} />}
+                        onPress={() =>
+                          downloadFormationPdf(formation, [
+                            ...catechists,
+                            ...archivedCatechists,
+                          ])
+                        }
+                      />
+                      <RowAction
+                        label="Editar"
+                        icon={<PencilSimple size={18} />}
+                        onPress={() => setEditing(formation)}
+                      />
+                      <RowAction
+                        label="Deletar"
+                        variant="danger"
+                        icon={<Trash size={18} />}
+                        onPress={() => setDeleting(formation)}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </DragScroll>
     </div>
   )
 }

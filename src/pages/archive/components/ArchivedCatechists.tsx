@@ -1,4 +1,5 @@
 import { ConfirmModal } from '@/components/ConfirmModal'
+import { DragScroll } from '@/components/DragScroll'
 import { RowAction } from '@/components/IconButton'
 import { SearchInput } from '@/components/SearchInput'
 import { tableClassNames } from '@/components/tableStyles'
@@ -82,56 +83,54 @@ export function ArchivedCatechists({
         onChange={setSearch}
         placeholder="Pesquisar catequista"
       />
-      <Table
-        aria-label="Catequistas arquivados"
-        classNames={tableClassNames}
-        isHeaderSticky
-      >
-        <TableHeader>
-          <TableColumn align="center">Nº</TableColumn>
-          <TableColumn align="start">NOME</TableColumn>
-          <TableColumn align="start">EMAIL</TableColumn>
-          <TableColumn align="center">TELEFONE</TableColumn>
-          <TableColumn align="center">ARQUIVADO EM</TableColumn>
-          <TableColumn align="center">AÇÕES</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="Nenhum catequista encontrado">
-          {filteredCatechists.map((catechist, index) => (
-            <TableRow key={catechist.id}>
-              <TableCell>
-                <span className="tabular-nums text-bunker-400">
-                  {index + 1}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span className="whitespace-nowrap font-medium text-bunker-900">
-                  {catechist.name}
-                </span>
-              </TableCell>
-              <TableCell>{catechist.email}</TableCell>
-              <TableCell className="whitespace-nowrap">
-                {maskPhone(catechist.phone) || '–'}
-              </TableCell>
-              <TableCell>{formatTimestamp(catechist.archivedAt)}</TableCell>
-              <TableCell>
-                <div className="flex items-center justify-center gap-0.5">
-                  <RowAction
-                    label="Restaurar"
-                    icon={<ArrowCounterClockwise size={18} />}
-                    onPress={() => setRestoring(catechist)}
-                  />
-                  <RowAction
-                    label="Excluir de vez"
-                    variant="danger"
-                    icon={<Trash size={18} />}
-                    onPress={() => setDeleting(catechist)}
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <DragScroll>
+        <Table aria-label="Catequistas arquivados" classNames={tableClassNames}>
+          <TableHeader>
+            <TableColumn align="center">Nº</TableColumn>
+            <TableColumn align="start">NOME</TableColumn>
+            <TableColumn align="start">EMAIL</TableColumn>
+            <TableColumn align="center">TELEFONE</TableColumn>
+            <TableColumn align="center">ARQUIVADO EM</TableColumn>
+            <TableColumn align="center">AÇÕES</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="Nenhum catequista encontrado">
+            {filteredCatechists.map((catechist, index) => (
+              <TableRow key={catechist.id}>
+                <TableCell>
+                  <span className="tabular-nums text-bunker-400">
+                    {index + 1}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="whitespace-nowrap font-medium text-bunker-900">
+                    {catechist.name}
+                  </span>
+                </TableCell>
+                <TableCell>{catechist.email}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {maskPhone(catechist.phone) || '–'}
+                </TableCell>
+                <TableCell>{formatTimestamp(catechist.archivedAt)}</TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-center gap-0.5">
+                    <RowAction
+                      label="Restaurar"
+                      icon={<ArrowCounterClockwise size={18} />}
+                      onPress={() => setRestoring(catechist)}
+                    />
+                    <RowAction
+                      label="Excluir de vez"
+                      variant="danger"
+                      icon={<Trash size={18} />}
+                      onPress={() => setDeleting(catechist)}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </DragScroll>
     </div>
   )
 }

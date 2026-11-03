@@ -1,4 +1,5 @@
 import { catechizing } from '@/Types'
+import { DragScroll } from '@/components/DragScroll'
 import {
   Table,
   TableHeader,
@@ -191,49 +192,52 @@ export function CatechizingsTable({
   }
 
   return (
-    <Table
-      aria-label="Catequizandos"
-      classNames={tableClassNames}
-      isHeaderSticky
-      sortDescriptor={sortDescriptor}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.key}
-            align={column.align ?? 'center'}
-            allowsSorting={column.allowsSorting}
-            className={column.sticky && stickyHeaderClassName[column.sticky]}
-          >
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent="Nenhum catequizando encontrado">
-        {sortedCatechizings.map((catechizing, index) => (
-          <TableRow key={catechizing.id} className="group">
-            {(columnKey) => {
-              const column = columns.find((column) => column.key === columnKey)
-              return (
-                <TableCell
-                  className={
-                    column?.sticky && stickyCellClassName[column.sticky]
-                  }
-                >
-                  <div
+    <DragScroll>
+      <Table
+        aria-label="Catequizandos"
+        classNames={tableClassNames}
+        sortDescriptor={sortDescriptor}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn
+              key={column.key}
+              align={column.align ?? 'center'}
+              allowsSorting={column.allowsSorting}
+              className={column.sticky && stickyHeaderClassName[column.sticky]}
+            >
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent="Nenhum catequizando encontrado">
+          {sortedCatechizings.map((catechizing, index) => (
+            <TableRow key={catechizing.id} className="group">
+              {(columnKey) => {
+                const column = columns.find(
+                  (column) => column.key === columnKey,
+                )
+                return (
+                  <TableCell
                     className={
-                      column?.align === 'start' ? '' : 'flex justify-center'
+                      column?.sticky && stickyCellClassName[column.sticky]
                     }
                   >
-                    {renderCell(catechizing, index, String(columnKey))}
-                  </div>
-                </TableCell>
-              )
-            }}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                    <div
+                      className={
+                        column?.align === 'start' ? '' : 'flex justify-center'
+                      }
+                    >
+                      {renderCell(catechizing, index, String(columnKey))}
+                    </div>
+                  </TableCell>
+                )
+              }}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </DragScroll>
   )
 }
