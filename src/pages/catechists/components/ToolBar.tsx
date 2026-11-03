@@ -1,10 +1,10 @@
 import { catechist } from '@/Types'
 import { Tooltip } from '@nextui-org/react'
-import { ArrowsLeftRight, PencilSimple, Trash } from '@phosphor-icons/react'
+import { Key, PencilSimple, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditCatechistModal } from './modals/EditCatechistModal'
 import { DeleteCatechistModal } from './modals/DeleteCatechistModal'
-import { TransferModal } from '@/components/TransferModal'
+import { ResetPasswordModal } from './modals/ResetPasswordModal'
 
 interface ToolBarProps {
   catechist: catechist
@@ -14,7 +14,7 @@ export default function ToolBar({ catechist }: ToolBarProps) {
     useState<boolean>(false)
   const [isUserDeletingCatechist, setIsUserDeletingCatechist] =
     useState<boolean>(false)
-  const [isUserTransferingCatechist, setIsUserTransferingCatechist] =
+  const [isUserResettingPassword, setIsUserResettingPassword] =
     useState<boolean>(false)
   return (
     <div className="flex items-center justify-center gap-2">
@@ -28,35 +28,36 @@ export default function ToolBar({ catechist }: ToolBarProps) {
         onClose={() => setIsUserDeletingCatechist(false)}
         data={catechist}
       />
-      <TransferModal
+      <ResetPasswordModal
+        isOpen={isUserResettingPassword}
+        onClose={() => setIsUserResettingPassword(false)}
         data={catechist}
-        isOpen={isUserTransferingCatechist}
-        onClose={() => setIsUserTransferingCatechist(false)}
-        type="catechist"
       />
+      <Tooltip content="Editar" className="text-bunker-950" closeDelay={0}>
+        <PencilSimple
+          size={20}
+          className="cursor-pointer duration-300 hover:opacity-60"
+          onClick={() => setIsUserEditingCatechist(true)}
+        />
+      </Tooltip>
       <Tooltip
-        content="Transferir de sala"
-        placement="left"
+        content="Resetar senha"
         className="text-bunker-950"
         closeDelay={0}
       >
-        <ArrowsLeftRight
+        <Key
           size={20}
-          className="cursor-pointer duration-300 hover:opacity-60"
-          onClick={() => setIsUserTransferingCatechist(true)}
+          className="cursor-pointer duration-300 hover:text-yellow-400"
+          onClick={() => setIsUserResettingPassword(true)}
         />
       </Tooltip>
-      <PencilSimple
-        size={20}
-        className="cursor-pointer duration-300 hover:opacity-60"
-        onClick={() => setIsUserEditingCatechist(true)}
-      />
-
-      <Trash
-        size={20}
-        className="cursor-pointer duration-300 hover:text-red-500"
-        onClick={() => setIsUserDeletingCatechist(true)}
-      />
+      <Tooltip content="Deletar" className="text-bunker-950" closeDelay={0}>
+        <Trash
+          size={20}
+          className="cursor-pointer duration-300 hover:text-red-500"
+          onClick={() => setIsUserDeletingCatechist(true)}
+        />
+      </Tooltip>
     </div>
   )
 }
