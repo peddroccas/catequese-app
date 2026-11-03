@@ -7,6 +7,7 @@ import { Classrooms } from './pages/classrooms/Classrooms'
 import { Login } from './pages/login/Login'
 import Classroom from './pages/classroom/Classroom'
 import { Profile } from './pages/profile/Profile'
+import { Formations } from './pages/formations/Formations'
 
 export function Router() {
   return (
@@ -17,6 +18,7 @@ export function Router() {
         <Route path="classroom" element={<Classroom />} />
         <Route path="catechizing" element={<Catechizings />} />
         <Route path="catechist" element={<Catechists />} />
+        <Route path="formations" element={<Formations />} />
         <Route path="rites" element={<Rites />} />
         <Route path="classrooms" element={<Classrooms />} />
         <Route path="profile" element={<Profile />} />
