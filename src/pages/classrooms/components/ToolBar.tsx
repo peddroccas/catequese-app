@@ -80,8 +80,7 @@ export function ToolBar({ classroom }: ToolBarProps) {
       {classroom.whatsappGroupLink && (
         <IconButton
           label="Abrir grupo do WhatsApp"
-          variant="whatsapp"
-          icon={<WhatsappLogo size={22} weight="fill" />}
+          icon={<WhatsappLogo size={20} />}
           onPress={() =>
             window.open(classroom.whatsappGroupLink!, '_blank', 'noopener')
           }
@@ -89,8 +88,7 @@ export function ToolBar({ classroom }: ToolBarProps) {
       )}
       <IconButton
         label="Convidar responsáveis para o grupo"
-        variant="whatsapp"
-        icon={<PaperPlaneTilt size={20} weight="fill" />}
+        icon={<PaperPlaneTilt size={20} />}
         onPress={() => setIsUserInvitingParents(true)}
       />
       {/* Com texto e menu explicado: no celular não há tooltip nos ícones */}

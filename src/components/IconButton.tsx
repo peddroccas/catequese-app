@@ -5,7 +5,7 @@ interface IconButtonProps {
   label: string
   icon: ReactNode
   onPress: () => void
-  variant?: 'default' | 'danger' | 'whatsapp'
+  variant?: 'default' | 'danger'
   isDisabled?: boolean
 }
 
@@ -13,9 +13,6 @@ const iconButtonVariants = {
   default: 'text-bunker-700 hover:border-bunker-300 hover:bg-bunker-50',
   danger:
     'text-bunker-700 hover:border-red-200 hover:bg-red-50 hover:text-red-600',
-  // Verde oficial do WhatsApp
-  whatsapp:
-    'text-[#25D366] hover:border-[#25D366]/40 hover:bg-[#25D366]/10 hover:text-[#1da851]',
 }
 
 // Botão quadrado com ícone e tooltip usado nas barras de ações

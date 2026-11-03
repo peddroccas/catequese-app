@@ -161,8 +161,9 @@ export function InviteParentsModal({
                   enviar e voltar aqui.
                 </span>
                 <Button
-                  className="shrink-0 bg-[#25D366] font-medium text-white hover:bg-[#1da851]"
-                  startContent={<PaperPlaneTilt size={18} weight="fill" />}
+                  color="primary"
+                  className="shrink-0"
+                  startContent={<PaperPlaneTilt size={18} />}
                   isDisabled={!pending.length}
                   onPress={() => sendInvite(pending[0])}
                 >
@@ -210,19 +211,14 @@ export function InviteParentsModal({
                         )}
                         <Button
                           size="sm"
-                          variant={isSent ? 'light' : 'solid'}
-                          startContent={
-                            <WhatsappLogo
-                              size={16}
-                              weight={isSent ? 'regular' : 'fill'}
-                            />
-                          }
+                          variant={isSent ? 'light' : 'flat'}
+                          startContent={<WhatsappLogo size={16} />}
                           isDisabled={!invite.number}
                           onPress={() => sendInvite(invite)}
                           className={
                             isSent
                               ? 'text-bunker-600'
-                              : 'bg-[#25D366] font-medium text-white hover:bg-[#1da851]'
+                              : 'bg-bunker-100 font-medium text-bunker-800'
                           }
                         >
                           {!invite.number
