@@ -71,7 +71,8 @@ export function ToolBar({ classroom }: ToolBarProps) {
       {classroom.whatsappGroupLink && (
         <IconButton
           label="Abrir grupo do WhatsApp"
-          icon={<WhatsappLogo size={20} />}
+          variant="whatsapp"
+          icon={<WhatsappLogo size={22} weight="fill" />}
           onPress={() =>
             window.open(classroom.whatsappGroupLink!, '_blank', 'noopener')
           }
@@ -79,7 +80,8 @@ export function ToolBar({ classroom }: ToolBarProps) {
       )}
       <IconButton
         label="Convidar responsáveis para o grupo"
-        icon={<PaperPlaneTilt size={20} />}
+        variant="whatsapp"
+        icon={<PaperPlaneTilt size={20} weight="fill" />}
         onPress={() => setIsUserInvitingParents(true)}
       />
       <IconButton
