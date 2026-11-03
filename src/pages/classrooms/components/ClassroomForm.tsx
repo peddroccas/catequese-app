@@ -12,6 +12,7 @@ import {
 import { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { WHATSAPP_GROUP_LINK } from '@/utils/whatsapp'
 
 const currentYear = new Date().getFullYear()
 
@@ -24,6 +25,13 @@ function classroomFormSchema(minYear: number) {
       .int('Ano inválido')
       .min(minYear, `O ano deve ser ${minYear} ou depois`),
     catechistsId: z.array(z.string()),
+    whatsappGroupLink: z
+      .string()
+      .trim()
+      .refine((value) => !value || WHATSAPP_GROUP_LINK.test(value), {
+        message:
+          'Cole o link de convite do grupo (https://chat.whatsapp.com/...)',
+      }),
   })
 }
 
@@ -54,6 +62,7 @@ export function ClassroomForm({
       segment: data?.segment,
       startedAt: data?.startedAt ?? currentYear,
       catechistsId: data?.catechists?.map((catechist) => catechist.id) ?? [],
+      whatsappGroupLink: data?.whatsappGroupLink ?? '',
     },
   })
   const [submitError, setSubmitError] = useState<string>('')
@@ -145,6 +154,21 @@ export function ClassroomForm({
               <SelectItem key={catechist.id!}>{catechist.name}</SelectItem>
             ))}
           </Select>
+        )}
+      />
+
+      <Controller
+        name="whatsappGroupLink"
+        control={control}
+        render={({ field }) => (
+          <Input
+            label="Link do grupo do WhatsApp"
+            placeholder="https://chat.whatsapp.com/..."
+            description="No grupo: toque no nome → Convidar via link → Copiar link"
+            {...field}
+            isInvalid={Boolean(errors.whatsappGroupLink)}
+            errorMessage={errors.whatsappGroupLink?.message}
+          />
         )}
       />
 

@@ -7,6 +7,7 @@ export interface classroomRequest {
   segment: segment
   startedAt: number
   catechistsId: string[]
+  whatsappGroupLink: string | null
 }
 
 export class ClassroomRepository {

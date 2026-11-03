@@ -88,6 +88,8 @@ export interface classroom {
   startedAt: number | undefined
   catechists?: classroomCatechist[]
   catechizings?: catechizing[]
+  // Link de convite do grupo de WhatsApp (chat.whatsapp.com/...)
+  whatsappGroupLink?: string | null
   archivedAt?: string | null
 }
 

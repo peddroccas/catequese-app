@@ -4,7 +4,9 @@ import {
   FilePdf,
   PencilSimple,
   Archive,
+  PaperPlaneTilt,
   UserPlus,
+  WhatsappLogo,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { EditClassroomModal } from './modals/EditClassroomModal'
@@ -14,6 +16,7 @@ import { downloadCallList } from '@/utils/downloadCallList'
 import { downloadClassroomPdf } from '@/utils/pdf'
 import { useAuth } from '@/hooks/useAuth'
 import { IconButton } from '@/components/IconButton'
+import { InviteParentsModal } from './modals/InviteParentsModal'
 
 interface ToolBarProps {
   classroom: classroom
@@ -28,9 +31,24 @@ export function ToolBar({ classroom }: ToolBarProps) {
     useState<boolean>(false)
   const [isUserEditingClassroom, setIsUserEditingClassroom] =
     useState<boolean>(false)
+  const [isUserInvitingParents, setIsUserInvitingParents] =
+    useState<boolean>(false)
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
+      <InviteParentsModal
+        classroom={classroom}
+        isOpen={isUserInvitingParents}
+        onClose={() => setIsUserInvitingParents(false)}
+        onEditLink={
+          isCoordinator
+            ? () => {
+                setIsUserInvitingParents(false)
+                setIsUserEditingClassroom(true)
+              }
+            : undefined
+        }
+      />
       {isCoordinator && (
         <>
           <AddNewCatechizingModal
@@ -50,6 +68,20 @@ export function ToolBar({ classroom }: ToolBarProps) {
           />
         </>
       )}
+      {classroom.whatsappGroupLink && (
+        <IconButton
+          label="Abrir grupo do WhatsApp"
+          icon={<WhatsappLogo size={20} />}
+          onPress={() =>
+            window.open(classroom.whatsappGroupLink!, '_blank', 'noopener')
+          }
+        />
+      )}
+      <IconButton
+        label="Convidar responsáveis para o grupo"
+        icon={<PaperPlaneTilt size={20} />}
+        onPress={() => setIsUserInvitingParents(true)}
+      />
       <IconButton
         label="Baixar lista de chamada"
         icon={<DownloadSimple size={20} />}
