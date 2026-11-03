@@ -47,7 +47,6 @@ export default function ToolBar({ catechizing }: ToolBarProps) {
         data={catechizing}
         isOpen={isUserTransferingCatechizing}
         onClose={() => setIsUserTransferingatechizing(false)}
-        type="catechizing"
       />
       {user?.role === 'COORDINATOR' && (
         <div className="flex items-center justify-center gap-2">
