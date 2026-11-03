@@ -1,70 +1,43 @@
 import { useAuth } from '@/hooks/useAuth'
-import { CatechizingsTable } from '../catechizings/components/CatechizingsTable'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { ClassroomRepository } from '@/services/repositories/classroomRepository'
-import { classroom } from '@/Types'
-import { useNavigate } from 'react-router-dom'
-import { Header } from '@/components/Header'
+import { useClassroomDetails } from '@/hooks/useClassroomDetails'
+import { ClassroomList } from '@/components/ClassroomList'
+import { ClassroomView } from '../classrooms/components/ClassroomView'
 
+// Turmas do catequista logado (pode estar em mais de uma)
 export default function Classroom() {
-  const navigate = useNavigate()
-  const { classrooms, hasClassroomUpdate, throwClassroomHasAlreadyUpdated } =
-    useContext(ClassroomContext)
-  const [classroom, setClassroom] = useState<classroom>({} as classroom)
-  const [classroomId, setClassroomId] = useState<string>('')
-  const { user, isCheckingLocalStorage } = useAuth()
+  const { user } = useAuth()
+  const { classrooms } = useContext(ClassroomContext)
+  const myClassrooms = classrooms.filter((classroom) =>
+    user?.classroomIds.includes(classroom.id!),
+  )
+  const [selectedClassroomId, setSelectedClassroomId] = useState<string>()
+  const selectedId = selectedClassroomId ?? myClassrooms[0]?.id
+  const classroom = useClassroomDetails(selectedId)
 
-  useEffect(() => {
-    if (!user && !isCheckingLocalStorage) {
-      navigate('/login')
-    }
-  }, [user, isCheckingLocalStorage, navigate])
-
-  if (user && !classroomId) {
-    const { classroomId } = user
-
-    if (classroomId) {
-      setClassroomId(classroomId!)
-    }
-  }
-
-  useEffect(() => {
-    async function getClassroom() {
-      if (classroomId) {
-        const classroom = await ClassroomRepository.getClassroom(classroomId)
-        if (classroom) {
-          setClassroom(classroom)
-        }
-      }
-    }
-    getClassroom().finally(throwClassroomHasAlreadyUpdated)
-  }, [
-    classrooms,
-    user,
-    hasClassroomUpdate,
-    throwClassroomHasAlreadyUpdated,
-    classroomId,
-  ])
-
-  if (!classroomId) {
+  if (!myClassrooms.length) {
     return (
-      <div className="flex min-h-screen flex-col bg-bunker-950">
-        <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
-          <p className="text-2xl">Turma não encontrada!</p>
-        </main>
-      </div>
+      <main className="mx-4 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4 sm:mx-10">
+        <p className="text-2xl">Você ainda não está em nenhuma turma.</p>
+      </main>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-950">
-      <main className="mx-10 mt-4 flex flex-grow flex-col gap-8 pb-8 pt-4">
-        {classroom.id && classrooms[0] && (
-          <CatechizingsTable
-            catechizings={classroom.catechizings!}
-            hasPageClassroomInfo={true}
+    <div className="mx-4 mt-4 flex flex-grow flex-col gap-6 pb-8 pt-4 sm:mx-10 lg:flex-row lg:items-start">
+      {myClassrooms.length > 1 && (
+        <aside className="lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
+          <ClassroomList
+            classrooms={myClassrooms}
+            selectedClassroomId={selectedId}
+            onSelect={(classroom) => setSelectedClassroomId(classroom.id)}
           />
+        </aside>
+      )}
+      <main className="min-w-0 flex-1">
+        {classroom && classroom.id === selectedId && (
+          <ClassroomView classroom={classroom} />
         )}
       </main>
     </div>

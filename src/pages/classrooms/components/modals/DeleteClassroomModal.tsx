@@ -30,6 +30,7 @@ export function DeleteClassroomModal({
         .then(() => {
           throwClassroomUpdate()
           throwCatechistUpdate()
+          throwCatechizingUpdate()
         })
         .finally(() => {
           onClose()
@@ -50,11 +51,16 @@ export function DeleteClassroomModal({
         <ModalContent>
           <ModalHeader>Deseja realmente deletar turma?</ModalHeader>
           <ModalBody>
-            <p>Turma: {data.roomNumber}</p>
+            <p>Local: {data.location}</p>
             <p>Segmento: {data.segment}</p>
             <p>
               Catequistas:{' '}
-              {data.catechists.map((catechist) => catechist.name).join(' e ')}
+              {data.catechists.map((catechist) => catechist.name).join(' e ') ||
+                '-'}
+            </p>
+            <p className="text-sm text-red-400">
+              Os {data.catechizings?.length ?? 0} catequizandos da turma também
+              serão apagados.
             </p>
           </ModalBody>
           <ModalFooter>

@@ -2,28 +2,30 @@ import { AddNewCatechizingModal } from '@/pages/catechizings/components/modals/A
 import { Button, Tooltip } from '@nextui-org/react'
 import {
   DownloadSimple,
+  FilePdf,
   PencilSimple,
-  Plus,
   Trash,
   UserPlus,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { AddNewClassroomModal } from './modals/AddNewClassroomModal'
 import { EditClassroomModal } from './modals/EditClassroomModal'
 import { classroom } from '@/Types'
 import { DeleteClassroomModal } from './modals/DeleteClassroomModal'
 import { downloadCallList } from '@/utils/downloadCallList'
-import DownloadButton from '@/components/DownloadButton'
+import { downloadClassroomPdf } from '@/utils/pdf'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ToolBarProps {
-  isClassroomSelected: boolean
-  classroom?: classroom
+  classroom: classroom
 }
 
-export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
+const buttonClassName =
+  'bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500'
+
+export function ToolBar({ classroom }: ToolBarProps) {
+  const { user } = useAuth()
+  const isCoordinator = user?.role === 'COORDINATOR'
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
-    useState<boolean>(false)
-  const [isUserAddingNewClassroom, setIsUserAddingNewClassroom] =
     useState<boolean>(false)
   const [isUserDeletingClassroom, setIsUserDeletingClassroom] =
     useState<boolean>(false)
@@ -32,90 +34,99 @@ export function ToolBar({ isClassroomSelected, classroom }: ToolBarProps) {
 
   return (
     <div className="flex gap-2">
-      <AddNewClassroomModal
-        isOpen={isUserAddingNewClassroom}
-        onClose={() => setIsUserAddingNewClassroom(false)}
-      />
-      <AddNewCatechizingModal
-        isOpen={isUserAddingNewCatechizing}
-        onClose={() => setIsUserAddingNewCatechizing(false)}
-        classroomId={classroom?.id}
-      />
-      <EditClassroomModal
-        isOpen={isUserEditingClassroom}
-        onClose={() => setIsUserEditingClassroom(false)}
-        data={classroom!}
-      />
-      <DeleteClassroomModal
-        isOpen={isUserDeletingClassroom}
-        onClose={() => setIsUserDeletingClassroom(false)}
-        data={classroom!}
-      />
+      {isCoordinator && (
+        <>
+          <AddNewCatechizingModal
+            isOpen={isUserAddingNewCatechizing}
+            onClose={() => setIsUserAddingNewCatechizing(false)}
+            classroomId={classroom.id}
+          />
+          <EditClassroomModal
+            isOpen={isUserEditingClassroom}
+            onClose={() => setIsUserEditingClassroom(false)}
+            data={classroom}
+          />
+          <DeleteClassroomModal
+            isOpen={isUserDeletingClassroom}
+            onClose={() => setIsUserDeletingClassroom(false)}
+            data={classroom}
+          />
+        </>
+      )}
       <Tooltip
         content="Baixar lista de chamada"
         className="text-bunker-950"
         closeDelay={0}
       >
         <Button
-          isDisabled={!classroom?.id}
           isIconOnly
-          onPress={() => downloadCallList({ classroom: classroom! })}
-          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
+          aria-label="Baixar lista de chamada"
+          onPress={() => downloadCallList({ classroom })}
+          className={buttonClassName}
         >
           <DownloadSimple size={28} className="text-white" />
         </Button>
       </Tooltip>
       <Tooltip
-        content="Adicionar novo catequizando a sala"
-        className="text-bunker-950"
-        closeDelay={0}
-      >
-        <Button
-          isDisabled={!isClassroomSelected}
-          isIconOnly
-          onPress={() => setIsUserAddingNewCatechizing(true)}
-          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
-        >
-          <UserPlus size={28} className="text-white" />
-        </Button>
-      </Tooltip>
-      <Tooltip
-        content="Adicionar nova turma"
+        content="Gerar PDF com os dados dos catequizandos"
         className="text-bunker-950"
         closeDelay={0}
       >
         <Button
           isIconOnly
-          onPress={() => setIsUserAddingNewClassroom(true)}
-          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-green-500"
+          aria-label="Gerar PDF da turma"
+          onPress={() => downloadClassroomPdf(classroom)}
+          className={buttonClassName}
         >
-          <Plus size={28} className="text-white" />
+          <FilePdf size={28} className="text-white" />
         </Button>
       </Tooltip>
-      <Tooltip content="Editar sala" className="text-bunker-950" closeDelay={0}>
-        <Button
-          isIconOnly
-          isDisabled={!isClassroomSelected}
-          onPress={() => setIsUserEditingClassroom(true)}
-          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-orange-400"
-        >
-          <PencilSimple size={28} className="text-white" />
-        </Button>
-      </Tooltip>
-      <Tooltip
-        content="Deletar sala"
-        className="text-bunker-950"
-        closeDelay={0}
-      >
-        <Button
-          isIconOnly
-          isDisabled={!isClassroomSelected}
-          className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-red-600"
-          onPress={() => setIsUserDeletingClassroom(true)}
-        >
-          <Trash size={28} className="text-white" />
-        </Button>
-      </Tooltip>
+      {isCoordinator && (
+        <>
+          <Tooltip
+            content="Adicionar novo catequizando à turma"
+            className="text-bunker-950"
+            closeDelay={0}
+          >
+            <Button
+              isIconOnly
+              aria-label="Adicionar catequizando"
+              onPress={() => setIsUserAddingNewCatechizing(true)}
+              className={buttonClassName}
+            >
+              <UserPlus size={28} className="text-white" />
+            </Button>
+          </Tooltip>
+          <Tooltip
+            content="Editar turma"
+            className="text-bunker-950"
+            closeDelay={0}
+          >
+            <Button
+              isIconOnly
+              aria-label="Editar turma"
+              onPress={() => setIsUserEditingClassroom(true)}
+              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-orange-400"
+            >
+              <PencilSimple size={28} className="text-white" />
+            </Button>
+          </Tooltip>
+          <Tooltip
+            content="Deletar turma"
+            className="text-bunker-950"
+            closeDelay={0}
+          >
+            <Button
+              isIconOnly
+              aria-label="Deletar turma"
+              className="bg-bunker-900 shadow shadow-black *:duration-300 *:hover:text-red-600"
+              onPress={() => setIsUserDeletingClassroom(true)}
+            >
+              <Trash size={28} className="text-white" />
+            </Button>
+          </Tooltip>
+        </>
+      )}
     </div>
   )
 }
