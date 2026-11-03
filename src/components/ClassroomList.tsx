@@ -1,4 +1,4 @@
-import { classroom, segment, segments } from '@/Types'
+import { classroom, segment } from '@/Types'
 import { compareNatural, joinNames } from '@/utils/names'
 import { surfaceClassName } from './tableStyles'
 
@@ -8,25 +8,13 @@ interface ClassroomListProps {
   onSelect: (classroom: classroom) => void
 }
 
-// Uma cor por segmento para achar o grupo de relance
-const segmentColors: Record<segment, string> = {
-  'Eucaristia 1': 'bg-amber-400',
-  'Eucaristia 2': 'bg-orange-500',
-  'Crisma 1': 'bg-red-700',
-  'Crisma 2': 'bg-red-700',
-  'Catequese Adultos': 'bg-sky-500',
-}
+const classroomGroups: { label: string; segments: segment[] }[] = [
+  { label: 'Eucaristia', segments: ['Eucaristia 1', 'Eucaristia 2'] },
+  { label: 'Crisma', segments: ['Crisma 1', 'Crisma 2'] },
+  { label: 'Catequese Adultos', segments: ['Catequese Adultos'] },
+]
 
-function SegmentDot({ segment }: { segment?: segment }) {
-  return (
-    <span
-      aria-hidden
-      className={`h-2.5 w-2.5 shrink-0 rounded-full ${segment ? segmentColors[segment] : 'bg-bunker-300'}`}
-    />
-  )
-}
-
-// Lista compacta das turmas agrupadas por segmento, para escolher com um clique
+// Lista compacta das turmas agrupadas sem separar as etapas 1 e 2
 export function ClassroomList({
   classrooms,
   selectedClassroomId,
@@ -36,11 +24,14 @@ export function ClassroomList({
     return <p className="text-sm text-bunker-500">Nenhuma turma cadastrada.</p>
   }
 
-  const groups = segments
-    .map((segment) => ({
-      segment,
+  const groups = classroomGroups
+    .map((group) => ({
+      label: group.label,
       classrooms: classrooms
-        .filter((classroom) => classroom.segment === segment)
+        .filter(
+          (classroom) =>
+            classroom.segment && group.segments.includes(classroom.segment),
+        )
         .sort((a, b) => compareNatural(a.location, b.location)),
     }))
     .filter((group) => group.classrooms.length)
@@ -53,8 +44,13 @@ export function ClassroomList({
         className="scrollbar-thin -mx-4 flex gap-2 overflow-x-auto px-4 pb-3 md:hidden"
       >
         {groups
-          .flatMap((group) => group.classrooms)
-          .map((classroom) => {
+          .flatMap((group) =>
+            group.classrooms.map((classroom) => ({
+              classroom,
+              label: group.label,
+            })),
+          )
+          .map(({ classroom, label }) => {
             const isSelected = classroom.id === selectedClassroomId
             return (
               <button
@@ -74,8 +70,7 @@ export function ClassroomList({
                 <span
                   className={`flex items-center gap-1.5 text-[11px] font-medium ${isSelected ? 'text-bunker-200' : 'text-bunker-600'}`}
                 >
-                  {/* <SegmentDot segment={classroom.segment} /> */}
-                  {classroom.segment}
+                  {label}
                 </span>
               </button>
             )
@@ -87,13 +82,12 @@ export function ClassroomList({
       >
         {groups.map((group) => (
           <section
-            key={group.segment}
+            key={group.label}
             className="flex flex-col gap-0.5 border-t border-bunker-100 pt-3 first:border-none first:pt-0"
           >
             <h2 className="mb-1 flex items-center justify-between gap-2 rounded-lg bg-bunker-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-bunker-800">
               <span className="flex items-center gap-2">
-                {/* <SegmentDot segment={group.segment} /> */}
-                {group.segment}
+                {group.label}
               </span>
               <span className="rounded-full bg-white px-1.5 text-[11px] font-semibold text-bunker-600">
                 {group.classrooms.length}
