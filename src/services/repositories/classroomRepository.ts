@@ -1,101 +1,38 @@
-import { classroom } from '@/Types'
+import { classroom, segment } from '@/Types'
 import { api } from '../api'
 
-export type segment =
-  | '1° Eucaristia'
-  | 'Crisma'
-  | 'Catequizandos Adultos'
-  | 'Catecúmenos Adultos'
-  | 'Sementinha'
-  | 'Pré-eucaristia'
+export interface classroomRequest {
+  id?: string
+  location: string
+  segment: segment
+  startedAt: number
+  catechistsId: string[]
+}
 
 export class ClassroomRepository {
-  static async createNewClassroom(classroom: classroom) {
-    return api
-      .post('/classrooms', classroom)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        console.error('Erro na requisição:', error)
-      })
+  static async createNewClassroom(classroom: classroomRequest) {
+    const response = await api.post('/classrooms', classroom)
+    return response.data
   }
 
-  static async editClassroom(classroom: classroom) {
-    return api
-      .put('/classrooms', classroom)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        console.error('Erro na requisição:', error)
-      })
-  }
-
-  static async getClassroomNamesBySegment(
-    segment: string,
-  ): Promise<{ id: string; classroomName: string }[]> {
-    return api
-      .get(`/classrooms/names/${encodeURIComponent(segment)}`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+  static async editClassroom(classroom: classroomRequest) {
+    const response = await api.put('/classrooms', classroom)
+    return response.data
   }
 
   static async getClassroomNames(): Promise<classroom[]> {
-    return api
-      .get(`/classrooms`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
-  }
-
-  static async getCatechizingByClassroom(classroomName: string): Promise<
-    {
-      id: string
-      name: string
-    }[]
-  > {
-    return api
-      .get(`/catechizings/${encodeURIComponent(classroomName)}`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+    const response = await api.get('/classrooms')
+    return response.data
   }
 
   static async getClassroom(classroomId: string): Promise<classroom> {
-    return api
-      .get(`/classrooms/${encodeURIComponent(classroomId)}`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+    const response = await api.get(
+      `/classrooms/${encodeURIComponent(classroomId)}`,
+    )
+    return response.data
   }
 
-  static async deleteClassroom(classroomId: string): Promise<classroom> {
-    return api
-      .delete(`/classrooms/${classroomId}`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+  static async deleteClassroom(classroomId: string) {
+    await api.delete(`/classrooms/${encodeURIComponent(classroomId)}`)
   }
 }

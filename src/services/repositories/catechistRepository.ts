@@ -1,103 +1,45 @@
 import { catechist } from '@/Types'
 import { api } from '../api'
 
-export type segment =
-  | '1° Eucaristia'
-  | 'Crisma'
-  | 'Catequizandos Adultos'
-  | 'Catecúmenos Adultos'
-  | 'Sementinha'
-  | 'Pré-eucaristia'
-
 export class CatechistRepository {
   static async getAllCatechists(): Promise<catechist[]> {
-    return api
-      .get(`/catechists`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+    const response = await api.get('/catechists')
+    return response.data
   }
 
-  static async createNewCatechist(catechist: catechist) {
-    return api
-      .post(`/catechists`, catechist)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+  static async createNewCatechist(catechist: catechist): Promise<catechist> {
+    const response = await api.post('/catechists', catechist)
+    return response.data
   }
 
   static async updateCatechist(catechist: catechist) {
-    return api
-      .put(`/catechists/${encodeURIComponent(catechist.id!)}`, catechist)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
-  }
-
-  static async transferCatechist(catechistId: string, classroomId: string) {
-    return api
-      .patch(`/catechists/transfer`, {
-        id: catechistId,
-        classroomId,
-      })
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+    await api.put('/catechists', catechist)
   }
 
   static async deleteCatechist(catechistId: string) {
-    return api
-      .delete(`/catechists/${encodeURIComponent(catechistId)}`)
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+    await api.delete(`/catechists/${encodeURIComponent(catechistId)}`)
   }
 
-  static async getCatechist(token: string): Promise<catechist> {
-    return api
-      .get(`/profile`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
+  static async resetPassword(catechistId: string) {
+    await api.patch(
+      `/catechists/${encodeURIComponent(catechistId)}/password/reset`,
+    )
+  }
+
+  static async changeOwnPassword(password: string) {
+    await api.patch('/catechists/me/password', { password })
+  }
+
+  static async getProfile(): Promise<catechist> {
+    const response = await api.get('/catechists/me')
+    return response.data
   }
 
   static async login(
     email: string,
     password: string,
-  ): Promise<{ token: string }> {
-    const response = api
-      .post(`/login`, { email, password })
-      .then((response) => {
-        return response.data
-      })
-      .catch((error) => {
-        // Manipular erros na requisição
-        console.error('Erro na requisição:', error)
-      })
-    return response
+  ): Promise<{ accessToken: string; mustChangePassword: boolean }> {
+    const response = await api.post('/catechists/auth', { email, password })
+    return response.data
   }
 }

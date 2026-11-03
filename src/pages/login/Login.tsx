@@ -9,7 +9,7 @@ import { z } from 'zod'
 
 const loginFormSchema = z.object({
   email: z.string({ message: 'Campo obrigatório' }).email('Email inválido'),
-  password: z.string().min(6).optional(),
+  password: z.string().min(1, 'Campo obrigatório'),
 })
 
 export function Login() {
@@ -26,7 +26,7 @@ export function Login() {
 
   useEffect(() => {
     if (user) {
-      navigate('/classrooms')
+      navigate(user.role === 'MEMBER' ? '/classroom' : '/classrooms')
     }
   }, [user, isCheckingLocalStorage, navigate])
 
@@ -38,19 +38,12 @@ export function Login() {
   async function handlelogin() {
     setHasUserSubmittedForm(true)
     try {
-      const user = await login(email, password)
-      if (user.role === 'MEMBER') {
-        navigate('/classroom')
-      } else {
-        if (user.role === 'COORDINATOR') {
-          navigate('/classrooms')
-        } else {
-          throw new Error()
-        }
-      }
+      // O redirecionamento (inclusive para trocar a senha padrão) é feito
+      // pelo efeito acima e pelo Header
+      await login(email, password)
     } catch (error) {
       setHasUserSubmittedForm(false)
-      alert('Login inválido' + error)
+      alert('Email ou senha inválidos')
       reset({ email: '', password: '' })
     }
   }

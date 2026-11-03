@@ -12,18 +12,12 @@ import {
 import { AuthContext } from './AuthContext'
 
 interface ClassroomType {
-  hasClassroomUpdate: boolean
-  hasCatechistUpdate: boolean
-  hasCatechizingUpdate: boolean
   catechizings: catechizing[]
   catechists: catechist[]
   classrooms: classroom[]
   throwClassroomUpdate: () => void
-  throwClassroomHasAlreadyUpdated: () => void
   throwCatechistUpdate: () => void
-  throwCatechistHasAlreadyUpdated: () => void
   throwCatechizingUpdate: () => void
-  throwCatechizingHasAlreadyUpdated: () => void
 }
 export const ClassroomContext = createContext({} as ClassroomType)
 
@@ -41,98 +35,66 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   const [classrooms, setClassrooms] = useState<classroom[]>([])
   const [catechists, setCatechists] = useState<catechist[]>([])
 
-  // Consulta nome das turmas
+  // Recarrega tudo sempre que alguém faz login
   useEffect(() => {
-    async function getClassroomNames() {
-      if (hasClassroomUpdate || user) {
-        const classroomNamesResponse =
-          await ClassroomRepository.getClassroomNames()
-        setClassrooms(classroomNamesResponse)
-        return true
-      }
-      return false
+    if (user?.id) {
+      setHasClassroomUpdate(true)
+      setHasCatechistUpdate(true)
+      setHasCatechizingUpdate(true)
     }
+  }, [user?.id])
 
-    if (user) {
-      getClassroomNames().then((response) => {
-        if (response) {
-          throwClassroomHasAlreadyUpdated()
-        }
-      })
+  // Consulta as turmas
+  useEffect(() => {
+    if (user && hasClassroomUpdate) {
+      ClassroomRepository.getClassroomNames()
+        .then(setClassrooms)
+        .catch(console.error)
+        .finally(() => setHasClassroomUpdate(false))
     }
   }, [hasClassroomUpdate, user])
 
   // Consulta todos os catequistas
   useEffect(() => {
-    async function getCatechists() {
-      if ((hasCatechistUpdate && hasClassroomUpdate) || user) {
-        const catechists = await CatechistRepository.getAllCatechists()
-        setCatechists(catechists)
-      }
+    if (user && hasCatechistUpdate) {
+      CatechistRepository.getAllCatechists()
+        .then(setCatechists)
+        .catch(console.error)
+        .finally(() => setHasCatechistUpdate(false))
     }
-    if (user) {
-      getCatechists().finally(() => {
-        throwCatechistHasAlreadyUpdated()
-        throwClassroomHasAlreadyUpdated()
-      })
-    }
-  }, [hasCatechistUpdate, hasClassroomUpdate, user])
+  }, [hasCatechistUpdate, user])
 
   // Consulta todos os catequizandos
   useEffect(() => {
-    async function getCatechizings() {
-      if ((hasCatechizingUpdate && hasClassroomUpdate) || user) {
-        const catechizings = await CatechizingRepository.getAllCatechizings()
-        setCatechizings(catechizings)
-      }
+    if (user && hasCatechizingUpdate) {
+      CatechizingRepository.getAllCatechizings()
+        .then(setCatechizings)
+        .catch(console.error)
+        .finally(() => setHasCatechizingUpdate(false))
     }
-
-    if (user) {
-      getCatechizings().finally(() => {
-        throwCatechizingHasAlreadyUpdated()
-        throwClassroomHasAlreadyUpdated()
-      })
-    }
-  }, [hasCatechizingUpdate, hasClassroomUpdate, user])
+  }, [hasCatechizingUpdate, user])
 
   function throwClassroomUpdate() {
     setHasClassroomUpdate(true)
-  }
-
-  function throwClassroomHasAlreadyUpdated() {
-    setHasClassroomUpdate(false)
   }
 
   function throwCatechistUpdate() {
     setHasCatechistUpdate(true)
   }
 
-  function throwCatechistHasAlreadyUpdated() {
-    setHasCatechistUpdate(false)
-  }
-
   function throwCatechizingUpdate() {
     setHasCatechizingUpdate(true)
   }
 
-  function throwCatechizingHasAlreadyUpdated() {
-    setHasCatechizingUpdate(false)
-  }
   return (
     <ClassroomContext.Provider
       value={{
         classrooms,
         catechists,
         catechizings,
-        hasClassroomUpdate,
-        hasCatechistUpdate,
-        hasCatechizingUpdate,
         throwClassroomUpdate,
-        throwClassroomHasAlreadyUpdated,
         throwCatechistUpdate,
-        throwCatechistHasAlreadyUpdated,
         throwCatechizingUpdate,
-        throwCatechizingHasAlreadyUpdated,
       }}
     >
       {children}
