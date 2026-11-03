@@ -1,4 +1,5 @@
 import { classroom, parent } from '@/Types'
+import { joinNames } from '@/utils/names'
 import { maskPhone } from '@/utils/phone'
 import {
   inviteMessage,
@@ -103,7 +104,7 @@ export function InviteParentsModal({
   function sendInvite(invite: invite) {
     const message = inviteMessage(
       invite.parent,
-      invite.catechizingNames.join(' e '),
+      joinNames(invite.catechizingNames),
       classroom,
     )
     window.open(whatsappChatUrl(invite.number!, message), '_blank', 'noopener')
@@ -192,7 +193,7 @@ export function InviteParentsModal({
                           )}
                         </span>
                         <span className="truncate text-xs text-bunker-500">
-                          de {invite.catechizingNames.join(' e ')} ·{' '}
+                          de {joinNames(invite.catechizingNames)} ·{' '}
                           {maskPhone(invite.parent.phone) || 'sem telefone'}
                         </span>
                       </div>
