@@ -112,7 +112,11 @@ export function ArchivedCatechizings({
       </ConfirmModal>
 
       <SearchInput value={search} onChange={setSearch} />
-      <Table aria-label="Catequizandos arquivados" classNames={tableClassNames}>
+      <Table
+        aria-label="Catequizandos arquivados"
+        classNames={tableClassNames}
+        isHeaderSticky
+      >
         <TableHeader>
           <TableColumn align="center">Nº</TableColumn>
           <TableColumn align="start">NOME</TableColumn>
@@ -144,7 +148,7 @@ export function ArchivedCatechizings({
                 <TableCell>
                   <span className="whitespace-nowrap">
                     {classroom
-                      ? `${classroom.location} (${classroom.segment})`
+                      ? `${classroom.location} (${classroom.segment})${classroom.archivedAt ? ' · turma arquivada' : ''}`
                       : '–'}
                   </span>
                 </TableCell>

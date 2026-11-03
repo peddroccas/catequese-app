@@ -65,8 +65,9 @@ export function ArchivedClassrooms({
             }}
           >
             <p>
-              <strong>{classroom.name}</strong> volta para as turmas ativas com
-              os catequizandos dela.
+              <strong>{classroom.name}</strong> volta para as turmas ativas
+              junto com os {classroom.catechizings?.length ?? 0} catequizandos
+              que foram arquivados com ela.
             </p>
           </ConfirmModal>
           <ConfirmModal

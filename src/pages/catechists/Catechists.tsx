@@ -56,7 +56,11 @@ export function Catechists() {
         onChange={setSearch}
         placeholder="Pesquisar catequista"
       />
-      <Table aria-label="Catequistas" classNames={tableClassNames}>
+      <Table
+        aria-label="Catequistas"
+        classNames={tableClassNames}
+        isHeaderSticky
+      >
         <TableHeader>
           <TableColumn align="center">Nº</TableColumn>
           <TableColumn align="start">NOME</TableColumn>

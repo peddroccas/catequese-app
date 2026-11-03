@@ -37,8 +37,9 @@ export function ArchiveClassroomModal({
         catequizandos.
       </p>
       <p>
-        Nada é apagado: a turma continua disponível para consulta e pode ser
-        restaurada a qualquer momento.
+        Os catequizandos também são arquivados e aparecem na aba Catequizandos
+        do Arquivo. Nada é apagado: dá para consultar e restaurar a turma a
+        qualquer momento.
       </p>
     </ConfirmModal>
   )

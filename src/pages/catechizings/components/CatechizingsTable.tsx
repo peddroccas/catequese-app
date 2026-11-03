@@ -28,6 +28,18 @@ interface column {
   label: string
   allowsSorting?: boolean
   align?: 'start' | 'center'
+  sticky?: 'left' | 'right'
+}
+
+// Nome e ações ficam presos nas bordas enquanto a tabela rola para o lado
+const stickyHeaderClassName = {
+  left: 'sticky left-0 z-20',
+  right: 'sticky right-0 z-20',
+}
+const stickyCellClassName = {
+  left: 'sticky left-0 z-10 bg-white group-hover:bg-bunker-50 shadow-[8px_0_8px_-8px_rgba(46,59,76,0.15)]',
+  right:
+    'sticky right-0 z-10 bg-white group-hover:bg-bunker-50 shadow-[-8px_0_8px_-8px_rgba(46,59,76,0.15)]',
 }
 
 function BooleanIcon({ value }: { value: boolean | null }) {
@@ -45,15 +57,21 @@ function BooleanIcon({ value }: { value: boolean | null }) {
   )
 }
 
-function Lines({ items }: { items: string[] }) {
-  if (!items.length) {
+// Um responsável por linha: nome e telefone lado a lado
+function Parents({ parents }: { parents: catechizing['parents'] }) {
+  if (!parents.length) {
     return <span className="text-bunker-300">–</span>
   }
   return (
-    <div className="flex flex-col">
-      {items.map((item, index) => (
-        <span key={index} className="whitespace-nowrap">
-          {item || '-'}
+    <div className="flex flex-col gap-0.5">
+      {parents.map((parent, index) => (
+        <span key={parent.id ?? index} className="whitespace-nowrap">
+          {parent.name}
+          {parent.phone && (
+            <span className="ml-2 tabular-nums text-bunker-500">
+              {maskPhone(parent.phone)}
+            </span>
+          )}
         </span>
       ))}
     </div>
@@ -76,19 +94,24 @@ export function CatechizingsTable({
   const columns = useMemo(() => {
     const list: (column | false)[] = [
       { key: 'index', label: 'Nº', align: 'center' },
-      { key: 'name', label: 'NOME', allowsSorting: true, align: 'start' },
+      {
+        key: 'name',
+        label: 'NOME',
+        allowsSorting: true,
+        align: 'start',
+        sticky: 'left',
+      },
       { key: 'age', label: 'IDADE', allowsSorting: true, align: 'center' },
       !hasPageClassroomInfo && { key: 'classroom', label: 'TURMA' },
       !hasPageClassroomInfo && { key: 'catechists', label: 'CATEQUISTA' },
-      { key: 'parents', label: 'RESPONSÁVEL', align: 'start' },
-      { key: 'phones', label: 'TEL. RESPONSÁVEL' },
+      { key: 'parents', label: 'RESPONSÁVEIS', align: 'start' },
       !isAdultClassroom && { key: 'goAwayAlone', label: 'VAI SOZINHO' },
       !!isAdultClassroom && { key: 'maritalStatus', label: 'ESTADO CIVIL' },
       !!isAdultClassroom && { key: 'livesWithPartner', label: 'MORA JUNTO' },
       { key: 'baptism', label: 'BATISMO', allowsSorting: true },
       { key: 'eucharist', label: '1ª EUCARISTIA' },
       !!isAdultClassroom && { key: 'marriage', label: 'MATRIMÔNIO' },
-      { key: 'actions', label: 'AÇÕES' },
+      { key: 'actions', label: 'AÇÕES', sticky: 'right' },
     ]
     return list.filter(Boolean) as column[]
   }, [hasPageClassroomInfo, isAdultClassroom])
@@ -146,15 +169,7 @@ export function CatechizingsTable({
             .join(' e ') || '-'
         )
       case 'parents':
-        return (
-          <Lines items={catechizing.parents.map((parent) => parent.name)} />
-        )
-      case 'phones':
-        return (
-          <Lines
-            items={catechizing.parents.map((parent) => maskPhone(parent.phone))}
-          />
-        )
+        return <Parents parents={catechizing.parents} />
       case 'goAwayAlone':
         return <BooleanIcon value={catechizing.releasedToGoAwayAlone} />
       case 'maritalStatus':
@@ -178,6 +193,7 @@ export function CatechizingsTable({
     <Table
       aria-label="Catequizandos"
       classNames={tableClassNames}
+      isHeaderSticky
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
     >
@@ -187,6 +203,7 @@ export function CatechizingsTable({
             key={column.key}
             align={column.align ?? 'center'}
             allowsSorting={column.allowsSorting}
+            className={column.sticky && stickyHeaderClassName[column.sticky]}
           >
             {column.label}
           </TableColumn>
@@ -194,21 +211,25 @@ export function CatechizingsTable({
       </TableHeader>
       <TableBody emptyContent="Nenhum catequizando encontrado">
         {sortedCatechizings.map((catechizing, index) => (
-          <TableRow key={catechizing.id}>
-            {(columnKey) => (
-              <TableCell>
-                <div
+          <TableRow key={catechizing.id} className="group">
+            {(columnKey) => {
+              const column = columns.find((column) => column.key === columnKey)
+              return (
+                <TableCell
                   className={
-                    columns.find((column) => column.key === columnKey)
-                      ?.align === 'start'
-                      ? ''
-                      : 'flex justify-center'
+                    column?.sticky && stickyCellClassName[column.sticky]
                   }
                 >
-                  {renderCell(catechizing, index, String(columnKey))}
-                </div>
-              </TableCell>
-            )}
+                  <div
+                    className={
+                      column?.align === 'start' ? '' : 'flex justify-center'
+                    }
+                  >
+                    {renderCell(catechizing, index, String(columnKey))}
+                  </div>
+                </TableCell>
+              )
+            }}
           </TableRow>
         ))}
       </TableBody>

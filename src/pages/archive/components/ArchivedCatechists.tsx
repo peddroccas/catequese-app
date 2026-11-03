@@ -82,7 +82,11 @@ export function ArchivedCatechists({
         onChange={setSearch}
         placeholder="Pesquisar catequista"
       />
-      <Table aria-label="Catequistas arquivados" classNames={tableClassNames}>
+      <Table
+        aria-label="Catequistas arquivados"
+        classNames={tableClassNames}
+        isHeaderSticky
+      >
         <TableHeader>
           <TableColumn align="center">Nº</TableColumn>
           <TableColumn align="start">NOME</TableColumn>

@@ -121,7 +121,7 @@ export function Formations() {
         placeholder="Pesquisar tema"
       />
 
-      <Table aria-label="Formações" classNames={tableClassNames}>
+      <Table aria-label="Formações" classNames={tableClassNames} isHeaderSticky>
         <TableHeader>
           <TableColumn align="center">DATA</TableColumn>
           <TableColumn align="start">TEMA</TableColumn>
