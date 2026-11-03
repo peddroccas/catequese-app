@@ -44,7 +44,8 @@ export function ToolBar({ classroom }: ToolBarProps) {
     useState<boolean>(false)
 
   return (
-    <div className="flex flex-wrap gap-2">
+    // Uma linha só no celular; se faltar espaço, rola de lado
+    <div className="scrollbar-thin flex max-w-full flex-nowrap gap-1.5 overflow-x-auto sm:gap-2">
       <InviteParentsModal
         classroom={classroom}
         isOpen={isUserInvitingParents}
@@ -98,7 +99,7 @@ export function ToolBar({ classroom }: ToolBarProps) {
             variant="bordered"
             startContent={<DownloadSimple size={18} />}
             endContent={<CaretDown size={14} />}
-            className="border-1 border-bunker-200 bg-white font-medium text-bunker-700 shadow-sm"
+            className="h-9 min-w-0 shrink-0 gap-1.5 border-1 border-bunker-200 bg-white px-3 font-medium text-bunker-700 shadow-sm sm:h-10"
           >
             Baixar
           </Button>

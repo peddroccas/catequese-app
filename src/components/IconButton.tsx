@@ -31,7 +31,7 @@ export function IconButton({
         onPress={onPress}
         isDisabled={isDisabled}
         variant="bordered"
-        className={`border-1 border-bunker-200 bg-white shadow-sm duration-150 ${iconButtonVariants[variant]}`}
+        className={`h-9 w-9 min-w-9 border-1 border-bunker-200 bg-white shadow-sm duration-150 sm:h-10 sm:w-10 sm:min-w-10 ${iconButtonVariants[variant]}`}
       >
         {icon}
       </Button>
