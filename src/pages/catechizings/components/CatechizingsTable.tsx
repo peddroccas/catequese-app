@@ -1,4 +1,5 @@
 import { catechizing } from '@/Types'
+import { joinNames } from '@/utils/names'
 import { DragScroll } from '@/components/DragScroll'
 import {
   Table,
@@ -166,9 +167,9 @@ export function CatechizingsTable({
         )
       case 'catechists':
         return (
-          classroom?.catechists
-            ?.map((catechist) => catechist.nickname)
-            .join(' e ') || '-'
+          joinNames(
+            classroom?.catechists?.map((catechist) => catechist.nickname) ?? [],
+          ) || '-'
         )
       case 'parents':
         return <Parents parents={catechizing.parents} />
