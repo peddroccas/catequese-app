@@ -26,6 +26,7 @@ import {
 } from '@nextui-org/react'
 import { FilePdf, PencilSimple, Plus, Trash } from '@phosphor-icons/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { AttendanceMatrix } from './AttendanceMatrix'
 import { MeetingModal } from './MeetingModal'
 
 interface ClassroomMeetingsProps {
@@ -293,6 +294,9 @@ export function ClassroomMeetings({ classroom }: ClassroomMeetingsProps) {
               </TableBody>
             </Table>
           </DragScroll>
+        </Tab>
+        <Tab key="matrix" title="Mapa de frequência">
+          <AttendanceMatrix classroom={classroom} meetings={meetings} />
         </Tab>
         <Tab key="absences" title="Faltas por catequizando">
           <DragScroll>

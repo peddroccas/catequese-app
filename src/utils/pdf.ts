@@ -7,6 +7,7 @@ import {
   isAdultSegment,
   meeting,
 } from '@/Types'
+import { attendanceRate, buildAttendanceMatrix } from './attendanceMatrix'
 import { calculateAge, formatDate } from './date'
 import { maskPhone } from './phone'
 
@@ -226,4 +227,127 @@ export function downloadMeetingPdf(meeting: meeting, classroom: classroom) {
   doc.save(
     `chamada-${fileName(classroom.name ?? classroom.location)}-${meeting.date}.pdf`,
   )
+}
+
+// Quantas datas cabem por página do mapa de frequência (paisagem)
+const MATRIX_DATES_PER_PAGE = 15
+
+// Mapa de frequência da turma (paisagem): catequizandos x encontros. Os
+// encontros são divididos em páginas de até MATRIX_DATES_PER_PAGE datas (o
+// nome se repete em todas); faltas e frequência ficam na última página. A
+// lista de temas de cada data vem no final.
+export function downloadAttendanceMatrixPdf(
+  classroom: classroom,
+  meetings: meeting[],
+) {
+  const { columns, rows } = buildAttendanceMatrix(classroom, meetings)
+  const title = classroom.name ?? classroom.location
+  const doc = new JsPDF({ orientation: 'landscape' })
+
+  const pages: number[] = []
+  for (let start = 0; start < columns.length; start += MATRIX_DATES_PER_PAGE) {
+    pages.push(start)
+  }
+  const pageCount = pages.length
+
+  pages.forEach((offset, pageIndex) => {
+    if (pageIndex > 0) {
+      doc.addPage()
+    }
+    const pageColumns = columns.slice(offset, offset + MATRIX_DATES_PER_PAGE)
+    const isLastPage = pageIndex === pageCount - 1
+    const dateCount = pageColumns.length
+
+    const startY = writeHeader(doc, [
+      'MAPA DE FREQUÊNCIA',
+      `TURMA: ${title} (${classroom.segment})`,
+      pageCount > 1
+        ? `ENCONTROS ${offset + 1} A ${offset + dateCount} DE ${columns.length} (PÁGINA ${pageIndex + 1} DE ${pageCount})`
+        : `${columns.length} ENCONTRO${columns.length === 1 ? '' : 'S'}`,
+    ])
+
+    autoTable(doc, {
+      startY,
+      head: [
+        [
+          'Nº',
+          'Catequizando',
+          ...pageColumns.map((meeting) => formatDate(meeting.date).slice(0, 5)),
+          ...(isLastPage ? ['Faltas', 'Freq.'] : []),
+        ],
+      ],
+      body: rows.map((person, index) => {
+        const rate = attendanceRate(person)
+        return [
+          index + 1,
+          person.isInClassroom ? person.name : `${person.name} (saiu da turma)`,
+          ...person.cells
+            .slice(offset, offset + dateCount)
+            .map((cell) => (cell === true ? 'P' : cell === false ? 'F' : '-')),
+          ...(isLastPage
+            ? [person.absent, rate === undefined ? '-' : `${rate}%`]
+            : []),
+        ]
+      }),
+      headStyles: { ...headStyles, halign: 'center', fontSize: 8 },
+      styles: { fontSize: 8, cellPadding: 1.5 },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 10 },
+        1: { cellWidth: 70 },
+        ...Object.fromEntries(
+          pageColumns.map((_, index) => [
+            2 + index,
+            { halign: 'center', cellWidth: 12 },
+          ]),
+        ),
+        [2 + dateCount]: { halign: 'center', cellWidth: 16 },
+        [3 + dateCount]: { halign: 'center', cellWidth: 16 },
+      },
+      didParseCell: (data) => {
+        if (data.section !== 'body') {
+          return
+        }
+        const isDateColumn =
+          data.column.index >= 2 && data.column.index < 2 + dateCount
+        if (isDateColumn && data.cell.raw === 'P') {
+          data.cell.styles.textColor = [22, 128, 61]
+        }
+        if (isDateColumn && data.cell.raw === 'F') {
+          data.cell.styles.textColor = [185, 28, 28]
+          data.cell.styles.fillColor = [254, 226, 226]
+          data.cell.styles.fontStyle = 'bold'
+        }
+      },
+    })
+
+    if (!isLastPage) {
+      const tableEnd = (doc as JsPDF & { lastAutoTable: { finalY: number } })
+        .lastAutoTable.finalY
+      doc.setFontSize(8)
+      doc.text(
+        'Faltas e frequência de cada catequizando na última página.',
+        14,
+        tableEnd + 6,
+      )
+    }
+  })
+
+  const finalY = (doc as JsPDF & { lastAutoTable: { finalY: number } })
+    .lastAutoTable.finalY
+  doc.setFontSize(8)
+  doc.text('P = presente   F = falta   - = sem registro', 14, finalY + 6)
+
+  autoTable(doc, {
+    startY: finalY + 10,
+    head: [['Data', 'Temas do encontro']],
+    body: columns.map((meeting) => [
+      formatDate(meeting.date),
+      meeting.themes.map((theme) => theme.name).join('\n'),
+    ]),
+    headStyles,
+    styles: { fontSize: 8 },
+    columnStyles: { 0: { cellWidth: 24 } },
+  })
+
+  doc.save(`frequencia-${fileName(title)}.pdf`)
 }
