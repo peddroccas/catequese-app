@@ -9,6 +9,7 @@ import Classroom from './pages/classroom/Classroom'
 import { Profile } from './pages/profile/Profile'
 import { Formations } from './pages/formations/Formations'
 import { Archive } from './pages/archive/Archive'
+import { Home } from './pages/home/Home'
 
 export function Router() {
   return (
@@ -16,6 +17,7 @@ export function Router() {
       <Route path="" element={<Navigate to={'/login'} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayout />}>
+        <Route path="inicio" element={<Home />} />
         <Route path="classroom" element={<Classroom />} />
         <Route path="catechizing" element={<Catechizings />} />
         <Route path="catechist" element={<Catechists />} />

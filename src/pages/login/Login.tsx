@@ -26,7 +26,7 @@ export function Login() {
 
   useEffect(() => {
     if (user) {
-      navigate(user.role === 'MEMBER' ? '/classroom' : '/classrooms')
+      navigate('/inicio')
     }
   }, [user, isCheckingLocalStorage, navigate])
 

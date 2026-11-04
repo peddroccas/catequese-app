@@ -9,11 +9,12 @@ import {
 import catequeseLogo from '../assets/catequese-logo.svg'
 import { useEffect, useState } from 'react'
 import { List } from '@phosphor-icons/react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import User from './User'
 
 const menuItems = [
+  { permission: 'ALL', name: 'Início', link: '/inicio' },
   { permission: 'MEMBER', name: 'Minhas turmas', link: '/classroom' },
   { permission: 'COORDINATOR', name: 'Turmas', link: '/classrooms' },
   { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
@@ -23,7 +24,7 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
 
-const memberPaths = ['/classroom', '/catechizing', '/profile']
+const memberPaths = ['/inicio', '/classroom', '/catechizing', '/profile']
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${
@@ -82,10 +83,17 @@ export function Header() {
           >
             <List color="#d1dae6" size={28} />
           </button>
-          <img className="w-11" src={catequeseLogo} alt="" />
-          <span className="hidden text-sm font-semibold tracking-wide text-white lg:block">
-            Catequese
-          </span>
+          {/* O símbolo leva para a página inicial */}
+          <Link
+            to="/inicio"
+            aria-label="Ir para a página inicial"
+            className="flex items-center gap-3 rounded-lg duration-150 hover:opacity-80"
+          >
+            <img className="w-11" src={catequeseLogo} alt="" />
+            <span className="hidden text-sm font-semibold tracking-wide text-white xl:block">
+              Catequese
+            </span>
+          </Link>
         </NavbarBrand>
       </NavbarContent>
 
