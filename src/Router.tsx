@@ -10,6 +10,8 @@ import { Profile } from './pages/profile/Profile'
 import { Formations } from './pages/formations/Formations'
 import { Archive } from './pages/archive/Archive'
 import { Home } from './pages/home/Home'
+import { Meetings } from './pages/meetings/Meetings'
+import { MeetingThemes } from './pages/meetings/MeetingThemes'
 
 export function Router() {
   return (
@@ -22,6 +24,8 @@ export function Router() {
         <Route path="catechizing" element={<Catechizings />} />
         <Route path="catechist" element={<Catechists />} />
         <Route path="formations" element={<Formations />} />
+        <Route path="meetings" element={<Meetings />} />
+        <Route path="meeting-themes" element={<MeetingThemes />} />
         <Route path="rites" element={<Rites />} />
         <Route path="classrooms" element={<Classrooms />} />
         <Route path="profile" element={<Profile />} />

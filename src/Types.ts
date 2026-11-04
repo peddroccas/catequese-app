@@ -109,3 +109,49 @@ export interface formation {
   date: string
   attendances: attendance[]
 }
+
+// Itinerário de temas dos encontros; cada segmento segue um
+export const itineraries = [
+  'Pré-Eucaristia',
+  'Eucaristia',
+  'Crisma',
+  'Adultos',
+] as const
+
+export type itinerary = (typeof itineraries)[number]
+
+export const segmentItinerary: Record<segment, itinerary> = {
+  'Pré-Eucaristia': 'Pré-Eucaristia',
+  'Eucaristia 1': 'Eucaristia',
+  'Eucaristia 2': 'Eucaristia',
+  'Crisma 1': 'Crisma',
+  'Crisma 2': 'Crisma',
+  'Catequese Adultos': 'Adultos',
+}
+
+export interface meetingTheme {
+  id: string
+  itinerary: itinerary
+  // Tempo/fase do itinerário
+  phase: string
+  name: string
+  position: number
+  // Tema excluído: só aparece no histórico das chamadas
+  archivedAt: string | null
+}
+
+export interface meetingAttendance {
+  catechizingId: string
+  // Vem da API; o catequizando pode ter saído da turma
+  catechizingName?: string | null
+  isPresent: boolean
+}
+
+// Encontro de uma turma com a chamada dos catequizandos
+export interface meeting {
+  id?: string
+  classroomId: string
+  date: string
+  themes: meetingTheme[]
+  attendances: meetingAttendance[]
+}

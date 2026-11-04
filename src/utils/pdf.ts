@@ -1,6 +1,12 @@
 import { jsPDF as JsPDF } from 'jspdf'
 import autoTable, { RowInput } from 'jspdf-autotable'
-import { catechist, classroom, formation, isAdultSegment } from '@/Types'
+import {
+  catechist,
+  classroom,
+  formation,
+  isAdultSegment,
+  meeting,
+} from '@/Types'
 import { calculateAge, formatDate } from './date'
 import { maskPhone } from './phone'
 
@@ -162,4 +168,62 @@ export function downloadFormationPdf(
   )
 
   doc.save(`formacao-${formation.date}-${fileName(formation.theme)}.pdf`)
+}
+
+// Chamada de um encontro da turma (um ou mais temas)
+export function downloadMeetingPdf(meeting: meeting, classroom: classroom) {
+  const doc = new JsPDF()
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const themeLines = meeting.themes.flatMap((theme) =>
+    doc.splitTextToSize(`• ${theme.name}`, pageWidth - 40),
+  )
+  const startY = writeHeader(doc, [
+    'CHAMADA DO ENCONTRO',
+    `TURMA: ${classroom.name ?? classroom.location} (${classroom.segment})`,
+    `DATA: ${formatDate(meeting.date)}`,
+    meeting.themes.length > 1 ? 'TEMAS:' : 'TEMA:',
+    ...themeLines,
+  ])
+
+  const rows = meeting.attendances
+    .map((attendance) => ({
+      name: attendance.catechizingName ?? 'Catequizando removido',
+      isPresent: attendance.isPresent,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  autoTable(doc, {
+    startY,
+    head: [['Nº', 'Catequizando', 'Presença']],
+    body: rows.map((row, index) => [
+      index + 1,
+      row.name,
+      row.isPresent ? 'Presente' : 'Falta',
+    ]),
+    headStyles,
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 12 },
+      2: { halign: 'center', cellWidth: 30 },
+    },
+    didParseCell: (data) => {
+      if (data.section === 'body' && data.column.index === 2) {
+        data.cell.styles.textColor =
+          data.cell.raw === 'Presente' ? [22, 128, 61] : [185, 28, 28]
+      }
+    },
+  })
+
+  const present = rows.filter((row) => row.isPresent).length
+  const finalY = (doc as JsPDF & { lastAutoTable: { finalY: number } })
+    .lastAutoTable.finalY
+  doc.setFontSize(10)
+  doc.text(
+    `Presentes: ${present}   Faltas: ${rows.length - present}   Total: ${rows.length}`,
+    14,
+    finalY + 8,
+  )
+
+  doc.save(
+    `chamada-${fileName(classroom.name ?? classroom.location)}-${meeting.date}.pdf`,
+  )
 }

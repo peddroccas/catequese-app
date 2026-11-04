@@ -17,6 +17,7 @@ const menuItems = [
   { permission: 'ALL', name: 'Início', link: '/inicio' },
   { permission: 'MEMBER', name: 'Minhas turmas', link: '/classroom' },
   { permission: 'COORDINATOR', name: 'Turmas', link: '/classrooms' },
+  { permission: 'ALL', name: 'Chamadas', link: '/meetings' },
   { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
   { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
   { permission: 'COORDINATOR', name: 'Formações', link: '/formations' },
@@ -24,7 +25,13 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
 
-const memberPaths = ['/inicio', '/classroom', '/catechizing', '/profile']
+const memberPaths = [
+  '/inicio',
+  '/classroom',
+  '/meetings',
+  '/catechizing',
+  '/profile',
+]
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${

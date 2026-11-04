@@ -6,6 +6,7 @@ import { calculateAge } from '@/utils/date'
 import {
   Archive,
   CalendarCheck,
+  CheckSquare,
   Cake,
   ChalkboardTeacher,
   Chalkboard,
@@ -29,6 +30,12 @@ const coordinatorShortcuts: shortcut[] = [
     title: 'Turmas',
     description: 'Catequizandos, chamada, PDF e convites',
     icon: <Chalkboard size={24} />,
+  },
+  {
+    link: '/meetings',
+    title: 'Chamadas',
+    description: 'Encontros, temas e faltas de todas as turmas',
+    icon: <CheckSquare size={24} />,
   },
   {
     link: '/catechizing',
@@ -68,6 +75,12 @@ const memberShortcuts: shortcut[] = [
     title: 'Minhas turmas',
     description: 'Catequizandos, chamada, PDF e convites',
     icon: <Chalkboard size={24} />,
+  },
+  {
+    link: '/meetings',
+    title: 'Chamadas',
+    description: 'Chamada dos encontros e faltas',
+    icon: <CheckSquare size={24} />,
   },
   {
     link: '/catechizing',
