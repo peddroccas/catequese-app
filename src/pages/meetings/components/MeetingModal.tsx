@@ -70,8 +70,8 @@ export function MeetingModal({
         data?.attendances
           .filter((attendance) => attendance.isPresent)
           .map((attendance) => attendance.catechizingId) ??
-        // Encontro novo: todos começam presentes, marca-se só quem faltou
-        catechizings.map((catechizing) => catechizing.id!),
+        // Encontro novo: todos começam desmarcados, marca-se quem está presente
+        [],
     },
   })
   const selectedThemeIds = watch('themeIds')
