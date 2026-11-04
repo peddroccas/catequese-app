@@ -61,6 +61,7 @@ export interface catechizing {
 }
 
 export const segments = [
+  'Pré-Eucaristia',
   'Eucaristia 1',
   'Eucaristia 2',
   'Crisma 1',

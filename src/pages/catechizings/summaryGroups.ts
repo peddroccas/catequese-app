@@ -11,7 +11,7 @@ export const summaryGroups: {
   {
     key: 'eucharist',
     label: 'Eucaristia',
-    segments: ['Eucaristia 1', 'Eucaristia 2'],
+    segments: ['Pré-Eucaristia', 'Eucaristia 1', 'Eucaristia 2'],
   },
   { key: 'confirmation', label: 'Crisma', segments: ['Crisma 1', 'Crisma 2'] },
   { key: 'adults', label: 'Adultos', segments: adultSegments },

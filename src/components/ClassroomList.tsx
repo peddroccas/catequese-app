@@ -9,7 +9,10 @@ interface ClassroomListProps {
 }
 
 const classroomGroups: { label: string; segments: segment[] }[] = [
-  { label: 'Eucaristia', segments: ['Eucaristia 1', 'Eucaristia 2'] },
+  {
+    label: 'Eucaristia',
+    segments: ['Pré-Eucaristia', 'Eucaristia 1', 'Eucaristia 2'],
+  },
   { label: 'Crisma', segments: ['Crisma 1', 'Crisma 2'] },
   { label: 'Catequese Adultos', segments: ['Catequese Adultos'] },
 ]
