@@ -68,13 +68,24 @@ export function ClassroomList({
                     : 'border-bunker-200/70 bg-white text-bunker-800'
                 }`}
               >
-                <span className="text-sm font-medium">
-                  {classroom.location}
+                <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+                  <span className="text-sm font-medium">
+                    {classroom.location}
+                  </span>
+                  <span
+                    className={`text-[11px] ${isSelected ? 'text-bunker-300' : 'text-bunker-500'}`}
+                  >
+                    · {label.replace('Catequese ', '')}
+                  </span>
                 </span>
                 <span
-                  className={`flex items-center gap-1.5 text-[11px] font-medium ${isSelected ? 'text-bunker-200' : 'text-bunker-600'}`}
+                  className={`max-w-36 truncate text-[11px] ${isSelected ? 'text-bunker-200' : 'text-bunker-600'}`}
                 >
-                  {label}
+                  {joinNames(
+                    classroom.catechists?.map(
+                      (catechist) => catechist.nickname,
+                    ) ?? [],
+                  ) || 'Sem catequista'}
                 </span>
               </button>
             )
