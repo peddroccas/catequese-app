@@ -62,8 +62,10 @@ export function Formations() {
     }
   }
 
-  const filteredFormations = formations.filter((formation) =>
-    matchesSearch(formation.theme, search),
+  const filteredFormations = formations.filter(
+    (formation) =>
+      matchesSearch(formation.theme, search) ||
+      matchesSearch(formation.instructor ?? '', search),
   )
 
   return (
@@ -119,7 +121,7 @@ export function Formations() {
       <SearchInput
         value={search}
         onChange={setSearch}
-        placeholder="Pesquisar tema"
+        placeholder="Pesquisar tema ou formador"
       />
 
       <DragScroll>
@@ -127,6 +129,7 @@ export function Formations() {
           <TableHeader>
             <TableColumn align="center">DATA</TableColumn>
             <TableColumn align="start">TEMA</TableColumn>
+            <TableColumn align="start">FORMADOR(A)</TableColumn>
             <TableColumn align="center">PRESENTES</TableColumn>
             <TableColumn align="center">FALTAS</TableColumn>
             <TableColumn align="center">AÇÕES</TableColumn>
@@ -143,6 +146,11 @@ export function Formations() {
                     <span className="font-medium text-bunker-900">
                       {formation.theme}
                     </span>
+                  </TableCell>
+                  <TableCell>
+                    {formation.instructor || (
+                      <span className="text-bunker-300">–</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <span className="font-medium tabular-nums text-emerald-600">

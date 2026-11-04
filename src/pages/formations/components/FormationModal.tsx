@@ -21,6 +21,7 @@ import { z } from 'zod'
 
 const formationFormSchema = z.object({
   theme: z.string().trim().min(1, 'Campo obrigatório'),
+  instructor: z.string().trim(),
   date: z.string({ message: 'Campo obrigatório' }).min(1, 'Campo obrigatório'),
   presentCatechistIds: z.array(z.string()),
 })
@@ -53,6 +54,7 @@ export function FormationModal({
     resolver: zodResolver(formationFormSchema),
     defaultValues: {
       theme: data?.theme ?? '',
+      instructor: data?.instructor ?? '',
       date: data?.date ?? today(),
       presentCatechistIds:
         data?.attendances
@@ -67,6 +69,7 @@ export function FormationModal({
     const formation: formation = {
       id: data?.id,
       theme: form.theme,
+      instructor: form.instructor || null,
       date: form.date,
       attendances: [
         ...catechists.map((catechist) => ({
@@ -122,6 +125,17 @@ export function FormationModal({
                   {...field}
                   isInvalid={Boolean(errors.theme)}
                   errorMessage={errors.theme?.message}
+                />
+              )}
+            />
+            <Controller
+              name="instructor"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  label="Formador(a)"
+                  description="Quem conduziu a formação (pode ser alguém de fora)"
+                  {...field}
                 />
               )}
             />

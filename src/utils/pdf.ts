@@ -117,6 +117,7 @@ export function downloadFormationPdf(
   const startY = writeHeader(doc, [
     'FORMAÇÃO DE CATEQUISTAS',
     `TEMA: ${formation.theme}`,
+    ...(formation.instructor ? [`FORMADOR(A): ${formation.instructor}`] : []),
     `DATA: ${formatDate(formation.date)}`,
   ])
 

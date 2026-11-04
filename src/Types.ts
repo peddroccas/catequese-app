@@ -101,6 +101,8 @@ export interface attendance {
 export interface formation {
   id?: string
   theme: string
+  // Quem conduziu a formação
+  instructor?: string | null
   date: string
   attendances: attendance[]
 }
