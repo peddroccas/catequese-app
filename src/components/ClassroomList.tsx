@@ -43,12 +43,16 @@ export function ClassroomList({
         aria-label="Turmas"
         className="scrollbar-thin -mx-4 flex gap-2 overflow-x-auto px-4 pb-3 md:hidden"
       >
+        {/* No celular a ordem é só pelo número da sala; o grupo aparece no cartão */}
         {groups
           .flatMap((group) =>
             group.classrooms.map((classroom) => ({
               classroom,
               label: group.label,
             })),
+          )
+          .sort((a, b) =>
+            compareNatural(a.classroom.location, b.classroom.location),
           )
           .map(({ classroom, label }) => {
             const isSelected = classroom.id === selectedClassroomId
@@ -86,9 +90,7 @@ export function ClassroomList({
             className="flex flex-col gap-0.5 border-t border-bunker-100 pt-3 first:border-none first:pt-0"
           >
             <h2 className="mb-1 flex items-center justify-between gap-2 rounded-lg bg-bunker-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-bunker-800">
-              <span className="flex items-center gap-2">
-                {group.label}
-              </span>
+              <span className="flex items-center gap-2">{group.label}</span>
               <span className="rounded-full bg-white px-1.5 text-[11px] font-semibold text-bunker-600">
                 {group.classrooms.length}
               </span>
