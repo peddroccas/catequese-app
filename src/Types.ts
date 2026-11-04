@@ -19,6 +19,8 @@ export interface catechist {
   email?: string
   // Data em que foi para o arquivo; null enquanto está ativo
   archivedAt?: string | null
+  // URL pública da foto de perfil; null quando não tem foto
+  avatarUrl?: string | null
 }
 
 export interface parent {

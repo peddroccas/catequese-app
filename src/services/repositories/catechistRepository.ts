@@ -43,6 +43,20 @@ export class CatechistRepository {
     await api.patch('/catechists/me/password', { password })
   }
 
+  static async changeOwnAvatar(image: Blob): Promise<{ avatarUrl: string }> {
+    const form = new FormData()
+    form.append('file', image, 'avatar.jpg')
+    // Content-Type undefined deixa o axios montar o multipart com o boundary
+    const response = await api.patch('/catechists/me/avatar', form, {
+      headers: { 'Content-Type': undefined },
+    })
+    return response.data
+  }
+
+  static async removeOwnAvatar() {
+    await api.delete('/catechists/me/avatar')
+  }
+
   static async getProfile(): Promise<catechist> {
     const response = await api.get('/catechists/me')
     return response.data

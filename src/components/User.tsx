@@ -21,6 +21,7 @@ export default function User() {
           <Avatar
             as="span"
             size="sm"
+            src={user?.avatarUrl ?? undefined}
             className="transition-transform"
             classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
           />
