@@ -1,0 +1,171 @@
+import catequeseLogo from '@/assets/catequese-logo.svg'
+import { registrationSegment } from '@/Types'
+import { RegistrationRepository } from '@/services/repositories/registrationRepository'
+import { registrationSegments } from '@/utils/registration'
+import { Button, CircularProgress } from '@nextui-org/react'
+import { CheckCircle, LockSimple, WarningCircle } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
+import { RegistrationForm } from './components/RegistrationForm'
+
+type pageState = 'loading' | 'error' | 'closed' | 'open'
+
+const cardClassName =
+  'rounded-2xl border border-bunker-200/70 bg-white p-6 shadow-lg shadow-bunker-900/5 sm:p-8'
+
+// Formulário público de inscrição na catequese: não precisa de login
+export function Registration() {
+  const [state, setState] = useState<pageState>('loading')
+  const [segment, setSegment] = useState<registrationSegment | null>(null)
+  const [protocol, setProtocol] = useState<string | null>(null)
+
+  function loadStatus() {
+    setState('loading')
+    RegistrationRepository.getPublicStatus()
+      .then((isOpen) => setState(isOpen ? 'open' : 'closed'))
+      .catch(() => setState('error'))
+  }
+
+  useEffect(loadStatus, [])
+
+  function changeStep(next: registrationSegment | null) {
+    setSegment(next)
+    window.scrollTo({ top: 0 })
+  }
+
+  function handleDone(code: string) {
+    setProtocol(code)
+    window.scrollTo({ top: 0 })
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-bunker-50">
+      <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
+        <img className="w-11" src={catequeseLogo} alt="" />
+        <div className="flex flex-col leading-tight">
+          <span className="text-sm font-semibold tracking-wide text-white">
+            Catequese
+          </span>
+          <span className="text-xs text-bunker-300">
+            Paróquia Nossa Senhora Aparecida do Gama
+          </span>
+        </div>
+      </header>
+
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-8 sm:py-12">
+        {state === 'loading' && (
+          <div className="flex flex-1 items-center justify-center">
+            <CircularProgress aria-label="Carregando" />
+          </div>
+        )}
+
+        {state === 'error' && (
+          <div
+            className={`${cardClassName} flex flex-col items-center gap-3 text-center`}
+          >
+            <WarningCircle size={40} className="text-amber-500" />
+            <h1 className="text-xl font-semibold text-bunker-900">
+              Não foi possível carregar
+            </h1>
+            <p className="text-sm text-bunker-500">
+              Verifique a internet e tente novamente.
+            </p>
+            <Button color="primary" onPress={loadStatus}>
+              Tentar de novo
+            </Button>
+          </div>
+        )}
+
+        {state === 'closed' && !protocol && (
+          <div
+            className={`${cardClassName} flex flex-col items-center gap-3 text-center`}
+          >
+            <LockSimple size={40} className="text-bunker-500" />
+            <h1 className="text-xl font-semibold text-bunker-900">
+              Inscrições encerradas
+            </h1>
+            <p className="text-sm text-bunker-500">
+              No momento não estamos recebendo inscrições para a catequese. Em
+              caso de dúvida, fale com a coordenação.
+            </p>
+          </div>
+        )}
+
+        {protocol && (
+          <div
+            className={`${cardClassName} flex flex-col items-center gap-3 text-center`}
+          >
+            <CheckCircle size={48} weight="fill" className="text-emerald-500" />
+            <h1 className="text-xl font-semibold text-bunker-900">
+              Inscrição enviada!
+            </h1>
+            <p className="text-sm text-bunker-600">
+              A coordenação vai conferir os dados e os documentos e entrará em
+              contato pelo WhatsApp informado.
+            </p>
+            <div className="rounded-xl bg-bunker-50 px-5 py-3">
+              <p className="text-xs uppercase tracking-wide text-bunker-500">
+                Código da inscrição
+              </p>
+              <p className="text-2xl font-semibold tracking-widest text-bunker-900">
+                {protocol}
+              </p>
+            </div>
+            <p className="text-xs text-bunker-500">
+              Guarde este código: ele ajuda a coordenação a encontrar a sua
+              inscrição.
+            </p>
+          </div>
+        )}
+
+        {state === 'open' && !protocol && !segment && (
+          <>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
+                Inscrição para a catequese
+              </h1>
+              <p className="text-sm text-bunker-500">
+                Escolha a etapa. Vagas limitadas; só aceitamos inscrições com
+                todos os documentos.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {registrationSegments.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => changeStep(item.key)}
+                  className="flex flex-col gap-1 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-bunker-300 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                >
+                  <span className="text-lg font-semibold text-bunker-900">
+                    {item.title}
+                  </span>
+                  <span className="text-sm text-bunker-500">
+                    {item.description}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="text-sm text-bunker-500">
+              Taxa de inscrição: R$ 20,00.
+            </p>
+          </>
+        )}
+
+        {state === 'open' && !protocol && segment && (
+          <div className={cardClassName}>
+            <RegistrationForm
+              key={segment}
+              segment={segment}
+              onBack={() => changeStep(null)}
+              onDone={handleDone}
+            />
+          </div>
+        )}
+      </main>
+
+      <footer className="px-4 pb-8 text-center text-xs text-bunker-500">
+        Dúvidas: Andressa (61) 9 9153-4184 · Luiz (61) 9 8214-2359
+      </footer>
+    </div>
+  )
+}

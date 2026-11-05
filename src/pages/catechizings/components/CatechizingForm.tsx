@@ -56,6 +56,9 @@ const catechizingFormSchema = z.object({
   specialNeedsDescription: optionalText(300),
   maritalStatus: z.string(),
   livesWithPartner: z.string(),
+  shirtSize: z.string(),
+  foodRestriction: optionalText(200),
+  pickupAuthorizedBy: optionalText(150),
 })
 
 type CatechizingFormData = z.infer<typeof catechizingFormSchema>
@@ -76,6 +79,9 @@ function toFormData(data?: catechizing, classroomId?: string) {
     personWithSpecialNeeds: data?.personWithSpecialNeeds ?? false,
     specialNeedsDescription: data?.specialNeedsDescription ?? '',
     maritalStatus: data?.maritalStatus ?? '',
+    shirtSize: data?.shirtSize ?? '',
+    foodRestriction: data?.foodRestriction ?? '',
+    pickupAuthorizedBy: data?.pickupAuthorizedBy ?? '',
     livesWithPartner:
       data?.livesWithPartner === null || data?.livesWithPartner === undefined
         ? ''
@@ -118,6 +124,7 @@ export function CatechizingForm({
   const isAdult = isAdultSegment(selectedClassroom?.segment)
   const age = calculateAge(watch('birthday'))
   const hasSpecialNeeds = watch('personWithSpecialNeeds')
+  const releasedAlone = watch('releasedToGoAwayAlone')
 
   async function handleSubmitForm(form: CatechizingFormData) {
     if (!isAdult && !form.parents.length) {
@@ -138,6 +145,11 @@ export function CatechizingForm({
         hasReceivedEucharist: form.hasReceivedEucharist,
         hasReceivedMarriage: form.hasReceivedMarriage,
         releasedToGoAwayAlone: form.releasedToGoAwayAlone,
+        shirtSize: form.shirtSize || null,
+        foodRestriction: form.foodRestriction || null,
+        pickupAuthorizedBy: form.releasedToGoAwayAlone
+          ? null
+          : form.pickupAuthorizedBy || null,
         personWithSpecialNeeds: form.personWithSpecialNeeds,
         specialNeedsDescription:
           form.personWithSpecialNeeds && form.specialNeedsDescription
@@ -384,6 +396,49 @@ export function CatechizingForm({
           )}
         />
       )}
+
+      {!releasedAlone && !isAdult && (
+        <Controller
+          name="pickupAuthorizedBy"
+          control={control}
+          render={({ field }) => (
+            <Input
+              label="Quem está autorizado a buscar"
+              {...field}
+              isReadOnly={isReadOnly}
+              isInvalid={Boolean(errors.pickupAuthorizedBy)}
+              errorMessage={errors.pickupAuthorizedBy?.message}
+            />
+          )}
+        />
+      )}
+
+      <Controller
+        name="foodRestriction"
+        control={control}
+        render={({ field }) => (
+          <Input
+            label="Restrição alimentar"
+            {...field}
+            isReadOnly={isReadOnly}
+            isInvalid={Boolean(errors.foodRestriction)}
+            errorMessage={errors.foodRestriction?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="shirtSize"
+        control={control}
+        render={({ field }) => (
+          <Input
+            label="Camiseta do sacramento (tamanho)"
+            {...field}
+            isReadOnly={isReadOnly}
+            className="sm:max-w-xs"
+          />
+        )}
+      />
 
       {isAdult && (
         <fieldset className="flex flex-col gap-3 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4">

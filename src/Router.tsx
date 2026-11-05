@@ -13,17 +13,22 @@ import { Home } from './pages/home/Home'
 import { Finances } from './pages/finances/Finances'
 import { Meetings } from './pages/meetings/Meetings'
 import { MeetingThemes } from './pages/meetings/MeetingThemes'
+import { Registration } from './pages/registration/Registration'
+import { Registrations } from './pages/registrations/Registrations'
 
 export function Router() {
   return (
     <Routes>
       <Route path="" element={<Navigate to={'/login'} />} />
       <Route path="/login" element={<Login />} />
+      {/* Formulário público: não precisa de login */}
+      <Route path="/inscricao" element={<Registration />} />
       <Route path="/" element={<DefaultLayout />}>
         <Route path="inicio" element={<Home />} />
         <Route path="classroom" element={<Classroom />} />
         <Route path="catechizing" element={<Catechizings />} />
         <Route path="catechist" element={<Catechists />} />
+        <Route path="inscricoes" element={<Registrations />} />
         <Route path="formations" element={<Formations />} />
         <Route path="finances" element={<Finances />} />
         <Route path="meetings" element={<Meetings />} />

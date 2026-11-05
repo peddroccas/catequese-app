@@ -38,3 +38,40 @@ export function inviteMessage(
 export function whatsappChatUrl(number: string, message: string) {
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }
+
+function firstName(name: string) {
+  return name.split(' ')[0]
+}
+
+// Aviso ao responsável quando a inscrição é aprovada e vai para uma turma
+export function registrationApprovedMessage(
+  contactName: string,
+  catechizingName: string,
+  classroom: classroom,
+) {
+  const lines = [
+    `Olá, ${firstName(contactName)}! Tudo bem?`,
+    `A inscrição de ${catechizingName} na catequese foi aprovada! A turma é ${classroom.name ?? classroom.location} (${classroom.segment}).`,
+  ]
+  if (classroom.whatsappGroupLink) {
+    lines.push(
+      `Entre no grupo do WhatsApp da turma pelo link: ${classroom.whatsappGroupLink}`,
+    )
+  }
+  return lines.join('\n\n')
+}
+
+// Aviso quando falta algo: a família corrige e envia a inscrição de novo
+export function registrationRejectedMessage(
+  contactName: string,
+  catechizingName: string,
+  protocol: string,
+  reason: string,
+  formUrl: string,
+) {
+  return [
+    `Olá, ${firstName(contactName)}! Tudo bem?`,
+    `Recebemos a inscrição de ${catechizingName} na catequese (código ${protocol}), mas precisamos de um ajuste: ${reason}`,
+    `Pode enviar a inscrição novamente, já corrigida, por este link: ${formUrl}`,
+  ].join('\n\n')
+}

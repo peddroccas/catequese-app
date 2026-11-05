@@ -10,6 +10,12 @@ export const api = axios.create({
   },
 })
 
+// Páginas públicas (inscrição): sem token e sem o redirecionamento para o login
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: { Accept: 'application/json' },
+})
+
 // Envia o token em todas as requisições
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN_KEY)

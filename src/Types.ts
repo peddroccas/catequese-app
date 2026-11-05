@@ -37,6 +37,11 @@ export const maritalStatuses = [
   'Separado(a)',
   'Divorciado(a)',
   'Viúvo(a)',
+  // Opções da ficha de inscrição
+  'Namorando',
+  'Noivo(a)',
+  'Casado(a) no civil',
+  'Casado(a) no religioso',
 ] as const
 
 export type maritalStatus = (typeof maritalStatuses)[number]
@@ -52,6 +57,11 @@ export interface catechizing {
   hasReceivedBaptism: boolean
   hasReceivedEucharist: boolean
   hasReceivedMarriage: boolean
+  // Vêm da ficha de inscrição
+  shirtSize?: string | null
+  foodRestriction?: string | null
+  // Quem pode buscar quando não vai embora sozinho
+  pickupAuthorizedBy?: string | null
   // Só preenchidos em turmas de adultos
   maritalStatus: maritalStatus | null
   livesWithPartner: boolean | null
@@ -239,4 +249,61 @@ export interface rite {
   description?: string | null
   // PDFs do rito (pode ter mais de um, ex.: roteiro e folder)
   files: riteFile[]
+}
+
+// Inscrição enviada pelo formulário público, conferida pela coordenação
+export type registrationSegment =
+  | 'PRE_EUCARISTIA'
+  | 'EUCARISTIA'
+  | 'CRISMA'
+  | 'ADULTOS'
+
+export type registrationStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export type documentKind =
+  | 'PERSON_ID'
+  | 'GUARDIAN_ID'
+  | 'PROOF_OF_RESIDENCE'
+  | 'BAPTISM'
+  | 'EUCHARIST'
+  | 'MARRIAGE'
+
+export interface registrationFile {
+  id: string
+  kind: documentKind
+  label: string
+  originalName: string
+  mimeType: string
+  sizeBytes: number
+}
+
+export interface registration {
+  id: string
+  // Código curto que a família cita ao falar com a coordenação
+  protocol: string
+  segment: registrationSegment
+  status: registrationStatus
+  name: string
+  birthday: string
+  address: string
+  personWithSpecialNeeds: boolean
+  specialNeedsDescription: string | null
+  foodRestriction: string | null
+  releasedToGoAwayAlone: boolean
+  pickupAuthorizedBy: string | null
+  shirtSize: string | null
+  hasReceivedBaptism: boolean
+  hasReceivedEucharist: boolean
+  hasReceivedMarriage: boolean
+  maritalStatus: string | null
+  livesWithPartner: boolean | null
+  parents: parent[]
+  files: registrationFile[]
+  rejectionReason: string | null
+  reviewedAt: string | null
+  reviewedByName: string | null
+  catechizingId: string | null
+  // Quando a família concordou com o termo de compromisso
+  termsAcceptedAt: string
+  createdAt: string
 }

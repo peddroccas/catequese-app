@@ -11,6 +11,7 @@ import {
   Cake,
   ChalkboardTeacher,
   Chalkboard,
+  ClipboardText,
   HandCoins,
   Student,
   UserCircle,
@@ -50,6 +51,12 @@ const coordinatorShortcuts: shortcut[] = [
     title: 'Catequizandos',
     description: 'Todos os catequizandos e cadastro',
     icon: <Student size={24} />,
+  },
+  {
+    link: '/inscricoes',
+    title: 'Inscrições',
+    description: 'Conferir fichas e documentos, e abrir ou fechar o formulário',
+    icon: <ClipboardText size={24} />,
   },
   {
     link: '/catechist',

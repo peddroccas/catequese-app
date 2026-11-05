@@ -20,6 +20,7 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Finanças', link: '/finances' },
   { permission: 'ALL', name: 'Chamadas', link: '/meetings' },
   { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
+  { permission: 'COORDINATOR', name: 'Inscrições', link: '/inscricoes' },
   { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
   { permission: 'COORDINATOR', name: 'Formações', link: '/formations' },
   // Catequista só tem o carnê dentro das finanças
