@@ -260,6 +260,12 @@ export type registrationSegment =
 
 export type registrationStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
+// Abre/fecha o formulário público e escolhe as etapas que recebem inscrição
+export interface registrationSettings {
+  isOpen: boolean
+  openSegments: registrationSegment[]
+}
+
 export type documentKind =
   | 'PERSON_ID'
   | 'GUARDIAN_ID'

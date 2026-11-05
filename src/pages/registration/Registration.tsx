@@ -16,12 +16,16 @@ const cardClassName =
 export function Registration() {
   const [state, setState] = useState<pageState>('loading')
   const [segment, setSegment] = useState<registrationSegment | null>(null)
+  const [openSegments, setOpenSegments] = useState<registrationSegment[]>([])
   const [protocol, setProtocol] = useState<string | null>(null)
 
   function loadStatus() {
     setState('loading')
     RegistrationRepository.getPublicStatus()
-      .then((isOpen) => setState(isOpen ? 'open' : 'closed'))
+      .then((settings) => {
+        setOpenSegments(settings.openSegments)
+        setState(settings.isOpen ? 'open' : 'closed')
+      })
       .catch(() => setState('error'))
   }
 
@@ -129,21 +133,33 @@ export function Registration() {
               </p>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {registrationSegments.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => changeStep(item.key)}
-                  className="flex flex-col gap-1 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-bunker-300 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-                >
-                  <span className="text-lg font-semibold text-bunker-900">
-                    {item.title}
-                  </span>
-                  <span className="text-sm text-bunker-500">
-                    {item.description}
-                  </span>
-                </button>
-              ))}
+              {registrationSegments.map((item) => {
+                const isSegmentOpen = openSegments.includes(item.key)
+
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    disabled={!isSegmentOpen}
+                    onClick={() => changeStep(item.key)}
+                    className="flex flex-col gap-1 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 enabled:hover:-translate-y-0.5 enabled:hover:border-bunker-300 enabled:hover:shadow-md disabled:cursor-not-allowed disabled:bg-bunker-100/60 disabled:shadow-none"
+                  >
+                    <span
+                      className={`text-lg font-semibold ${isSegmentOpen ? 'text-bunker-900' : 'text-bunker-400'}`}
+                    >
+                      {item.title}
+                    </span>
+                    <span className="text-sm text-bunker-500">
+                      {item.description}
+                    </span>
+                    {!isSegmentOpen && (
+                      <span className="mt-1 text-xs font-medium text-bunker-500">
+                        Inscrições encerradas para esta etapa
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
             <p className="text-sm text-bunker-500">
               Taxa de inscrição: R$ 20,00.

@@ -1,12 +1,18 @@
-import { catechizing, registration, registrationStatus } from '@/Types'
+import {
+  catechizing,
+  registration,
+  registrationSettings,
+  registrationStatus,
+} from '@/Types'
 import { api, publicApi } from '../api'
 
 export class RegistrationRepository {
   // --- Público (sem login)
 
-  static async getPublicStatus(): Promise<boolean> {
+  // Aberto e quais etapas recebem inscrição (fechado = nenhuma etapa)
+  static async getPublicStatus(): Promise<registrationSettings> {
     const response = await publicApi.get('/public/registrations/status')
-    return response.data.isOpen
+    return response.data
   }
 
   // Dados da ficha em JSON + um arquivo por documento (campo = nome do documento)
@@ -35,14 +41,17 @@ export class RegistrationRepository {
     return response.data
   }
 
-  static async getSettings(): Promise<boolean> {
+  static async getSettings(): Promise<registrationSettings> {
     const response = await api.get('/registrations/settings')
-    return response.data.isOpen
+    return response.data
   }
 
-  static async setOpen(isOpen: boolean): Promise<boolean> {
-    const response = await api.put('/registrations/settings', { isOpen })
-    return response.data.isOpen
+  // Muda só o que for enviado (abrir/fechar tudo e/ou as etapas)
+  static async updateSettings(
+    changes: Partial<registrationSettings>,
+  ): Promise<registrationSettings> {
+    const response = await api.put('/registrations/settings', changes)
+    return response.data
   }
 
   // Inscrição de onde o catequizando veio (404 se foi cadastrado à mão)

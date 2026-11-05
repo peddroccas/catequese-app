@@ -4,10 +4,19 @@ import { SearchInput } from '@/components/SearchInput'
 import { surfaceClassName } from '@/components/tableStyles'
 import { getErrorMessage } from '@/services/api'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
-import { registration, registrationStatus } from '@/Types'
+import {
+  registration,
+  registrationSegment,
+  registrationSettings,
+  registrationStatus,
+} from '@/Types'
 import { calculateAge, formatTimestamp } from '@/utils/date'
 import { maskPhone } from '@/utils/phone'
-import { getRegistrationSegment, isAgeOutOfRange } from '@/utils/registration'
+import {
+  getRegistrationSegment,
+  isAgeOutOfRange,
+  registrationSegments,
+} from '@/utils/registration'
 import { matchesSearch } from '@/utils/search'
 import { Button, Chip, Switch, Tab, Tabs } from '@nextui-org/react'
 import { Copy, LinkSimple, Warning } from '@phosphor-icons/react'
@@ -31,7 +40,7 @@ const tabs: { key: registrationStatus; label: string; empty: string }[] = [
 // Conferência das inscrições enviadas pelo formulário público. Só a coordenação
 export function Registrations() {
   const [registrations, setRegistrations] = useState<registration[]>()
-  const [isOpen, setIsOpen] = useState<boolean>()
+  const [settings, setSettings] = useState<registrationSettings>()
   const [tab, setTab] = useState<registrationStatus>('PENDING')
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<registration>()
@@ -47,9 +56,9 @@ export function Registrations() {
       RegistrationRepository.getAll(),
       RegistrationRepository.getSettings(),
     ])
-      .then(([list, open]) => {
+      .then(([list, current]) => {
         setRegistrations(list)
-        setIsOpen(open)
+        setSettings(current)
       })
       .catch((loadError) => setError(getErrorMessage(loadError)))
   }, [])
@@ -58,11 +67,15 @@ export function Registrations() {
     load()
   }, [load])
 
-  async function updateOpen(next: boolean) {
+  const isOpen = settings?.isOpen
+  const openSegments = settings?.openSegments ?? []
+
+  // Muda só o que for enviado: abrir/fechar tudo ou as etapas
+  async function updateSettings(changes: Partial<registrationSettings>) {
     setIsSwitching(true)
     setError('')
     try {
-      setIsOpen(await RegistrationRepository.setOpen(next))
+      setSettings(await RegistrationRepository.updateSettings(changes))
     } catch (switchError) {
       setError(getErrorMessage(switchError))
     } finally {
@@ -112,7 +125,7 @@ export function Registrations() {
         onClose={() => setIsConfirmingOpen(false)}
         title="Abrir as inscrições?"
         confirmLabel="Abrir inscrições"
-        onConfirm={() => updateOpen(true)}
+        onConfirm={() => updateSettings({ isOpen: true })}
       >
         O formulário fica disponível para qualquer pessoa que tenha o link. Você
         pode fechar de novo quando quiser.
@@ -141,7 +154,9 @@ export function Registrations() {
             isSelected={Boolean(isOpen)}
             isDisabled={isOpen === undefined || isSwitching}
             onValueChange={(next) =>
-              next ? setIsConfirmingOpen(true) : updateOpen(false)
+              next
+                ? setIsConfirmingOpen(true)
+                : updateSettings({ isOpen: false })
             }
             aria-label="Inscrições abertas"
           />
@@ -183,6 +198,49 @@ export function Registrations() {
           >
             Abrir
           </Button>
+        </div>
+      </section>
+
+      <section className={`${surfaceClassName} flex flex-col gap-3 p-5`}>
+        <div className="flex flex-col">
+          <h2 className="font-semibold text-bunker-900">
+            Etapas que recebem inscrição
+          </h2>
+          <p className="text-sm text-bunker-500">
+            {!isOpen
+              ? 'As inscrições estão fechadas, então nenhuma etapa recebe. A escolha abaixo vale quando você abrir.'
+              : openSegments.length === 0
+                ? 'Nenhuma etapa marcada: o formulário aparece como encerrado.'
+                : 'Etapas desmarcadas aparecem como encerradas no formulário.'}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {registrationSegments.map((item) => {
+            const isChecked = openSegments.includes(item.key)
+
+            return (
+              <Switch
+                key={item.key}
+                isSelected={isChecked}
+                isDisabled={settings === undefined || isSwitching}
+                onValueChange={(next) =>
+                  updateSettings({
+                    openSegments: next
+                      ? [...openSegments, item.key]
+                      : openSegments.filter(
+                          (key: registrationSegment) => key !== item.key,
+                        ),
+                  })
+                }
+                classNames={{
+                  base: 'max-w-none rounded-xl border border-bunker-200 px-3 py-2',
+                  label: 'text-sm text-bunker-800',
+                }}
+              >
+                {item.title}
+              </Switch>
+            )
+          })}
         </div>
       </section>
 
