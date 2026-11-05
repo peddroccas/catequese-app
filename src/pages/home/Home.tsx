@@ -33,6 +33,12 @@ const coordinatorShortcuts: shortcut[] = [
     icon: <Chalkboard size={24} />,
   },
   {
+    link: '/finances',
+    title: 'Finanças',
+    description: 'Caixa, entradas, saídas e carnê',
+    icon: <HandCoins size={24} />,
+  },
+  {
     link: '/meetings',
     title: 'Chamadas',
     description: 'Encontros, temas e faltas de todas as turmas',
@@ -55,12 +61,6 @@ const coordinatorShortcuts: shortcut[] = [
     title: 'Formações',
     description: 'Encontros e chamada dos catequistas',
     icon: <CalendarCheck size={24} />,
-  },
-  {
-    link: '/finances',
-    title: 'Finanças',
-    description: 'Caixa, entradas, saídas e carnê',
-    icon: <HandCoins size={24} />,
   },
   {
     link: '/archive',
