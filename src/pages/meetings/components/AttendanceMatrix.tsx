@@ -46,7 +46,12 @@ export function AttendanceMatrix({
   }
 
   const headCell =
-    'border-b border-bunker-200 bg-bunker-50 px-3 py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-bunker-500'
+    'border-b border-bunker-200 bg-bunker-50 px-2 py-2 text-center text-[11px] sm:px-3 font-semibold uppercase tracking-wide text-bunker-500'
+
+  // Coluna fixa do nome: estreita no celular (o nome quebra em linhas) para
+  // sobrar espaço para as datas; no desktop mostra o nome inteiro
+  const nameColumn =
+    'sticky left-0 z-10 w-28 min-w-28 max-w-28 border-r border-bunker-100 sm:w-auto sm:min-w-48 sm:max-w-none sm:whitespace-nowrap'
 
   return (
     <div className="flex flex-col gap-3">
@@ -62,7 +67,9 @@ export function AttendanceMatrix({
           <span className="flex items-center gap-1">
             <span className="text-bunker-300">–</span> Sem registro
           </span>
-          <span>Passe o mouse na data para ver os temas</span>
+          <span className="hidden md:inline">
+            Passe o mouse na data para ver os temas
+          </span>
         </div>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
@@ -104,9 +111,7 @@ export function AttendanceMatrix({
         <table className="w-full border-separate border-spacing-0 text-sm">
           <thead>
             <tr>
-              <th
-                className={`${headCell} sticky left-0 z-10 min-w-48 text-left`}
-              >
+              <th className={`${headCell} ${nameColumn} text-left`}>
                 Catequizando
               </th>
               {columns.map((meeting) => (
@@ -139,10 +144,12 @@ export function AttendanceMatrix({
               const rate = attendanceRate(person)
               return (
                 <tr key={person.id} className="group">
-                  <td className="sticky left-0 z-10 whitespace-nowrap border-b border-bunker-100 bg-white px-3 py-2 font-medium text-bunker-900 group-hover:bg-bunker-50">
+                  <td
+                    className={`${nameColumn} border-b border-bunker-100 bg-white px-2 py-2 text-xs font-medium leading-tight text-bunker-900 group-hover:bg-bunker-50 sm:px-3 sm:text-sm`}
+                  >
                     {person.name}
                     {!person.isInClassroom && (
-                      <span className="ml-2 text-xs font-normal text-bunker-400">
+                      <span className="block text-[11px] font-normal text-bunker-400 sm:ml-2 sm:inline sm:text-xs">
                         (saiu da turma)
                       </span>
                     )}
@@ -150,7 +157,7 @@ export function AttendanceMatrix({
                   {person.cells.map((isPresent, index) => (
                     <td
                       key={columns[index].id}
-                      className="border-b border-bunker-100 px-3 py-2 text-center group-hover:bg-bunker-50"
+                      className="border-b border-bunker-100 px-2 py-2 text-center group-hover:bg-bunker-50 sm:px-3"
                     >
                       {isPresent === true && (
                         <Check
@@ -173,10 +180,10 @@ export function AttendanceMatrix({
                       )}
                     </td>
                   ))}
-                  <td className="border-b border-bunker-100 px-3 py-2 text-center font-medium tabular-nums text-red-500 group-hover:bg-bunker-50">
+                  <td className="border-b border-bunker-100 px-2 py-2 text-center font-medium tabular-nums text-red-500 group-hover:bg-bunker-50 sm:px-3">
                     {person.absent}
                   </td>
-                  <td className="border-b border-bunker-100 px-3 py-2 text-center tabular-nums group-hover:bg-bunker-50">
+                  <td className="border-b border-bunker-100 px-2 py-2 text-center tabular-nums group-hover:bg-bunker-50 sm:px-3">
                     {rate === undefined ? '–' : `${rate}%`}
                   </td>
                 </tr>

@@ -155,3 +155,62 @@ export interface meeting {
   themes: meetingTheme[]
   attendances: meetingAttendance[]
 }
+
+export type paymentMethod = 'PIX' | 'CASH' | 'CARD'
+
+export const paymentMethods: paymentMethod[] = ['PIX', 'CASH', 'CARD']
+
+export const paymentMethodLabels: Record<paymentMethod, string> = {
+  PIX: 'Pix',
+  CASH: 'Dinheiro',
+  CARD: 'Cartão',
+}
+
+export type entrySource = 'COLLABORATION' | 'CARNE' | 'DONATION' | 'PARISH'
+
+export const entrySources: entrySource[] = [
+  'COLLABORATION',
+  'CARNE',
+  'DONATION',
+  'PARISH',
+]
+
+export const entrySourceLabels: Record<entrySource, string> = {
+  COLLABORATION: 'Colaboração do caixa',
+  CARNE: 'Carnê',
+  DONATION: 'Doação',
+  PARISH: 'Pago pela paróquia',
+}
+
+// Saída do caixa. Valores em centavos
+export interface expense {
+  id?: string
+  // Destinação: com o que foi gasto
+  description: string
+  amountCents: number
+  date: string
+  paymentMethod: paymentMethod
+  createdByName?: string | null
+}
+
+// Entrada no caixa. Pagamentos do carnê são entradas de origem CARNE
+export interface entry {
+  id?: string
+  source: entrySource
+  amountCents: number
+  date: string
+  paymentMethod: paymentMethod
+  // Quem pagou (obrigatório no carnê)
+  payerName?: string | null
+  description?: string | null
+  // Só no carnê
+  catechizingId?: string | null
+  catechizingName?: string | null
+  createdByName?: string | null
+}
+
+export interface carne {
+  // Valor total do carnê de cada catequizando, em centavos
+  totalCents: number
+  payments: entry[]
+}

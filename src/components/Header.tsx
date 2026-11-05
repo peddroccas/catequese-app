@@ -21,6 +21,9 @@ const menuItems = [
   { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
   { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
   { permission: 'COORDINATOR', name: 'Formações', link: '/formations' },
+  { permission: 'COORDINATOR', name: 'Finanças', link: '/finances' },
+  // Catequista só tem o carnê dentro das finanças
+  { permission: 'MEMBER', name: 'Carnê', link: '/finances' },
   { permission: 'COORDINATOR', name: 'Ritos e eventos', link: '/rites' },
   { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
@@ -30,6 +33,7 @@ const memberPaths = [
   '/classroom',
   '/meetings',
   '/catechizing',
+  '/finances',
   '/profile',
 ]
 

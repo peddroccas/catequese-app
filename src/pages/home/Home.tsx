@@ -10,6 +10,7 @@ import {
   Cake,
   ChalkboardTeacher,
   Chalkboard,
+  HandCoins,
   Student,
   UserCircle,
   UsersThree,
@@ -81,6 +82,12 @@ const memberShortcuts: shortcut[] = [
     title: 'Chamadas',
     description: 'Chamada dos encontros e faltas',
     icon: <CheckSquare size={24} />,
+  },
+  {
+    link: '/finances',
+    title: 'Carnê',
+    description: 'Registrar e consultar pagamentos do carnê',
+    icon: <HandCoins size={24} />,
   },
   {
     link: '/catechizing',

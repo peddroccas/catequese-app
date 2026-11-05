@@ -10,6 +10,7 @@ import { Profile } from './pages/profile/Profile'
 import { Formations } from './pages/formations/Formations'
 import { Archive } from './pages/archive/Archive'
 import { Home } from './pages/home/Home'
+import { Finances } from './pages/finances/Finances'
 import { Meetings } from './pages/meetings/Meetings'
 import { MeetingThemes } from './pages/meetings/MeetingThemes'
 
@@ -24,6 +25,7 @@ export function Router() {
         <Route path="catechizing" element={<Catechizings />} />
         <Route path="catechist" element={<Catechists />} />
         <Route path="formations" element={<Formations />} />
+        <Route path="finances" element={<Finances />} />
         <Route path="meetings" element={<Meetings />} />
         <Route path="meeting-themes" element={<MeetingThemes />} />
         <Route path="rites" element={<Rites />} />
