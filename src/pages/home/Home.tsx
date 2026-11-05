@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { calculateAge } from '@/utils/date'
 import {
   Archive,
+  BookOpenText,
   CalendarCheck,
   CheckSquare,
   Cake,
@@ -63,6 +64,12 @@ const coordinatorShortcuts: shortcut[] = [
     icon: <CalendarCheck size={24} />,
   },
   {
+    link: '/rites',
+    title: 'Ritos',
+    description: 'Roteiros dos ritos em PDF',
+    icon: <BookOpenText size={24} />,
+  },
+  {
     link: '/archive',
     title: 'Arquivo',
     description: 'Turmas e pessoas arquivadas',
@@ -100,6 +107,12 @@ const memberShortcuts: shortcut[] = [
     title: 'Catequizandos',
     description: 'Pesquisar catequizandos',
     icon: <Student size={24} />,
+  },
+  {
+    link: '/rites',
+    title: 'Ritos',
+    description: 'Roteiros dos ritos em PDF',
+    icon: <BookOpenText size={24} />,
   },
   {
     link: '/profile',
