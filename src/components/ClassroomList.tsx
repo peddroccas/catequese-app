@@ -1,4 +1,4 @@
-import { classroom, segment } from '@/Types'
+import { classroom, segmentGroups } from '@/Types'
 import { compareNatural, joinNames } from '@/utils/names'
 import { surfaceClassName } from './tableStyles'
 
@@ -7,15 +7,6 @@ interface ClassroomListProps {
   selectedClassroomId?: string
   onSelect: (classroom: classroom) => void
 }
-
-const classroomGroups: { label: string; segments: segment[] }[] = [
-  {
-    label: 'Eucaristia',
-    segments: ['Pré-Eucaristia', 'Eucaristia 1', 'Eucaristia 2'],
-  },
-  { label: 'Crisma', segments: ['Crisma 1', 'Crisma 2'] },
-  { label: 'Catequese Adultos', segments: ['Catequese Adultos'] },
-]
 
 // Lista compacta das turmas agrupadas sem separar as etapas 1 e 2
 export function ClassroomList({
@@ -27,7 +18,7 @@ export function ClassroomList({
     return <p className="text-sm text-bunker-500">Nenhuma turma cadastrada.</p>
   }
 
-  const groups = classroomGroups
+  const groups = segmentGroups
     .map((group) => ({
       label: group.label,
       classrooms: classrooms

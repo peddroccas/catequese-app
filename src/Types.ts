@@ -73,6 +73,16 @@ export type segment = (typeof segments)[number]
 
 export const adultSegments: segment[] = ['Catequese Adultos']
 
+// Agrupamento usado nas telas (turmas, ritos): as etapas 1 e 2 ficam juntas
+export const segmentGroups: { label: string; segments: segment[] }[] = [
+  {
+    label: 'Eucaristia',
+    segments: ['Pré-Eucaristia', 'Eucaristia 1', 'Eucaristia 2'],
+  },
+  { label: 'Crisma', segments: ['Crisma 1', 'Crisma 2'] },
+  { label: 'Catequese Adultos', segments: ['Catequese Adultos'] },
+]
+
 export function isAdultSegment(segment?: segment) {
   return Boolean(segment && adultSegments.includes(segment))
 }
@@ -213,4 +223,20 @@ export interface carne {
   // Valor total do carnê de cada catequizando, em centavos
   totalCents: number
   payments: entry[]
+}
+
+// PDF de um rito: URL pública e o nome original do arquivo
+export interface riteFile {
+  id: string
+  name: string
+  url: string
+}
+
+// Rito da catequese, com os PDFs do roteiro. Vale para todas as turmas
+export interface rite {
+  id?: string
+  name: string
+  description?: string | null
+  // PDFs do rito (pode ter mais de um, ex.: roteiro e folder)
+  files: riteFile[]
 }
