@@ -57,6 +57,12 @@ const coordinatorShortcuts: shortcut[] = [
     icon: <CalendarCheck size={24} />,
   },
   {
+    link: '/finances',
+    title: 'Finanças',
+    description: 'Caixa, entradas, saídas e carnê',
+    icon: <HandCoins size={24} />,
+  },
+  {
     link: '/archive',
     title: 'Arquivo',
     description: 'Turmas e pessoas arquivadas',
