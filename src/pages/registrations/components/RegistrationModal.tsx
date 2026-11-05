@@ -1,3 +1,4 @@
+import { PackageMenu } from '@/components/PackageMenu'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { getErrorMessage } from '@/services/api'
@@ -10,7 +11,10 @@ import {
   getRegistrationSegment,
   isAgeOutOfRange,
 } from '@/utils/registration'
-import { downloadRegistrationPdf } from '@/utils/registrationPdf'
+import {
+  downloadRegistrationPackage,
+  downloadRegistrationPdf,
+} from '@/utils/registrationPdf'
 import {
   registrationApprovedMessage,
   registrationRejectedMessage,
@@ -391,13 +395,20 @@ export function RegistrationModal({
             </Button>
           ) : (
             <>
-              <Button
-                variant="flat"
-                startContent={<FilePdf size={18} />}
-                onPress={() => downloadRegistrationPdf(registration)}
-              >
-                Ficha em PDF
-              </Button>
+              <div className="flex flex-wrap items-start gap-2">
+                <Button
+                  variant="flat"
+                  startContent={<FilePdf size={18} />}
+                  onPress={() => downloadRegistrationPdf(registration)}
+                >
+                  Ficha em PDF
+                </Button>
+                <PackageMenu
+                  onDownload={(format) =>
+                    downloadRegistrationPackage(registration, format)
+                  }
+                />
+              </div>
               <div className="flex flex-wrap gap-2">
                 <Button variant="light" onPress={onClose}>
                   Fechar

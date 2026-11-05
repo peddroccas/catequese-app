@@ -6,11 +6,13 @@ import { calculateAge, fromCalendarDate, toCalendarDate } from '@/utils/date'
 import {
   ageRangeLabel,
   documentFields,
+  documentLabels,
   getRegistrationSegment,
   isAgeOutOfRange,
   registrationMaritalStatuses,
   requiredDocuments,
   shirtSizes,
+  sacramentDocuments,
 } from '@/utils/registration'
 import {
   birthDate,
@@ -38,6 +40,7 @@ import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Control, Controller, FieldErrors, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { CoordinationContacts } from './CoordinationContacts'
 import { DocumentUpload, preparedDocument } from './DocumentUpload'
 
 // refine (e não enum): um rádio vazio não impede as demais regras de rodarem,
@@ -288,6 +291,8 @@ export function RegistrationForm({
     Partial<Record<documentKind, string>>
   >({})
   const [submitError, setSubmitError] = useState('')
+  // Documentos que faltavam na última tentativa de envio (some quando enviados)
+  const [missingDocuments, setMissingDocuments] = useState<documentKind[]>([])
 
   const age = calculateAge(watch('birthday'))
   const hasSpecialNeeds = watch('personWithSpecialNeeds') === 'true'
@@ -313,16 +318,26 @@ export function RegistrationForm({
     }, 50)
   }
 
+  // Marca os documentos que faltam e mostra o aviso com o contato da coordenação
+  function markMissingDocuments() {
+    const missing = required.filter((kind) => !documents[kind])
+    setMissingDocuments(missing)
+    setDocumentErrors(
+      Object.fromEntries(missing.map((kind) => [kind, 'Envie este documento'])),
+    )
+    return missing.length
+  }
+
+  // Campos com erro: o aviso dos documentos que faltam também aparece
+  function handleInvalidForm() {
+    markMissingDocuments()
+    scrollToFirstError()
+  }
+
   async function onSubmit(form: FormValues) {
     setSubmitError('')
 
-    const missing = required.filter((kind) => !documents[kind])
-    if (missing.length) {
-      setDocumentErrors(
-        Object.fromEntries(
-          missing.map((kind) => [kind, 'Envie este documento']),
-        ),
-      )
+    if (markMissingDocuments()) {
       scrollToFirstError()
       return
     }
@@ -384,6 +399,11 @@ export function RegistrationForm({
     }
   }
 
+  // Só continua avisando o que ainda não foi enviado
+  const stillMissing = missingDocuments.filter(
+    (kind) => required.includes(kind) && !documents[kind],
+  )
+
   function setDocument(kind: documentKind, value?: preparedDocument) {
     setDocuments((current) => ({ ...current, [kind]: value }))
     setDocumentErrors((current) => ({ ...current, [kind]: undefined }))
@@ -396,7 +416,7 @@ export function RegistrationForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, scrollToFirstError)}
+      onSubmit={handleSubmit(onSubmit, handleInvalidForm)}
       className="flex flex-col gap-6"
       noValidate
     >
@@ -523,7 +543,8 @@ export function RegistrationForm({
           control={control}
           render={({ field }) => (
             <PhoneInput
-              label="Celular (WhatsApp) para avisos via grupo"
+              label="Celular (WhatsApp)"
+              description="Para avisos no grupo da turma"
               value={field.value}
               onChange={field.onChange}
               isInvalid={Boolean(errors.contactPhone)}
@@ -659,7 +680,8 @@ export function RegistrationForm({
                 control={control}
                 render={({ field }) => (
                   <Input
-                    label="Quem está autorizado a buscá-lo?"
+                    label="Quem pode buscar"
+                    description="Quem está autorizado a buscá-lo(a)"
                     {...field}
                     isInvalid={Boolean(errors.pickupAuthorizedBy)}
                     errorMessage={errors.pickupAuthorizedBy?.message}
@@ -741,8 +763,8 @@ export function RegistrationForm({
           control={control}
           render={({ field }) => (
             <Select
-              label="Tamanho (sujeito a confirmação)"
-              description="Não trabalhamos com baby look."
+              label="Tamanho"
+              description="Sujeito a confirmação. Não trabalhamos com baby look."
               classNames={selectClassNames}
               selectedKeys={field.value ? [field.value] : []}
               onChange={(event) => field.onChange(event.target.value)}
@@ -760,8 +782,8 @@ export function RegistrationForm({
       <fieldset className={fieldsetClassName}>
         <legend className={legendClassName}>Documentos</legend>
         <p className="text-sm text-bunker-600">
-          Envie uma foto nítida (a câmera do celular serve) ou um PDF de cada
-          documento. Não recebemos inscrições com documentos faltando.
+          Envie cada documento em PDF, legível e completo. Não recebemos
+          inscrições com documentos faltando.
         </p>
         {required.map((kind) => (
           <DocumentUpload
@@ -854,13 +876,37 @@ export function RegistrationForm({
         </label>
       </div>
 
-      {submitError && (
-        <p
+      {stillMissing.length > 0 && (
+        <div
           data-invalid="true"
-          className="rounded-lg bg-red-50 p-3 text-sm text-danger"
+          className="flex flex-col gap-1 rounded-lg bg-amber-50 p-3 text-sm text-amber-900"
         >
-          {submitError}
-        </p>
+          <p className="font-medium">
+            Faltam documentos:{' '}
+            {stillMissing.map((kind) => documentLabels[kind]).join(', ')}.
+          </p>
+          <p>
+            {stillMissing.some((kind) => sacramentDocuments.includes(kind))
+              ? 'Caso não possua os documentos dos sacramentos'
+              : 'Caso não possua os documentos'}
+            , entre em contato com a coordenação: <CoordinationContacts />.
+          </p>
+        </div>
+      )}
+
+      {submitError && (
+        <div
+          data-invalid="true"
+          className="flex flex-col gap-1 rounded-lg bg-red-50 p-3 text-sm text-danger"
+        >
+          <p>{submitError}</p>
+          {/Faltam documentos/.test(submitError) && (
+            <p>
+              Caso não possua os documentos, entre em contato com a coordenação:{' '}
+              <CoordinationContacts />.
+            </p>
+          )}
+        </div>
       )}
 
       <Button

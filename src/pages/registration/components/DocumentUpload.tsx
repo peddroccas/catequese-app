@@ -1,8 +1,5 @@
 import { documentKind } from '@/Types'
-import { resizeImage } from '@/utils/resizeImage'
 import {
-  IMAGE_MAX_SIDE,
-  IMAGE_QUALITY,
   MAX_PDF_SIZE,
   documentHints,
   documentLabels,
@@ -30,34 +27,24 @@ interface DocumentUploadProps {
   onError: (message: string) => void
 }
 
-function baseName(name: string) {
-  return name.replace(/\.[^.]+$/, '') || 'documento'
+function isPdf(file: File) {
+  // Alguns navegadores e celulares não informam o tipo: confere também a extensão
+  return file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
 }
 
-// Foto: reduz no próprio celular (menos espera e menos espaço no armazenamento).
-// PDF: segue como está, com limite de tamanho
-async function prepareDocument(file: File): Promise<preparedDocument> {
-  if (file.type === 'application/pdf') {
-    if (file.size > MAX_PDF_SIZE) {
-      throw new Error(
-        `O PDF tem ${formatFileSize(file.size)}. O máximo é ${formatFileSize(MAX_PDF_SIZE)}; envie uma foto do documento ou um PDF menor`,
-      )
-    }
-    return { blob: file, name: file.name, size: file.size }
+// Só PDF, com limite de tamanho (a API confere de novo pelo conteúdo)
+function prepareDocument(file: File): preparedDocument {
+  if (!isPdf(file)) {
+    throw new Error(
+      'Envie o documento em PDF. Dica: o app de notas do iPhone, o Google Drive e o Adobe Scan transformam a foto em PDF',
+    )
   }
-
-  if (file.type.startsWith('image/')) {
-    try {
-      const blob = await resizeImage(file, IMAGE_MAX_SIDE, IMAGE_QUALITY)
-      return { blob, name: `${baseName(file.name)}.jpg`, size: blob.size }
-    } catch {
-      throw new Error(
-        'Não foi possível ler esta imagem. Tire a foto de novo ou envie um PDF',
-      )
-    }
+  if (file.size > MAX_PDF_SIZE) {
+    throw new Error(
+      `O PDF tem ${formatFileSize(file.size)}. O máximo é ${formatFileSize(MAX_PDF_SIZE)}; envie um PDF mais leve`,
+    )
   }
-
-  throw new Error('Envie uma foto (JPG ou PNG) ou um PDF')
+  return { blob: file, name: file.name, size: file.size }
 }
 
 export function DocumentUpload({
@@ -72,13 +59,13 @@ export function DocumentUpload({
   const inputRef = useRef<HTMLInputElement>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  async function handleFile(file?: File) {
+  function handleFile(file?: File) {
     if (!file) {
       return
     }
     setIsProcessing(true)
     try {
-      onChange(await prepareDocument(file))
+      onChange(prepareDocument(file))
     } catch (processingError) {
       onChange(undefined)
       onError(
@@ -108,7 +95,7 @@ export function DocumentUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*,application/pdf"
+        accept="application/pdf,.pdf"
         className="hidden"
         onChange={(event) => handleFile(event.target.files?.[0])}
       />
@@ -154,7 +141,7 @@ export function DocumentUpload({
           startContent={<FileArrowUp size={18} />}
           onPress={() => inputRef.current?.click()}
         >
-          Enviar foto ou PDF
+          Enviar PDF
         </Button>
       )}
 

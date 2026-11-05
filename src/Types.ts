@@ -274,6 +274,17 @@ export type documentKind =
   | 'EUCHARIST'
   | 'MARRIAGE'
 
+// Documento guardado no perfil do catequizando (só a coordenação vê)
+export interface catechizingDocument {
+  id: string
+  kind: documentKind
+  label: string
+  originalName: string
+  mimeType: string
+  sizeBytes: number
+  createdAt: string
+}
+
 export interface registrationFile {
   id: string
   kind: documentKind

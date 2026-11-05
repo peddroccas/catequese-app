@@ -1,17 +1,24 @@
 import { catechizing } from '@/Types'
 import {
   ArrowsLeftRight,
+  FilePdf,
   Info,
   PencilSimple,
   Archive,
 } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { EditCatechizingModal } from './modals/EditCatechizingModal'
 import { TransferModal } from '@/components/TransferModal'
 import { ArchiveCatechizingModal } from './modals/ArchiveCatechizingModal'
 import { CatechizingInfoModal } from './modals/CatechizingInfoModal'
 import { useAuth } from '@/hooks/useAuth'
 import { RowAction } from '@/components/IconButton'
+import { ClassroomContext } from '@/contexts/ClassroomContext'
+import {
+  describeSkipped,
+  downloadCatechizingPackage,
+} from '@/utils/registrationPdf'
+import { getErrorMessage } from '@/services/api'
 
 interface ToolBarProps {
   catechizing: catechizing
@@ -20,6 +27,33 @@ interface ToolBarProps {
 }
 export default function ToolBar({ catechizing, isReadOnly }: ToolBarProps) {
   const { user } = useAuth()
+  const { classrooms } = useContext(ClassroomContext)
+  const [isExporting, setIsExporting] = useState<boolean>(false)
+
+  // Por padrão a ficha sai já com os documentos, num PDF só (sem documentos
+  // cadastrados, sai só a ficha)
+  async function exportWithDocuments() {
+    if (isExporting) {
+      return
+    }
+    setIsExporting(true)
+    try {
+      const result = await downloadCatechizingPackage(
+        catechizing,
+        'pdf',
+        classrooms.find(
+          (classroom) => classroom.id === catechizing.classroomId,
+        ),
+      )
+      if (result.skipped.length) {
+        alert(describeSkipped(result.skipped))
+      }
+    } catch (error) {
+      alert(getErrorMessage(error))
+    } finally {
+      setIsExporting(false)
+    }
+  }
   const [isUserEditingCatechizing, setIsUserEditingCatechizing] =
     useState<boolean>(false)
   const [isUserArchivingCatechizing, setIsUserArchivingCatechizing] =
@@ -55,6 +89,14 @@ export default function ToolBar({ catechizing, isReadOnly }: ToolBarProps) {
         icon={<Info size={18} />}
         onPress={() => setIsUserSeeingCatechizingInfo(true)}
       />
+      {/* A ficha impressa é só da coordenação (também no arquivo) */}
+      {user?.role === 'COORDINATOR' && (
+        <RowAction
+          label="Ficha com documentos (PDF)"
+          icon={<FilePdf size={18} />}
+          onPress={exportWithDocuments}
+        />
+      )}
       {user?.role === 'COORDINATOR' && !isReadOnly && (
         <>
           <RowAction

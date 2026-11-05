@@ -5,6 +5,7 @@ import { getErrorMessage } from '@/services/api'
 import { catechizing } from '@/Types'
 import { useContext } from 'react'
 import { CatechizingForm } from '../CatechizingForm'
+import { CatechizingDocuments } from '../CatechizingDocuments'
 
 interface EditCatechizingModalProps {
   data: catechizing
@@ -47,6 +48,8 @@ export function EditCatechizingModal({
               onClose()
             }}
           />
+          {/* Só a coordenação edita; os documentos são salvos na hora, sem depender do botão Salvar */}
+          {isOpen && data.id && <CatechizingDocuments catechizing={data} />}
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -403,7 +403,7 @@ export function CatechizingForm({
           control={control}
           render={({ field }) => (
             <Input
-              label="Quem está autorizado a buscar"
+              label="Quem pode buscar"
               {...field}
               isReadOnly={isReadOnly}
               isInvalid={Boolean(errors.pickupAuthorizedBy)}
@@ -432,7 +432,7 @@ export function CatechizingForm({
         control={control}
         render={({ field }) => (
           <Input
-            label="Camiseta do sacramento (tamanho)"
+            label="Camiseta (tamanho)"
             {...field}
             isReadOnly={isReadOnly}
             className="sm:max-w-xs"

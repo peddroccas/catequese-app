@@ -5,6 +5,7 @@ import { registrationSegments } from '@/utils/registration'
 import { Button, CircularProgress } from '@nextui-org/react'
 import { CheckCircle, LockSimple, WarningCircle } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
+import { CoordinationContacts } from './components/CoordinationContacts'
 import { RegistrationForm } from './components/RegistrationForm'
 
 type pageState = 'loading' | 'error' | 'closed' | 'open'
@@ -180,7 +181,7 @@ export function Registration() {
       </main>
 
       <footer className="px-4 pb-8 text-center text-xs text-bunker-500">
-        Dúvidas: Andressa (61) 9 9153-4184 · Luiz (61) 9 8214-2359
+        Dúvidas: <CoordinationContacts />
       </footer>
     </div>
   )

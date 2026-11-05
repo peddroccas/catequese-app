@@ -162,10 +162,21 @@ export const registrationMaritalStatuses = [
   'Casado(a) no religioso',
 ]
 
+// Contatos da coordenação, mostrados quando a família tem dúvida ou falta documento
+export const coordinationContacts = [
+  { name: 'Andressa', phone: '(61) 9 9153-4184' },
+  { name: 'Luiz', phone: '(61) 9 8214-2359' },
+]
+
+// Documentos de sacramentos: quem não os tem precisa falar com a coordenação
+export const sacramentDocuments: documentKind[] = [
+  'BAPTISM',
+  'EUCHARIST',
+  'MARRIAGE',
+]
+
+// Os documentos são enviados só em PDF
 export const MAX_PDF_SIZE = 5 * 1024 * 1024
-// Fotos de celular são reduzidas antes do envio: cabem melhor no armazenamento
-export const IMAGE_MAX_SIDE = 1600
-export const IMAGE_QUALITY = 0.8
 
 export function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024) {

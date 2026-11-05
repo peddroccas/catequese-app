@@ -1,9 +1,22 @@
-import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@nextui-org/react'
+import { FilePdf } from '@phosphor-icons/react'
+import { useContext } from 'react'
+import { PackageMenu } from '@/components/PackageMenu'
+import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { useAuth } from '@/hooks/useAuth'
-import { RegistrationRepository } from '@/services/repositories/registrationRepository'
-import { catechizing, registration } from '@/Types'
-import { RegistrationDocuments } from '@/pages/registrations/components/RegistrationDocuments'
+import { catechizing } from '@/Types'
+import {
+  downloadCatechizingPackage,
+  downloadCatechizingPdf,
+} from '@/utils/registrationPdf'
+import { CatechizingDocuments } from '../CatechizingDocuments'
 import { CatechizingForm } from '../CatechizingForm'
 
 interface CatechizingInfoProps {
@@ -18,14 +31,10 @@ export function CatechizingInfoModal({
   onClose,
 }: CatechizingInfoProps) {
   const { user } = useAuth()
-  const [registration, setRegistration] = useState<registration | null>(null)
+  const { classrooms } = useContext(ClassroomContext)
+  const isCoordinator = user?.role === 'COORDINATOR'
 
-  // Só a coordenação vê os documentos, e só de quem veio por inscrição
-  useEffect(() => {
-    if (isOpen && user?.role === 'COORDINATOR' && data.id) {
-      RegistrationRepository.getByCatechizing(data.id).then(setRegistration)
-    }
-  }, [isOpen, user?.role, data.id])
+  const classroom = classrooms.find((item) => item.id === data.classroomId)
 
   return (
     <Modal
@@ -42,15 +51,38 @@ export function CatechizingInfoModal({
         </ModalHeader>
         <ModalBody>
           <CatechizingForm data={data} isReadOnly />
-          {registration && (
-            <section className="flex flex-col gap-2">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
-                Documentos da inscrição
-              </h3>
-              <RegistrationDocuments registration={registration} />
-            </section>
+          {/* Só a coordenação vê os documentos, e aqui só para consultar:
+              cadastrar, trocar e remover ficam no editar */}
+          {isOpen && isCoordinator && data.id && (
+            <CatechizingDocuments catechizing={data} isReadOnly />
           )}
         </ModalBody>
+        <ModalFooter
+          className={
+            isCoordinator ? 'items-start justify-between' : 'justify-end'
+          }
+        >
+          {/* A ficha e os documentos são só da coordenação */}
+          {isCoordinator && (
+            <div className="flex flex-wrap items-start gap-2">
+              <Button
+                variant="flat"
+                startContent={<FilePdf size={18} />}
+                onPress={() => downloadCatechizingPdf(data, classroom)}
+              >
+                Ficha em PDF
+              </Button>
+              <PackageMenu
+                onDownload={(format) =>
+                  downloadCatechizingPackage(data, format, classroom)
+                }
+              />
+            </div>
+          )}
+          <Button variant="light" onPress={onClose}>
+            Fechar
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
