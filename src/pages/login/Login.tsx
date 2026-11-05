@@ -8,8 +8,12 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const loginFormSchema = z.object({
-  email: z.string({ message: 'Campo obrigatório' }).email('Email inválido'),
-  password: z.string().min(1, 'Campo obrigatório'),
+  email: z
+    .string({ message: 'Campo obrigatório' })
+    .trim()
+    .max(120, 'Máximo de 120 caracteres')
+    .email('Email inválido'),
+  password: z.string().min(1, 'Campo obrigatório').max(72, 'Senha muito longa'),
 })
 
 export function Login() {

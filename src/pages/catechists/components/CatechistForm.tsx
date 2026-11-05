@@ -16,16 +16,24 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  birthDate,
+  optionalText,
+  personName,
+  phoneNumber,
+} from '@/utils/validation'
 
 const catechistFormSchema = z.object({
-  name: z.string().trim().min(1, 'Campo obrigatório'),
-  nickname: z.string().trim().min(1, 'Campo obrigatório'),
-  birthday: z
-    .string({ message: 'Campo obrigatório' })
-    .min(1, 'Campo obrigatório'),
-  email: z.string().email('Digite um email válido'),
-  phone: z.string(),
-  address: z.string(),
+  name: personName(),
+  nickname: personName(50),
+  birthday: birthDate(),
+  email: z
+    .string()
+    .trim()
+    .max(120, 'Máximo de 120 caracteres')
+    .email('Digite um email válido'),
+  phone: phoneNumber(),
+  address: optionalText(200),
   role: z.enum(['COORDINATOR', 'MEMBER'], { message: 'Campo obrigatório' }),
   classroomIds: z.array(z.string()),
   hasReceivedBaptism: z.boolean(),
@@ -175,6 +183,8 @@ export function CatechistForm({
               value={field.value}
               onChange={field.onChange}
               isReadOnly={isReadOnly}
+              isInvalid={Boolean(errors.phone)}
+              errorMessage={errors.phone?.message}
             />
           )}
         />
@@ -184,7 +194,13 @@ export function CatechistForm({
         name="address"
         control={control}
         render={({ field }) => (
-          <Input label="Endereço" {...field} isReadOnly={isReadOnly} />
+          <Input
+            label="Endereço"
+            {...field}
+            isReadOnly={isReadOnly}
+            isInvalid={Boolean(errors.address)}
+            errorMessage={errors.address?.message}
+          />
         )}
       />
 

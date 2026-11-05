@@ -15,10 +15,11 @@ import {
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { requiredText } from '@/utils/validation'
 
 const themeFormSchema = z.object({
-  phase: z.string().trim().min(1, 'Campo obrigatório'),
-  name: z.string().trim().min(1, 'Campo obrigatório'),
+  phase: requiredText(60),
+  name: requiredText(300),
 })
 
 type ThemeFormData = z.infer<typeof themeFormSchema>

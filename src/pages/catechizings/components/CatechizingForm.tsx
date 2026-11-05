@@ -25,22 +25,27 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  birthDate,
+  optionalPersonName,
+  optionalText,
+  personName,
+  phoneNumber,
+} from '@/utils/validation'
 
 const catechizingFormSchema = z.object({
-  name: z.string().trim().min(1, 'Campo obrigatório'),
-  birthday: z
-    .string({ message: 'Campo obrigatório' })
-    .min(1, 'Campo obrigatório'),
-  address: z.string(),
+  name: personName(),
+  birthday: birthDate(),
+  address: optionalText(200),
   classroomId: z
     .string({ message: 'Campo obrigatório' })
     .min(1, 'Campo obrigatório'),
   parents: z.array(
     z.object({
       id: z.string().optional(),
-      name: z.string().trim().min(1, 'Campo obrigatório'),
-      phone: z.string(),
-      kinship: z.string(),
+      name: personName(),
+      phone: phoneNumber(),
+      kinship: optionalPersonName(30),
     }),
   ),
   hasReceivedBaptism: z.boolean(),
@@ -48,7 +53,7 @@ const catechizingFormSchema = z.object({
   hasReceivedMarriage: z.boolean(),
   releasedToGoAwayAlone: z.boolean(),
   personWithSpecialNeeds: z.boolean(),
-  specialNeedsDescription: z.string(),
+  specialNeedsDescription: optionalText(300),
   maritalStatus: z.string(),
   livesWithPartner: z.string(),
 })
@@ -203,7 +208,13 @@ export function CatechizingForm({
         name="address"
         control={control}
         render={({ field }) => (
-          <Input label="Endereço" {...field} isReadOnly={isReadOnly} />
+          <Input
+            label="Endereço"
+            {...field}
+            isReadOnly={isReadOnly}
+            isInvalid={Boolean(errors.address)}
+            errorMessage={errors.address?.message}
+          />
         )}
       />
 
@@ -278,6 +289,8 @@ export function CatechizingForm({
                     value={field.value}
                     onChange={field.onChange}
                     isReadOnly={isReadOnly}
+                    isInvalid={Boolean(errors.parents?.[index]?.phone)}
+                    errorMessage={errors.parents?.[index]?.phone?.message}
                   />
                 )}
               />
@@ -289,6 +302,8 @@ export function CatechizingForm({
                     label="Parentesco"
                     {...field}
                     isReadOnly={isReadOnly}
+                    isInvalid={Boolean(errors.parents?.[index]?.kinship)}
+                    errorMessage={errors.parents?.[index]?.kinship?.message}
                   />
                 )}
               />
@@ -363,6 +378,8 @@ export function CatechizingForm({
               minRows={2}
               {...field}
               isReadOnly={isReadOnly}
+              isInvalid={Boolean(errors.specialNeedsDescription)}
+              errorMessage={errors.specialNeedsDescription?.message}
             />
           )}
         />

@@ -3,6 +3,7 @@ import { FinanceRepository } from '@/services/repositories/financeRepository'
 import { expense } from '@/Types'
 import { centsToInput, parseCurrencyToCents } from '@/utils/currency'
 import { today } from '@/utils/date'
+import { moneyAmount, notFutureDate, requiredText } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -18,11 +19,9 @@ import { z } from 'zod'
 import { DateInput, MoneyInput, PaymentMethodSelect } from './fields'
 
 const expenseFormSchema = z.object({
-  description: z.string().trim().min(1, 'Informe com o que foi gasto'),
-  amount: z
-    .string()
-    .refine((value) => parseCurrencyToCents(value) !== null, 'Valor inválido'),
-  date: z.string().min(1, 'Campo obrigatório'),
+  description: requiredText(120),
+  amount: moneyAmount(),
+  date: notFutureDate(),
   paymentMethod: z.enum(['PIX', 'CASH', 'CARD'], {
     message: 'Escolha a forma de pagamento',
   }),

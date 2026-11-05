@@ -12,18 +12,20 @@ import {
 import { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { requiredText } from '@/utils/validation'
 import { WHATSAPP_GROUP_LINK } from '@/utils/whatsapp'
 
 const currentYear = new Date().getFullYear()
 
 function classroomFormSchema(minYear: number) {
   return z.object({
-    location: z.string().trim().min(1, 'Campo obrigatório'),
+    location: requiredText(60),
     segment: z.enum(segments, { message: 'Campo obrigatório' }),
     startedAt: z.coerce
       .number({ message: 'Campo obrigatório' })
       .int('Ano inválido')
-      .min(minYear, `O ano deve ser ${minYear} ou depois`),
+      .min(minYear, `O ano deve ser ${minYear} ou depois`)
+      .max(currentYear + 1, `O ano deve ser no máximo ${currentYear + 1}`),
     catechistsId: z.array(z.string()),
     whatsappGroupLink: z
       .string()

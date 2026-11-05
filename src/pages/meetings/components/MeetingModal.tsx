@@ -23,9 +23,10 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { requiredDate } from '@/utils/validation'
 
 const meetingFormSchema = z.object({
-  date: z.string({ message: 'Campo obrigatório' }).min(1, 'Campo obrigatório'),
+  date: requiredDate(),
   themeIds: z.array(z.string()).min(1, 'Escolha pelo menos um tema'),
   presentCatechizingIds: z.array(z.string()),
 })

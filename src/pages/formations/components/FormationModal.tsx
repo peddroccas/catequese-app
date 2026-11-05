@@ -18,11 +18,16 @@ import { I18nProvider } from '@react-aria/i18n'
 import { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  optionalPersonName,
+  requiredDate,
+  requiredText,
+} from '@/utils/validation'
 
 const formationFormSchema = z.object({
-  theme: z.string().trim().min(1, 'Campo obrigatório'),
-  instructor: z.string().trim(),
-  date: z.string({ message: 'Campo obrigatório' }).min(1, 'Campo obrigatório'),
+  theme: requiredText(150),
+  instructor: optionalPersonName(),
+  date: requiredDate(),
   presentCatechistIds: z.array(z.string()),
 })
 
@@ -136,6 +141,8 @@ export function FormationModal({
                   label="Formador(a)"
                   description="Quem conduziu a formação (pode ser alguém de fora)"
                   {...field}
+                  isInvalid={Boolean(errors.instructor)}
+                  errorMessage={errors.instructor?.message}
                 />
               )}
             />

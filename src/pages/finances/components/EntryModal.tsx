@@ -9,6 +9,12 @@ import {
   parseCurrencyToCents,
 } from '@/utils/currency'
 import { today } from '@/utils/date'
+import {
+  moneyAmount,
+  notFutureDate,
+  optionalPersonName,
+  optionalText,
+} from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Autocomplete,
@@ -30,18 +36,13 @@ import { DateInput, MoneyInput, PaymentMethodSelect } from './fields'
 const entryFormSchema = z
   .object({
     source: z.enum(['COLLABORATION', 'CARNE', 'DONATION', 'PARISH']),
-    amount: z
-      .string()
-      .refine(
-        (value) => parseCurrencyToCents(value) !== null,
-        'Valor inválido',
-      ),
-    date: z.string().min(1, 'Campo obrigatório'),
+    amount: moneyAmount(),
+    date: notFutureDate(),
     paymentMethod: z.enum(['PIX', 'CASH', 'CARD'], {
       message: 'Escolha a forma de pagamento',
     }),
-    payerName: z.string().trim(),
-    description: z.string().trim(),
+    payerName: optionalPersonName(),
+    description: optionalText(200),
     catechizingId: z.string(),
   })
   .superRefine((form, context) => {

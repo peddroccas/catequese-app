@@ -1,4 +1,5 @@
 import { paymentMethodLabels, paymentMethods, paymentMethod } from '@/Types'
+import { maskMoneyInput } from '@/utils/currency'
 import { fromCalendarDate, toCalendarDate } from '@/utils/date'
 import { DatePicker, Input, Select, SelectItem } from '@nextui-org/react'
 import { I18nProvider } from '@react-aria/i18n'
@@ -18,7 +19,7 @@ export function MoneyInput({ value, onChange, error }: FieldProps<string>) {
       placeholder="0,00"
       startContent={<span className="text-sm text-bunker-500">R$</span>}
       value={value}
-      onValueChange={onChange}
+      onValueChange={(text) => onChange(maskMoneyInput(text))}
       isInvalid={Boolean(error)}
       errorMessage={error}
     />

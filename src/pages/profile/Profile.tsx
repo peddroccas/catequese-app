@@ -23,6 +23,7 @@ const changePasswordFormSchema = z
     password: z
       .string()
       .min(6, 'A senha deve ter pelo menos 6 caracteres')
+      .max(72, 'A senha deve ter no máximo 72 caracteres')
       .refine((value) => value !== DEFAULT_PASSWORD, {
         message: 'A nova senha não pode ser a senha padrão',
       }),
