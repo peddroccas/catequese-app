@@ -31,6 +31,13 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
 
+const mobileNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  `flex w-full items-center rounded-xl px-4 py-3 text-xl font-medium transition-colors duration-150 ${
+    isActive
+      ? 'bg-white/15 text-white'
+      : 'text-bunker-300 hover:bg-white/5 hover:text-white'
+  }`
+
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${
     isActive
@@ -104,7 +111,7 @@ export function Header() {
         {visibleItems.map((item) => (
           <NavbarMenuItem key={item.link}>
             <NavLink
-              className={navLinkClassName}
+              className={mobileNavLinkClassName}
               to={item.link}
               onClick={() => setIsMenuOpen(false)}
             >

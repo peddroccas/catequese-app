@@ -153,7 +153,7 @@ export function NewParishModal({ onClose, onCreated }: NewParishModalProps) {
         </ModalHeader>
         {created ? (
           <>
-            <ModalBody className="gap-3 text-sm text-bunker-700">
+            <ModalBody className="gap-3 text-base text-bunker-700">
               <p>
                 Passe ao coordenador o e-mail <strong>{created.email}</strong>,
                 a senha temporária abaixo e o endereço de inscrição{' '}
@@ -326,7 +326,7 @@ export function ResetCoordinatorModal({
     <Modal isOpen onClose={onClose} placement="center" isDismissable={!result}>
       <ModalContent>
         <ModalHeader>Redefinir senha do coordenador</ModalHeader>
-        <ModalBody className="gap-3 text-sm text-bunker-700">
+        <ModalBody className="gap-3 text-base text-bunker-700">
           {result ? (
             <TemporaryPasswordNotice
               name={result.email}
@@ -417,7 +417,7 @@ export function DeleteParishModal({
         <ModalHeader className="text-danger">
           Apagar paróquia para sempre
         </ModalHeader>
-        <ModalBody className="gap-3 text-sm text-bunker-700">
+        <ModalBody className="gap-3 text-base text-bunker-700">
           <p>
             Isto apaga <strong>todos os dados</strong> de {parish.name}:{' '}
             {parish.catechizingsCount} catequizandos, {parish.catechistsCount}{' '}

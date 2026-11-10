@@ -31,6 +31,13 @@ import {
   ResetCoordinatorModal,
 } from './AdminParishModals'
 
+// Painel de administração: letras maiores que o restante do sistema
+const adminTableClassNames = {
+  ...tableClassNames,
+  th: 'bg-bunker-50 text-xs font-semibold uppercase tracking-wide text-bunker-500 first:rounded-none last:rounded-none',
+  td: 'text-base text-bunker-800',
+}
+
 type Dialog =
   | { kind: 'new' }
   | { kind: 'edit'; parish: adminParish }
@@ -113,11 +120,18 @@ export function AdminParishes() {
       <header className="flex h-[4.5rem] items-center justify-between gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
         <div className="flex items-center gap-3">
           <img className="w-11" src={catequeseLogo} alt="" />
-          <span className="text-sm font-semibold tracking-wide text-white">
+          <span className="text-base font-semibold tracking-wide text-white">
             {APP_NAME} · Administração
           </span>
         </div>
-        <Button size="sm" variant="flat" onPress={handleLogout}>
+        {/* Cabeçalho escuro: botão claro sobre fundo escuro (o "flat" padrão
+            ficava cinza com letra escura e sumia) */}
+        <Button
+          size="md"
+          variant="bordered"
+          className="border-white/30 font-medium text-white hover:bg-white/10"
+          onPress={handleLogout}
+        >
           Sair
         </Button>
       </header>
@@ -125,10 +139,10 @@ export function AdminParishes() {
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-bunker-900">
+            <h1 className="text-3xl font-semibold text-bunker-900">
               Paróquias
             </h1>
-            <p className="text-sm text-bunker-500">
+            <p className="text-base text-bunker-500">
               {activeCount} ativas · {catechizingsTotal} catequizandos no total
               {overdueCount > 0 && (
                 <span className="font-medium text-danger">
@@ -151,7 +165,7 @@ export function AdminParishes() {
           <Table
             aria-label="Paróquias"
             removeWrapper={false}
-            classNames={tableClassNames}
+            classNames={adminTableClassNames}
           >
             <TableHeader>
               <TableColumn>Paróquia</TableColumn>
@@ -170,11 +184,11 @@ export function AdminParishes() {
                       <span className="font-medium text-bunker-900">
                         {parish.name}
                       </span>
-                      <span className="text-xs text-bunker-500">
+                      <span className="text-sm text-bunker-500">
                         {parish.city}/{parish.state} · /inscricao/{parish.slug}
                       </span>
                       {parish.customDomain && (
-                        <span className="text-xs text-bunker-500">
+                        <span className="text-sm text-bunker-500">
                           {parish.customDomain}
                         </span>
                       )}
@@ -182,7 +196,7 @@ export function AdminParishes() {
                   </TableCell>
                   <TableCell>
                     {parish.coordinators.length ? (
-                      <div className="flex flex-col text-xs">
+                      <div className="flex flex-col text-sm">
                         {parish.coordinators.map((coordinator) => (
                           <span key={coordinator.email}>
                             {coordinator.name}
@@ -201,7 +215,7 @@ export function AdminParishes() {
                     <span className="tabular-nums">
                       {parish.catechizingsCount}
                     </span>
-                    <span className="text-xs text-bunker-500">
+                    <span className="text-sm text-bunker-500">
                       {' '}
                       · {parish.classroomsCount} turmas
                     </span>
@@ -224,7 +238,7 @@ export function AdminParishes() {
                   <TableCell>
                     <Dropdown placement="bottom-end">
                       <DropdownTrigger>
-                        <Button size="sm" variant="bordered">
+                        <Button size="md" variant="bordered">
                           Ações
                         </Button>
                       </DropdownTrigger>
@@ -278,7 +292,7 @@ export function AdminParishes() {
           </Table>
         )}
 
-        <p className={`${surfaceClassName} p-4 text-xs text-bunker-500`}>
+        <p className={`${surfaceClassName} p-4 text-sm text-bunker-500`}>
           Suspender bloqueia o login de quem é da paróquia e fecha o formulário
           de inscrição, mas não apaga nada. Os dados exportados ficam em JSON
           (sem os arquivos de documentos enviados).

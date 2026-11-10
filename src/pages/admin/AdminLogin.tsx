@@ -37,7 +37,7 @@ export function AdminLogin() {
     <div className="flex min-h-screen flex-col bg-bunker-50">
       <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
         <img className="w-11" src={catequeseLogo} alt="" />
-        <span className="text-sm font-semibold tracking-wide text-white">
+        <span className="text-base font-semibold tracking-wide text-white">
           {APP_NAME} · Administração
         </span>
       </header>
@@ -47,10 +47,10 @@ export function AdminLogin() {
           className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-bunker-200/70 bg-white p-6 shadow-lg shadow-bunker-900/5"
         >
           <div className="flex flex-col gap-1 text-center">
-            <h1 className="text-xl font-semibold text-bunker-900">
+            <h1 className="text-2xl font-semibold text-bunker-900">
               Administração do sistema
             </h1>
-            <p className="text-sm text-bunker-500">
+            <p className="text-base text-bunker-500">
               Acesso restrito a quem cuida das paróquias.
             </p>
           </div>

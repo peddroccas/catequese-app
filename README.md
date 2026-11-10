@@ -47,8 +47,7 @@ próprio, redefine a senha do coordenador, exporta e apaga os dados da paróquia
 administrador é criado na API com `npm run admin:create` (veja o README do `catequese-nest`).
 
 Outros fluxos: `/esqueci-senha` e `/redefinir-senha?token=` (recuperação por e-mail),
-**Importar planilha** na tela de catequizandos (modelo .xlsx, até 500 linhas por envio, erros
-listados linha a linha), **Registro de acessos** no menu do coordenador (quem abriu documentos).
+**Registro de acessos** no menu do coordenador (quem abriu documentos).
 
 Em endereço de paróquia (domínio próprio ou subdomínio) o app descobre a paróquia por
 `GET /public/parishes/resolve?host=` (`src/utils/hostParish.ts`); `/inscricao` leva à dela e o
