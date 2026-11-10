@@ -7,7 +7,10 @@ export class CatechistRepository {
     return response.data
   }
 
-  static async createNewCatechist(catechist: catechist): Promise<catechist> {
+  // A resposta traz a senha temporária, mostrada só nesta vez
+  static async createNewCatechist(
+    catechist: catechist,
+  ): Promise<catechist & { temporaryPassword: string }> {
     const response = await api.post('/catechists', catechist)
     return response.data
   }
@@ -33,10 +36,13 @@ export class CatechistRepository {
     await api.delete(`/catechists/${encodeURIComponent(catechistId)}`)
   }
 
-  static async resetPassword(catechistId: string) {
-    await api.patch(
+  static async resetPassword(
+    catechistId: string,
+  ): Promise<{ temporaryPassword: string }> {
+    const response = await api.patch(
       `/catechists/${encodeURIComponent(catechistId)}/password/reset`,
     )
+    return response.data
   }
 
   static async changeOwnPassword(password: string) {

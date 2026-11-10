@@ -10,6 +10,7 @@ import {
   ModalHeader,
 } from '@nextui-org/react'
 import { useState } from 'react'
+import { TemporaryPasswordNotice } from '../TemporaryPasswordNotice'
 
 interface ResetPasswordModalProps {
   data: catechist
@@ -23,13 +24,16 @@ export function ResetPasswordModal({
   onClose,
 }: ResetPasswordModalProps) {
   const [isResetting, setIsResetting] = useState<boolean>(false)
+  // Preenchido depois do reset: a senha temporária só aparece uma vez
+  const [temporaryPassword, setTemporaryPassword] = useState<string | null>(
+    null,
+  )
 
   async function handleResetPassword() {
     setIsResetting(true)
     try {
-      await CatechistRepository.resetPassword(data.id!)
-      alert(`Senha de ${data.name} voltou para 123456`)
-      onClose()
+      const response = await CatechistRepository.resetPassword(data.id!)
+      setTemporaryPassword(response.temporaryPassword)
     } catch (error) {
       alert(getErrorMessage(error))
     } finally {
@@ -37,27 +41,55 @@ export function ResetPasswordModal({
     }
   }
 
+  function handleClose() {
+    setTemporaryPassword(null)
+    onClose()
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} placement="center">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      placement="center"
+      isDismissable={!temporaryPassword}
+    >
       <ModalContent>
-        <ModalHeader>Resetar senha?</ModalHeader>
+        <ModalHeader>
+          {temporaryPassword ? 'Senha resetada' : 'Resetar senha?'}
+        </ModalHeader>
         <ModalBody>
-          <p>
-            A senha de <strong>{data.name}</strong> volta para{' '}
-            <strong>123456</strong> e a troca será pedida no próximo acesso.
-          </p>
+          {temporaryPassword ? (
+            <TemporaryPasswordNotice
+              name={data.name}
+              password={temporaryPassword}
+            />
+          ) : (
+            <p>
+              A senha de <strong>{data.name}</strong> será trocada por uma senha
+              temporária nova, mostrada uma única vez. A troca será pedida no
+              próximo acesso.
+            </p>
+          )}
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onPress={onClose}>
-            Cancelar
-          </Button>
-          <Button
-            color="danger"
-            onPress={handleResetPassword}
-            isLoading={isResetting}
-          >
-            Resetar
-          </Button>
+          {temporaryPassword ? (
+            <Button color="primary" onPress={handleClose}>
+              Concluir
+            </Button>
+          ) : (
+            <>
+              <Button color="primary" onPress={handleClose}>
+                Cancelar
+              </Button>
+              <Button
+                color="danger"
+                onPress={handleResetPassword}
+                isLoading={isResetting}
+              >
+                Resetar
+              </Button>
+            </>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
