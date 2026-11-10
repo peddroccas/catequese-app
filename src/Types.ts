@@ -348,6 +348,15 @@ export interface coordinationContact {
   phone: string
 }
 
+// Abas que o administrador pode desligar por paróquia
+export type parishModule =
+  | 'finances'
+  | 'registrations'
+  | 'meetings'
+  | 'formations'
+  | 'rites'
+  | 'archive'
+
 export interface publicParish {
   slug: string
   name: string
@@ -374,6 +383,8 @@ export interface parish extends publicParish {
   plan: string
   paidUntil: string | null
   customDomain: string | null
+  // Abas desligadas pelo administrador (ausente = tudo ligado)
+  disabledModules?: parishModule[]
 }
 
 // O que a coordenação pode alterar
@@ -403,6 +414,7 @@ export interface adminParish {
   plan: string
   paidUntil: string | null
   customDomain: string | null
+  disabledModules: parishModule[]
   createdAt: string
   catechizingsCount: number
   catechistsCount: number

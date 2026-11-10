@@ -6,6 +6,7 @@ import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { parish } from '@/Types'
 import { centsToInput, parseCurrencyToCents } from '@/utils/currency'
+import { isModuleEnabled } from '@/utils/modules'
 import { maskPhone } from '@/utils/phone'
 import { moneyAmount, requiredText } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -112,6 +113,9 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
   })
   const contacts = useFieldArray({ control, name: 'contacts' })
   const formUrl = `${window.location.origin}/inscricao/${parish.slug}`
+  // Abas que o administrador desligou: o que é só delas some desta tela
+  const hasFinances = isModuleEnabled(parish, 'finances')
+  const hasRegistrations = isModuleEnabled(parish, 'registrations')
 
   async function handleSave(form: SettingsForm) {
     try {
@@ -171,32 +175,36 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
         </Button>
       </PageHeader>
 
-      <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
-        <h2 className="text-lg font-semibold text-bunker-900">
-          Link de inscrição
-        </h2>
-        <p className="text-sm text-bunker-500">
-          Divulgue este endereço para as famílias se inscreverem (a coordenação
-          abre e fecha as inscrições em “Inscrições”).
-        </p>
-        <div className="flex items-center gap-2">
-          <Input
-            readOnly
-            aria-label="Link de inscrição"
-            value={formUrl}
-            variant="bordered"
-            startContent={<LinkSimple size={18} className="text-bunker-400" />}
-            onFocus={(event) => (event.target as HTMLInputElement).select()}
-          />
-          <Button
-            variant="bordered"
-            startContent={<Copy size={18} />}
-            onPress={handleCopy}
-          >
-            {copied ? 'Copiado' : 'Copiar'}
-          </Button>
-        </div>
-      </section>
+      {hasRegistrations && (
+        <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
+          <h2 className="text-lg font-semibold text-bunker-900">
+            Link de inscrição
+          </h2>
+          <p className="text-sm text-bunker-500">
+            Divulgue este endereço para as famílias se inscreverem (a
+            coordenação abre e fecha as inscrições em “Inscrições”).
+          </p>
+          <div className="flex items-center gap-2">
+            <Input
+              readOnly
+              aria-label="Link de inscrição"
+              value={formUrl}
+              variant="bordered"
+              startContent={
+                <LinkSimple size={18} className="text-bunker-400" />
+              }
+              onFocus={(event) => (event.target as HTMLInputElement).select()}
+            />
+            <Button
+              variant="bordered"
+              startContent={<Copy size={18} />}
+              onPress={handleCopy}
+            >
+              {copied ? 'Copiado' : 'Copiar'}
+            </Button>
+          </div>
+        </section>
+      )}
 
       <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
         <h2 className="text-lg font-semibold text-bunker-900">Identificação</h2>
@@ -343,46 +351,52 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
         ))}
       </section>
 
-      <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
-        <h2 className="text-lg font-semibold text-bunker-900">Valores</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Controller
-            name="carneAmount"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Valor do carnê de cada catequizando"
-                inputMode="decimal"
-                startContent={
-                  <span className="text-sm text-bunker-500">R$</span>
-                }
-                variant="bordered"
-                isInvalid={Boolean(errors.carneAmount)}
-                errorMessage={errors.carneAmount?.message}
+      {(hasFinances || hasRegistrations) && (
+        <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
+          <h2 className="text-lg font-semibold text-bunker-900">Valores</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {hasFinances && (
+              <Controller
+                name="carneAmount"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Valor do carnê de cada catequizando"
+                    inputMode="decimal"
+                    startContent={
+                      <span className="text-sm text-bunker-500">R$</span>
+                    }
+                    variant="bordered"
+                    isInvalid={Boolean(errors.carneAmount)}
+                    errorMessage={errors.carneAmount?.message}
+                  />
+                )}
               />
             )}
-          />
-          <Controller
-            name="registrationFee"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Taxa de inscrição (opcional)"
-                inputMode="decimal"
-                startContent={
-                  <span className="text-sm text-bunker-500">R$</span>
-                }
-                variant="bordered"
-                description="Vazio = sem taxa no formulário"
-                isInvalid={Boolean(errors.registrationFee)}
-                errorMessage={errors.registrationFee?.message}
+            {hasRegistrations && (
+              <Controller
+                name="registrationFee"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Taxa de inscrição (opcional)"
+                    inputMode="decimal"
+                    startContent={
+                      <span className="text-sm text-bunker-500">R$</span>
+                    }
+                    variant="bordered"
+                    description="Vazio = sem taxa no formulário"
+                    isInvalid={Boolean(errors.registrationFee)}
+                    errorMessage={errors.registrationFee?.message}
+                  />
+                )}
               />
             )}
-          />
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
         <h2 className="text-lg font-semibold text-bunker-900">

@@ -13,6 +13,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useParish } from '@/hooks/useParish'
 import { APP_NAME } from '@/lib/config'
+import { isPathEnabled } from '@/utils/modules'
 import User from './User'
 
 const menuItems = [
@@ -55,7 +56,9 @@ export function Header() {
   }
 
   const visibleItems = menuItems.filter(
-    (item) => item.permission === user.role || item.permission === 'ALL',
+    (item) =>
+      (item.permission === user.role || item.permission === 'ALL') &&
+      isPathEnabled(item.link, parish),
   )
 
   return (

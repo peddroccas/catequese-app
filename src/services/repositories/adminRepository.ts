@@ -1,4 +1,4 @@
-import { adminParish, createAdminParish } from '@/Types'
+import { adminParish, createAdminParish, parishModule } from '@/Types'
 import { ADMIN_TOKEN_KEY, adminApi } from '../adminApi'
 
 export class AdminRepository {
@@ -41,6 +41,7 @@ export class AdminRepository {
     changes: {
       status?: 'ACTIVE' | 'SUSPENDED'
       plan?: string
+      disabledModules?: parishModule[]
       paidUntil?: string | null
       customDomain?: string | null
     },

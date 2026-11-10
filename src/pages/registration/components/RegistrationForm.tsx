@@ -1,6 +1,6 @@
 import { PhoneInput } from '@/components/PhoneInput'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
-import { documentKind, registrationSegment } from '@/Types'
+import { coordinationContact, documentKind, registrationSegment } from '@/Types'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { CommitmentTerms } from './CommitmentTerms'
 import { calculateAge, fromCalendarDate, toCalendarDate } from '@/utils/date'
@@ -36,6 +36,8 @@ import {
   Textarea,
 } from '@nextui-org/react'
 import { Warning } from '@phosphor-icons/react'
+import { CoordinationContactsCard } from './CoordinationContactsCard'
+import { RegistrationFeeNotice } from './RegistrationFeeNotice'
 import { I18nProvider } from '@react-aria/i18n'
 import { AxiosError } from 'axios'
 import { useState } from 'react'
@@ -267,6 +269,9 @@ interface RegistrationFormProps {
   // Paróquia da inscrição (vem do endereço) e o termo de compromisso dela
   slug: string
   terms: string | null
+  // Taxa de inscrição (centavos) e contatos da coordenação, mostrados no formulário
+  feeCents: number | null
+  contacts: coordinationContact[]
   segment: registrationSegment
   onBack: () => void
   onDone: (protocol: string) => void
@@ -275,6 +280,8 @@ interface RegistrationFormProps {
 export function RegistrationForm({
   slug,
   terms,
+  feeCents,
+  contacts,
   segment,
   onBack,
   onDone,
@@ -441,6 +448,8 @@ export function RegistrationForm({
           Trocar etapa
         </Button>
       </div>
+
+      <RegistrationFeeNotice feeCents={feeCents} />
 
       <fieldset className={fieldsetClassName}>
         <legend className={legendClassName}>
@@ -898,6 +907,9 @@ export function RegistrationForm({
           )}
         </div>
       )}
+
+      <RegistrationFeeNotice feeCents={feeCents} />
+      <CoordinationContactsCard contacts={contacts} />
 
       <Button
         color="primary"

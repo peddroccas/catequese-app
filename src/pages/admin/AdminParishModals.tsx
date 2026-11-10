@@ -2,7 +2,8 @@ import { TemporaryPasswordNotice } from '@/pages/catechists/components/Temporary
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { AdminRepository } from '@/services/repositories/adminRepository'
-import { adminParish } from '@/Types'
+import { adminParish, parishModule } from '@/Types'
+import { parishModules } from '@/utils/modules'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -14,6 +15,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Switch,
 } from '@nextui-org/react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -51,7 +53,6 @@ const newParishSchema = z.object({
     .string()
     .trim()
     .regex(/^\d{2}$/, 'DDD com 2 números'),
-  plan: z.string().trim().min(1, 'Informe o plano').max(30),
   coordinatorName: z.string().trim().min(2, 'Muito curto').max(80),
   coordinatorEmail: z.string().trim().email('E-mail inválido'),
 })
@@ -84,7 +85,6 @@ export function NewParishModal({ onClose, onCreated }: NewParishModalProps) {
       city: '',
       state: '',
       areaCode: '',
-      plan: 'FOUNDER',
       coordinatorName: '',
       coordinatorEmail: '',
     },
@@ -188,7 +188,6 @@ export function NewParishModal({ onClose, onCreated }: NewParishModalProps) {
                   {field('state', 'UF', { maxLength: 2 })}
                   {field('areaCode', 'DDD', { maxLength: 2 })}
                 </div>
-                {field('plan', 'Plano')}
               </div>
               <h3 className="text-sm font-semibold text-bunker-700">
                 Primeiro coordenador
@@ -213,7 +212,7 @@ export function NewParishModal({ onClose, onCreated }: NewParishModalProps) {
   )
 }
 
-// ---------------------------------------------------- plano, vencimento e domínio
+// ---------------------------------------------------------- vencimento e domínio
 
 interface EditParishModalProps {
   parish: adminParish
@@ -226,7 +225,6 @@ export function EditParishModal({
   onClose,
   onSaved,
 }: EditParishModalProps) {
-  const [plan, setPlan] = useState(parish.plan)
   const [paidUntil, setPaidUntil] = useState(
     parish.paidUntil?.slice(0, 10) ?? '',
   )
@@ -237,7 +235,6 @@ export function EditParishModal({
     setIsSaving(true)
     try {
       await AdminRepository.update(parish.id, {
-        plan: plan.trim() || undefined,
         paidUntil: paidUntil || null,
         customDomain: customDomain.trim() || null,
       })
@@ -257,12 +254,6 @@ export function EditParishModal({
         <ModalHeader>{parish.name}</ModalHeader>
         <ModalBody className="gap-4">
           <Input
-            label="Plano"
-            variant="bordered"
-            value={plan}
-            onValueChange={setPlan}
-          />
-          <Input
             type="date"
             label="Pago até"
             variant="bordered"
@@ -278,6 +269,85 @@ export function EditParishModal({
             placeholder="catequese.paroquia.org.br"
             description="Vazio = só o endereço padrão. Depois de salvar, o domínio precisa ser apontado para o app (veja o passo a passo do domínio)"
           />
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="light" onPress={onClose}>
+            Cancelar
+          </Button>
+          <Button color="primary" onPress={handleSave} isLoading={isSaving}>
+            Salvar
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  )
+}
+
+// ------------------------------------------------------------ abas da paróquia
+
+interface ParishModulesModalProps {
+  parish: adminParish
+  onClose: () => void
+  onSaved: () => void
+}
+
+export function ParishModulesModal({
+  parish,
+  onClose,
+  onSaved,
+}: ParishModulesModalProps) {
+  const [disabled, setDisabled] = useState<parishModule[]>(
+    parish.disabledModules ?? [],
+  )
+  const [isSaving, setIsSaving] = useState(false)
+
+  function toggle(key: parishModule, isEnabled: boolean) {
+    setDisabled((current) =>
+      isEnabled ? current.filter((item) => item !== key) : [...current, key],
+    )
+  }
+
+  async function handleSave() {
+    setIsSaving(true)
+    try {
+      await AdminRepository.update(parish.id, { disabledModules: disabled })
+      toast.success('Abas atualizadas')
+      onSaved()
+      onClose()
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  return (
+    <Modal isOpen onClose={onClose} placement="center">
+      <ModalContent>
+        <ModalHeader>Abas de {parish.name}</ModalHeader>
+        <ModalBody className="gap-4 text-base text-bunker-700">
+          <p>
+            Abas desligadas somem do menu e a API as recusa. Nada é apagado: ao
+            ligar de novo, tudo volta. Início, Turmas, Catequizandos e
+            Catequistas ficam sempre ligadas.
+          </p>
+          <ul className="flex flex-col divide-y divide-bunker-100">
+            {parishModules.map((item) => (
+              <li
+                key={item.key}
+                className="flex items-center justify-between py-3"
+              >
+                <span className="font-medium text-bunker-900">
+                  {item.label}
+                </span>
+                <Switch
+                  aria-label={item.label}
+                  isSelected={!disabled.includes(item.key)}
+                  onValueChange={(isEnabled) => toggle(item.key, isEnabled)}
+                />
+              </li>
+            ))}
+          </ul>
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>

@@ -3,7 +3,6 @@ import { APP_NAME } from '@/lib/config'
 import { publicParish, registrationSegment } from '@/Types'
 import { ParishRepository } from '@/services/repositories/parishRepository'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
-import { formatCurrency } from '@/utils/currency'
 import { setCurrentParish } from '@/utils/parish'
 import { registrationSegments } from '@/utils/registration'
 import { Button, CircularProgress } from '@nextui-org/react'
@@ -15,7 +14,8 @@ import {
 } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { CoordinationContacts } from './components/CoordinationContacts'
+import { CoordinationContactsCard } from './components/CoordinationContactsCard'
+import { RegistrationFeeNotice } from './components/RegistrationFeeNotice'
 import { RegistrationForm } from './components/RegistrationForm'
 
 type pageState = 'loading' | 'error' | 'notFound' | 'closed' | 'open'
@@ -137,6 +137,12 @@ export function Registration() {
           </div>
         )}
 
+        {state === 'closed' && !protocol && (
+          <CoordinationContactsCard
+            contacts={parish?.coordinationContacts ?? []}
+          />
+        )}
+
         {protocol && (
           <div
             className={`${cardClassName} flex flex-col items-center gap-3 text-center`}
@@ -164,6 +170,15 @@ export function Registration() {
           </div>
         )}
 
+        {protocol && (
+          <>
+            <RegistrationFeeNotice feeCents={parish?.registrationFeeCents} />
+            <CoordinationContactsCard
+              contacts={parish?.coordinationContacts ?? []}
+            />
+          </>
+        )}
+
         {state === 'open' && parish && !protocol && !segment && (
           <>
             <div className="flex flex-col gap-1">
@@ -175,6 +190,7 @@ export function Registration() {
                 todos os documentos.
               </p>
             </div>
+            <RegistrationFeeNotice feeCents={parish.registrationFeeCents} />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {registrationSegments.map((item) => {
                 const isSegmentOpen = openSegments.includes(item.key)
@@ -204,12 +220,7 @@ export function Registration() {
                 )
               })}
             </div>
-            {parish.registrationFeeCents ? (
-              <p className="text-sm text-bunker-500">
-                Taxa de inscrição: {formatCurrency(parish.registrationFeeCents)}
-                .
-              </p>
-            ) : null}
+            <CoordinationContactsCard contacts={parish.coordinationContacts} />
           </>
         )}
 
@@ -219,6 +230,8 @@ export function Registration() {
               key={segment}
               slug={slug}
               terms={parish.commitmentTerms}
+              feeCents={parish.registrationFeeCents}
+              contacts={parish.coordinationContacts}
               segment={segment}
               onBack={() => changeStep(null)}
               onDone={handleDone}
@@ -226,11 +239,6 @@ export function Registration() {
           </div>
         )}
       </main>
-
-      <footer className="px-4 pb-8 text-center text-xs text-bunker-500">
-        Dúvidas:{' '}
-        <CoordinationContacts contacts={parish?.coordinationContacts ?? []} />
-      </footer>
     </div>
   )
 }

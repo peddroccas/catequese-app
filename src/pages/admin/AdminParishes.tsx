@@ -6,6 +6,7 @@ import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { AdminRepository } from '@/services/repositories/adminRepository'
 import { adminParish } from '@/Types'
+import { parishModules } from '@/utils/modules'
 import {
   Button,
   Chip,
@@ -28,19 +29,21 @@ import {
   DeleteParishModal,
   EditParishModal,
   NewParishModal,
+  ParishModulesModal,
   ResetCoordinatorModal,
 } from './AdminParishModals'
 
 // Painel de administração: letras maiores que o restante do sistema
 const adminTableClassNames = {
   ...tableClassNames,
-  th: 'bg-bunker-50 text-xs font-semibold uppercase tracking-wide text-bunker-500 first:rounded-none last:rounded-none',
-  td: 'text-base text-bunker-800',
+  th: 'h-12 bg-bunker-50 text-xs font-semibold uppercase tracking-wide text-bunker-500 first:rounded-none last:rounded-none lg:text-sm',
+  td: 'py-3 text-base text-bunker-800 lg:py-5 lg:text-lg',
 }
 
 type Dialog =
   | { kind: 'new' }
   | { kind: 'edit'; parish: adminParish }
+  | { kind: 'modules'; parish: adminParish }
   | { kind: 'status'; parish: adminParish }
   | { kind: 'reset'; parish: adminParish }
   | { kind: 'delete'; parish: adminParish }
@@ -136,13 +139,13 @@ export function AdminParishes() {
         </Button>
       </header>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8 sm:px-8">
+      <main className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-6 px-4 py-8 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold text-bunker-900">
+            <h1 className="text-3xl font-semibold text-bunker-900 lg:text-4xl">
               Paróquias
             </h1>
-            <p className="text-base text-bunker-500">
+            <p className="text-base text-bunker-500 lg:text-lg">
               {activeCount} ativas · {catechizingsTotal} catequizandos no total
               {overdueCount > 0 && (
                 <span className="font-medium text-danger">
@@ -171,7 +174,6 @@ export function AdminParishes() {
               <TableColumn>Paróquia</TableColumn>
               <TableColumn>Coordenação</TableColumn>
               <TableColumn align="end">Catequizandos</TableColumn>
-              <TableColumn>Plano</TableColumn>
               <TableColumn>Pago até</TableColumn>
               <TableColumn>Situação</TableColumn>
               <TableColumn align="end">Ações</TableColumn>
@@ -181,14 +183,25 @@ export function AdminParishes() {
                 <TableRow key={parish.id}>
                   <TableCell>
                     <div className="flex flex-col">
-                      <span className="font-medium text-bunker-900">
+                      <span className="font-semibold text-bunker-900 lg:text-xl">
                         {parish.name}
                       </span>
-                      <span className="text-sm text-bunker-500">
+                      <span className="text-sm text-bunker-500 lg:text-base">
                         {parish.city}/{parish.state} · /inscricao/{parish.slug}
                       </span>
+                      {parish.disabledModules.length > 0 && (
+                        <span className="text-sm font-medium text-amber-700">
+                          Sem:{' '}
+                          {parishModules
+                            .filter((item) =>
+                              parish.disabledModules.includes(item.key),
+                            )
+                            .map((item) => item.label)
+                            .join(', ')}
+                        </span>
+                      )}
                       {parish.customDomain && (
-                        <span className="text-sm text-bunker-500">
+                        <span className="text-sm text-bunker-500 lg:text-base">
                           {parish.customDomain}
                         </span>
                       )}
@@ -196,7 +209,7 @@ export function AdminParishes() {
                   </TableCell>
                   <TableCell>
                     {parish.coordinators.length ? (
-                      <div className="flex flex-col text-sm">
+                      <div className="flex flex-col text-sm lg:text-base">
                         {parish.coordinators.map((coordinator) => (
                           <span key={coordinator.email}>
                             {coordinator.name}
@@ -215,12 +228,11 @@ export function AdminParishes() {
                     <span className="tabular-nums">
                       {parish.catechizingsCount}
                     </span>
-                    <span className="text-sm text-bunker-500">
+                    <span className="text-sm text-bunker-500 lg:text-base">
                       {' '}
                       · {parish.classroomsCount} turmas
                     </span>
                   </TableCell>
-                  <TableCell>{parish.plan}</TableCell>
                   <TableCell>
                     <span className={isOverdue(parish) ? 'text-danger' : ''}>
                       {formatDate(parish.paidUntil)}
@@ -238,7 +250,11 @@ export function AdminParishes() {
                   <TableCell>
                     <Dropdown placement="bottom-end">
                       <DropdownTrigger>
-                        <Button size="md" variant="bordered">
+                        <Button
+                          size="md"
+                          variant="bordered"
+                          className="lg:h-11 lg:px-5 lg:text-base"
+                        >
                           Ações
                         </Button>
                       </DropdownTrigger>
@@ -252,6 +268,8 @@ export function AdminParishes() {
                               return setDialog({ kind: 'status', parish })
                             case 'reset':
                               return setDialog({ kind: 'reset', parish })
+                            case 'modules':
+                              return setDialog({ kind: 'modules', parish })
                             case 'link':
                               return copyLink(parish)
                             case 'export':
@@ -262,7 +280,10 @@ export function AdminParishes() {
                         }}
                       >
                         <DropdownItem key="edit">
-                          Plano, vencimento e domínio
+                          Vencimento e domínio
+                        </DropdownItem>
+                        <DropdownItem key="modules">
+                          Abas da paróquia
                         </DropdownItem>
                         <DropdownItem key="link">
                           Copiar link de inscrição
@@ -304,6 +325,13 @@ export function AdminParishes() {
       )}
       {dialog?.kind === 'edit' && (
         <EditParishModal
+          parish={dialog.parish}
+          onClose={close}
+          onSaved={load}
+        />
+      )}
+      {dialog?.kind === 'modules' && (
+        <ParishModulesModal
           parish={dialog.parish}
           onClose={close}
           onSaved={load}

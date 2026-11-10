@@ -2,6 +2,8 @@ import { PageHeader } from '@/components/PageHeader'
 import { surfaceClassName } from '@/components/tableStyles'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { useAuth } from '@/hooks/useAuth'
+import { useParish } from '@/hooks/useParish'
+import { isPathEnabled } from '@/utils/modules'
 import { calculateAge } from '@/utils/date'
 import {
   Archive,
@@ -155,6 +157,7 @@ function birthdayDay(date?: string) {
 // Página inicial: resumo, atalhos e aniversariantes do mês
 export function Home() {
   const { user } = useAuth()
+  const { parish } = useParish()
   const { classrooms, catechizings, catechists } = useContext(ClassroomContext)
   const isCoordinator = user?.role === 'COORDINATOR'
 
@@ -221,7 +224,9 @@ export function Home() {
     { label: `Aniversariantes de ${monthName}`, value: birthdays.length },
   ]
 
-  const shortcuts = isCoordinator ? coordinatorShortcuts : memberShortcuts
+  const shortcuts = (
+    isCoordinator ? coordinatorShortcuts : memberShortcuts
+  ).filter((item) => isPathEnabled(item.link, parish))
   const firstName = user?.nickname || user?.name.split(' ')[0]
 
   return (
