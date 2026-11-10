@@ -75,4 +75,13 @@ export class CatechistRepository {
     const response = await api.post('/catechists/auth', { email, password })
     return response.data
   }
+
+  // A resposta é a mesma exista ou não a conta (não revela quem tem cadastro)
+  static async requestPasswordReset(email: string) {
+    await api.post('/catechists/forgot-password', { email })
+  }
+
+  static async resetPasswordWithToken(token: string, password: string) {
+    await api.post('/catechists/reset-password', { token, password })
+  }
 }

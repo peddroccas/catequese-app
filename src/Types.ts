@@ -391,3 +391,44 @@ export type parishChanges = Pick<
   | 'registrationFeeCents'
   | 'commitmentTerms'
 >
+
+// Painel do administrador do sistema
+export interface adminParish {
+  id: string
+  slug: string
+  name: string
+  city: string
+  state: string
+  status: 'ACTIVE' | 'SUSPENDED'
+  plan: string
+  paidUntil: string | null
+  customDomain: string | null
+  createdAt: string
+  catechizingsCount: number
+  catechistsCount: number
+  classroomsCount: number
+  coordinators: { name: string; email: string }[]
+}
+
+export interface createAdminParish {
+  slug: string
+  name: string
+  dioceseName: string
+  city: string
+  state: string
+  areaCode: string
+  plan?: string
+  coordinatorName: string
+  coordinatorEmail: string
+  coordinatorPhone?: string
+}
+
+export interface auditLogEntry {
+  id: string
+  actorName: string
+  action: string
+  targetType: string
+  targetId: string | null
+  detail: string | null
+  createdAt: string
+}

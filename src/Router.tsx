@@ -1,9 +1,10 @@
 import { ComponentType, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { DEFAULT_PARISH_SLUG } from './lib/config'
 import { PageFallback } from './components/PageFallback'
 import { DefaultLayout } from './layouts/DefaultLayout'
 import { Login } from './pages/login/Login'
+import { RegistrationRedirect } from './routes/RegistrationRedirect'
+import { RequireAdmin } from './routes/RequireAdmin'
 import { RequireAuth } from './routes/RequireAuth'
 
 // Cada tela vira um arquivo separado, baixado só quando a pessoa abre: o
@@ -50,11 +51,25 @@ const ParishSettings = page(
   () => import('./pages/parish/ParishSettings'),
   'ParishSettings',
 )
+const AccessLog = page(() => import('./pages/parish/AccessLog'), 'AccessLog')
 const Profile = page(() => import('./pages/profile/Profile'), 'Profile')
 const Archive = page(() => import('./pages/archive/Archive'), 'Archive')
 const Registration = page(
   () => import('./pages/registration/Registration'),
   'Registration',
+)
+const ForgotPassword = page(
+  () => import('./pages/login/ForgotPassword'),
+  'ForgotPassword',
+)
+const ResetPassword = page(
+  () => import('./pages/login/ResetPassword'),
+  'ResetPassword',
+)
+const AdminLogin = page(() => import('./pages/admin/AdminLogin'), 'AdminLogin')
+const AdminParishes = page(
+  () => import('./pages/admin/AdminParishes'),
+  'AdminParishes',
 )
 
 export function Router() {
@@ -63,15 +78,18 @@ export function Router() {
       <Routes>
         <Route path="" element={<Navigate to={'/login'} />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/esqueci-senha" element={<ForgotPassword />} />
+        <Route path="/redefinir-senha" element={<ResetPassword />} />
         {/* Formulário público: não precisa de login */}
         <Route path="/inscricao/:slug" element={<Registration />} />
-        {/* Endereço antigo (sem slug): vai para a paróquia padrão */}
-        <Route
-          path="/inscricao"
-          element={
-            <Navigate to={`/inscricao/${DEFAULT_PARISH_SLUG}`} replace />
-          }
-        />
+        {/* Sem slug: vai para a paróquia do endereço (domínio próprio ou
+            subdomínio) ou, no endereço genérico, para a paróquia padrão */}
+        <Route path="/inscricao" element={<RegistrationRedirect />} />
+        {/* Administração do sistema: login próprio, separado dos catequistas */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin" element={<AdminParishes />} />
+        </Route>
         {/* Telas internas: só com login (e, para catequista, só as permitidas) */}
         <Route element={<RequireAuth />}>
           <Route element={<DefaultLayout />}>
@@ -87,6 +105,7 @@ export function Router() {
             <Route path="rites" element={<Rites />} />
             <Route path="classrooms" element={<Classrooms />} />
             <Route path="parish" element={<ParishSettings />} />
+            <Route path="acessos" element={<AccessLog />} />
             <Route path="profile" element={<Profile />} />
             <Route path="archive" element={<Archive />} />
           </Route>

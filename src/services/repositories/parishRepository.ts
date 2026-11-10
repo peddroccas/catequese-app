@@ -14,6 +14,14 @@ export class ParishRepository {
     return response.data
   }
 
+  // A paróquia dona de um endereço (domínio próprio ou subdomínio); 404 se nenhuma
+  static async resolveHost(host: string): Promise<publicParish> {
+    const response = await publicApi.get('/public/parishes/resolve', {
+      params: { host },
+    })
+    return response.data
+  }
+
   // Dados públicos, sem login (página de inscrição)
   static async getPublic(slug: string): Promise<publicParish> {
     const response = await publicApi.get(

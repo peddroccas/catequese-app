@@ -7,7 +7,33 @@ import {
 } from '../../Types'
 import { api } from '../api'
 
+export interface ImportRowResult {
+  // Posição na lista enviada, a partir de 1
+  row: number
+  ok: boolean
+  error?: string
+}
+
+export interface ImportResult {
+  total: number
+  imported: number
+  failed: number
+  results: ImportRowResult[]
+}
+
 export class CatechizingRepository {
+  // Cadastro em lote (planilha): cada linha entra ou volta com o motivo
+  static async importMany(
+    rows: unknown[],
+    defaultClassroomId?: string,
+  ): Promise<ImportResult> {
+    const response = await api.post('/catechizings/import', {
+      rows,
+      defaultClassroomId,
+    })
+    return response.data
+  }
+
   static async getAllCatechizings(): Promise<catechizing[]> {
     const response = await api.get('/catechizings')
     return response.data

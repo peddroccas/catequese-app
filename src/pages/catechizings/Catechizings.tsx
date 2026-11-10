@@ -1,8 +1,10 @@
 import { Button, Spinner } from '@nextui-org/react'
 import { PageHeader } from '@/components/PageHeader'
-import { UserPlus } from '@phosphor-icons/react'
-import { useMemo, useRef, useState } from 'react'
+import { FileXls, UserPlus } from '@phosphor-icons/react'
+import { useContext, useMemo, useRef, useState } from 'react'
+import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
+import { ImportCatechizingsModal } from './components/modals/ImportCatechizingsModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
 import { useAuth } from '@/hooks/useAuth'
 import { PAGE_SIZES, useCatechizingsPage } from '@/hooks/useCatechizingsPage'
@@ -19,6 +21,8 @@ export function Catechizings() {
   const list = useCatechizingsPage()
   const { data, error, isFetching, group, page, pageSize, sort } = list
   const topRef = useRef<HTMLDivElement>(null)
+  const { throwCatechizingUpdate } = useContext(ClassroomContext)
+  const [isImporting, setIsImporting] = useState<boolean>(false)
 
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
@@ -42,10 +46,26 @@ export function Catechizings() {
           onClose={() => setIsUserAddingNewCatechizing(false)}
         />
       )}
+      {user?.role === 'COORDINATOR' && (
+        <ImportCatechizingsModal
+          isOpen={isImporting}
+          onClose={() => setIsImporting(false)}
+          onImported={throwCatechizingUpdate}
+        />
+      )}
       <PageHeader
         title="Catequizandos"
         description="Todos os catequizandos da paróquia"
       >
+        {user?.role === 'COORDINATOR' && (
+          <Button
+            variant="bordered"
+            startContent={<FileXls size={18} />}
+            onPress={() => setIsImporting(true)}
+          >
+            Importar planilha
+          </Button>
+        )}
         {user?.role === 'COORDINATOR' && (
           <Button
             color="primary"

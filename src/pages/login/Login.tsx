@@ -4,11 +4,12 @@ import { toast } from '@/lib/toast'
 import { APP_NAME } from '@/lib/config'
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
+import { useHostParish } from '@/hooks/useHostParish'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const loginFormSchema = z.object({
@@ -31,6 +32,8 @@ export function Login() {
   })
   const navigate = useNavigate()
   const { user, isCheckingLocalStorage, login } = useAuth()
+  // Em endereço de paróquia (domínio próprio ou subdomínio) mostra o nome dela
+  const { parish: hostParish } = useHostParish()
 
   useEffect(() => {
     if (user) {
@@ -81,7 +84,9 @@ export function Login() {
                 Bem-vindo(a)
               </h1>
               <p className="text-sm text-bunker-500">
-                Entre com seu email e senha
+                {hostParish
+                  ? `Catequese de ${hostParish.name}`
+                  : 'Entre com seu email e senha'}
               </p>
             </div>
           </div>
@@ -129,6 +134,12 @@ export function Login() {
           >
             Entrar
           </Button>
+          <Link
+            to="/esqueci-senha"
+            className="text-center text-sm text-primary hover:underline"
+          >
+            Esqueci minha senha
+          </Link>
         </form>
       </main>
     </div>
