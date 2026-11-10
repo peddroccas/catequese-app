@@ -70,6 +70,22 @@ export interface catechizing {
   archivedAt?: string | null
 }
 
+// Grupos e colunas aceitos pela listagem paginada de catequizandos
+export type catechizingGroup = 'all' | 'eucharist' | 'confirmation' | 'adults'
+export type catechizingSortColumn = 'name' | 'age' | 'baptism'
+export type sortDirection = 'asc' | 'desc'
+
+export interface catechizingsPage {
+  items: catechizing[]
+  page: number
+  pageSize: number
+  // Tudo que bate com a busca e o grupo, somando todas as páginas
+  total: number
+  totalPages: number
+  // Totais por grupo, sem considerar a busca nem o grupo escolhido
+  counts: Record<catechizingGroup, number>
+}
+
 export const segments = [
   'Pré-Eucaristia',
   'Eucaristia 1',

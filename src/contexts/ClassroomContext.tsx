@@ -18,6 +18,8 @@ interface ClassroomType {
   throwClassroomUpdate: () => void
   throwCatechistUpdate: () => void
   throwCatechizingUpdate: () => void
+  // Sobe a cada alteração de catequizandos; listas paginadas recarregam por ele
+  catechizingsVersion: number
 }
 export const ClassroomContext = createContext({} as ClassroomType)
 
@@ -34,6 +36,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
   const [catechizings, setCatechizings] = useState<catechizing[]>([])
   const [classrooms, setClassrooms] = useState<classroom[]>([])
   const [catechists, setCatechists] = useState<catechist[]>([])
+  const [catechizingsVersion, setCatechizingsVersion] = useState<number>(0)
 
   // Recarrega tudo sempre que alguém faz login
   useEffect(() => {
@@ -84,6 +87,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
 
   function throwCatechizingUpdate() {
     setHasCatechizingUpdate(true)
+    setCatechizingsVersion((version) => version + 1)
   }
 
   return (
@@ -95,6 +99,7 @@ export function ClassroomProvider({ children }: ClassroomProviderProps) {
         throwClassroomUpdate,
         throwCatechistUpdate,
         throwCatechizingUpdate,
+        catechizingsVersion,
       }}
     >
       {children}

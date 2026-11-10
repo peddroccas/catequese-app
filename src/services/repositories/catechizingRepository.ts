@@ -1,9 +1,35 @@
-import { catechizing } from '../../Types'
+import {
+  catechizing,
+  catechizingGroup,
+  catechizingsPage,
+  catechizingSortColumn,
+  sortDirection,
+} from '../../Types'
 import { api } from '../api'
 
 export class CatechizingRepository {
   static async getAllCatechizings(): Promise<catechizing[]> {
     const response = await api.get('/catechizings')
+    return response.data
+  }
+
+  // Uma página de catequizandos, com busca, grupo e ordenação feitos no servidor.
+  // O signal cancela a chamada anterior quando o filtro muda antes dela voltar
+  static async getPage(
+    params: {
+      page: number
+      pageSize: number
+      search?: string
+      group?: catechizingGroup
+      sortBy?: catechizingSortColumn
+      sortDirection?: sortDirection
+    },
+    signal?: AbortSignal,
+  ): Promise<catechizingsPage> {
+    const response = await api.get('/catechizings/search', {
+      params: { ...params, search: params.search || undefined },
+      signal,
+    })
     return response.data
   }
 

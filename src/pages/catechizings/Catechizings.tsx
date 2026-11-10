@@ -1,51 +1,41 @@
-import { ClassroomContext } from '@/contexts/ClassroomContext'
-import { Button } from '@nextui-org/react'
+import { Button, Spinner } from '@nextui-org/react'
 import { PageHeader } from '@/components/PageHeader'
 import { UserPlus } from '@phosphor-icons/react'
-import { useContext, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { AddNewCatechizingModal } from './components/modals/AddNewCatechizingModal'
 import { CatechizingsTable } from './components/CatechizingsTable'
 import { useAuth } from '@/hooks/useAuth'
+import { PAGE_SIZES, useCatechizingsPage } from '@/hooks/useCatechizingsPage'
 import { SearchInput } from '@/components/SearchInput'
-import { matchesSearch } from '@/utils/search'
+import { TablePagination } from '@/components/TablePagination'
 import { CatechizingsSummary } from './components/CatechizingsSummary'
-import { summaryGroup, summaryGroups } from './summaryGroups'
 
+const EMPTY_COUNTS = { all: 0, eucharist: 0, confirmation: 0, adults: 0 }
+
+// Todos os catequizandos, paginados: o servidor entrega uma página por vez, já
+// filtrada, pesquisada e ordenada
 export function Catechizings() {
   const { user } = useAuth()
-  const { catechizings, classrooms } = useContext(ClassroomContext)
-  const [search, setSearch] = useState<string>('')
-  const [selectedGroup, setSelectedGroup] = useState<summaryGroup>('all')
+  const list = useCatechizingsPage()
+  const { data, error, isFetching, group, page, pageSize, sort } = list
+  const topRef = useRef<HTMLDivElement>(null)
 
   const [isUserAddingNewCatechizing, setIsUserAddingNewCatechizing] =
     useState<boolean>(false)
 
-  function isInGroup(classroomId: string | undefined, group: summaryGroup) {
-    const segments = summaryGroups.find((item) => item.key === group)?.segments
-    if (!segments) {
-      return true
-    }
-    const classroom = classrooms.find((item) => item.id === classroomId)
-    return Boolean(classroom?.segment && segments.includes(classroom.segment))
-  }
-
-  const counts = Object.fromEntries(
-    summaryGroups.map((group) => [
-      group.key,
-      catechizings.filter((catechizing) =>
-        isInGroup(catechizing.classroomId, group.key),
-      ).length,
-    ]),
-  ) as Record<summaryGroup, number>
-
-  const filteredCatechizings = catechizings.filter(
-    (catechizing) =>
-      isInGroup(catechizing.classroomId, selectedGroup) &&
-      matchesSearch(catechizing.name, search),
+  const serverSort = useMemo(
+    () => ({ ...sort, onChange: list.setSort }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sort.column, sort.direction],
   )
 
+  function handlePageChange(nextPage: number) {
+    list.setPage(nextPage)
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
-    <div className="flex flex-grow flex-col gap-6">
+    <div ref={topRef} className="flex flex-grow scroll-mt-4 flex-col gap-6">
       {user?.role === 'COORDINATOR' && (
         <AddNewCatechizingModal
           isOpen={isUserAddingNewCatechizing}
@@ -67,15 +57,58 @@ export function Catechizings() {
         )}
       </PageHeader>
       <CatechizingsSummary
-        counts={counts}
-        selectedGroup={selectedGroup}
-        onSelect={setSelectedGroup}
+        counts={data?.counts ?? EMPTY_COUNTS}
+        selectedGroup={group}
+        onSelect={list.setGroup}
       />
-      <SearchInput value={search} onChange={setSearch} />
-      <CatechizingsTable
-        catechizings={filteredCatechizings}
-        isAdultClassroom={selectedGroup === 'adults'}
-      />
+      <SearchInput value={list.searchText} onChange={list.setSearchText} />
+
+      {error ? (
+        <div
+          role="alert"
+          className="flex flex-col items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-700"
+        >
+          <span>Não foi possível carregar os catequizandos: {error}</span>
+          <Button size="sm" color="danger" variant="flat" onPress={list.reload}>
+            Tentar de novo
+          </Button>
+        </div>
+      ) : !data ? (
+        <div className="flex justify-center py-16">
+          <Spinner label="Carregando catequizandos" />
+        </div>
+      ) : (
+        <>
+          {/* A lista antiga fica na tela, mais clara, enquanto a nova carrega */}
+          <div
+            aria-busy={isFetching}
+            className={
+              isFetching
+                ? 'opacity-60 transition-opacity'
+                : 'transition-opacity'
+            }
+          >
+            <CatechizingsTable
+              catechizings={data.items}
+              isAdultClassroom={group === 'adults'}
+              serverSort={serverSort}
+              startIndex={(data.page - 1) * data.pageSize}
+            />
+          </div>
+          <TablePagination
+            page={data.page}
+            pageSize={pageSize}
+            total={data.total}
+            totalPages={data.totalPages}
+            pageSizes={PAGE_SIZES}
+            onPageChange={handlePageChange}
+            onPageSizeChange={list.setPageSize}
+          />
+        </>
+      )}
+      <span className="sr-only" aria-live="polite">
+        {isFetching ? 'Carregando' : `Página ${page}`}
+      </span>
     </div>
   )
 }

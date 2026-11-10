@@ -1,6 +1,6 @@
-import { adultSegments, segment } from '@/Types'
+import { adultSegments, catechizingGroup, segment } from '@/Types'
 
-export type summaryGroup = 'all' | 'eucharist' | 'confirmation' | 'adults'
+export type summaryGroup = catechizingGroup
 
 export const summaryGroups: {
   key: summaryGroup

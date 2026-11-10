@@ -1,4 +1,4 @@
-import { catechizing } from '@/Types'
+import { catechizing, catechizingSortColumn, sortDirection } from '@/Types'
 import { joinNames } from '@/utils/names'
 import { DragScroll } from '@/components/DragScroll'
 import {
@@ -18,11 +18,23 @@ import { calculateAge } from '@/utils/date'
 import { tableClassNames } from '@/components/tableStyles'
 import { maskPhone } from '@/utils/phone'
 
+// Ordenação feita no servidor (tela paginada): a tabela só mostra a ordem
+// recebida e avisa quando a pessoa clica numa coluna
+interface ServerSort {
+  column: catechizingSortColumn
+  direction: sortDirection
+  onChange: (column: catechizingSortColumn, direction: sortDirection) => void
+}
+
 interface CatechizingsTableProps {
   catechizings: catechizing[]
   hasPageClassroomInfo?: boolean
   isAdultClassroom?: boolean
   isReadOnly?: boolean
+  // Sem serverSort, a tabela ordena sozinha (telas por turma)
+  serverSort?: ServerSort
+  // Posição do primeiro item na lista toda: a numeração continua entre páginas
+  startIndex?: number
 }
 
 interface column {
@@ -86,6 +98,8 @@ export function CatechizingsTable({
   hasPageClassroomInfo,
   isAdultClassroom,
   isReadOnly,
+  serverSort,
+  startIndex = 0,
 }: CatechizingsTableProps) {
   const { classrooms } = useContext(ClassroomContext)
 
@@ -93,6 +107,24 @@ export function CatechizingsTable({
     column: 'name',
     direction: 'ascending',
   })
+
+  const activeDescriptor: SortDescriptor = serverSort
+    ? {
+        column: serverSort.column,
+        direction: serverSort.direction === 'asc' ? 'ascending' : 'descending',
+      }
+    : sortDescriptor
+
+  function handleSortChange(descriptor: SortDescriptor) {
+    if (serverSort) {
+      serverSort.onChange(
+        descriptor.column as catechizingSortColumn,
+        descriptor.direction === 'ascending' ? 'asc' : 'desc',
+      )
+      return
+    }
+    setSortDescriptor(descriptor)
+  }
 
   const columns = useMemo(() => {
     const list: (column | false)[] = [
@@ -120,6 +152,9 @@ export function CatechizingsTable({
   }, [hasPageClassroomInfo, isAdultClassroom])
 
   const sortedCatechizings = useMemo(() => {
+    if (serverSort) {
+      return catechizings
+    }
     const direction = sortDescriptor.direction === 'ascending' ? 1 : -1
     return [...catechizings].sort((a, b) => {
       switch (sortDescriptor.column) {
@@ -138,7 +173,7 @@ export function CatechizingsTable({
           return a.name.localeCompare(b.name) * direction
       }
     })
-  }, [catechizings, sortDescriptor])
+  }, [catechizings, sortDescriptor, serverSort])
 
   function renderCell(
     catechizing: catechizing,
@@ -150,7 +185,11 @@ export function CatechizingsTable({
     )
     switch (key) {
       case 'index':
-        return <span className="tabular-nums text-bunker-400">{index + 1}</span>
+        return (
+          <span className="tabular-nums text-bunker-400">
+            {startIndex + index + 1}
+          </span>
+        )
       case 'name':
         return (
           <span className="whitespace-nowrap font-medium text-bunker-900">
@@ -197,8 +236,8 @@ export function CatechizingsTable({
       <Table
         aria-label="Catequizandos"
         classNames={tableClassNames}
-        sortDescriptor={sortDescriptor}
-        onSortChange={setSortDescriptor}
+        sortDescriptor={activeDescriptor}
+        onSortChange={handleSortChange}
       >
         <TableHeader columns={columns}>
           {(column) => (
