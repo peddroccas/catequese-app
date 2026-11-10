@@ -23,9 +23,21 @@ npm run dev              # http://localhost:5173
 
 ## Variáveis de ambiente
 
+- `VITE_APP_NAME` (opcional, padrão `Catequese`): nome do produto no menu e na aba do navegador.
+- `VITE_DEFAULT_PARISH_SLUG` (opcional, padrão `aparecida-gama`): para onde vai o endereço antigo `/inscricao`, sem a paróquia.
 - `VITE_API_URL`: endereço da API. É lida no **build**, então trocar exige novo deploy.
   A API só aceita chamadas dos endereços listados em `CORS_ORIGINS` (veja o README da API):
   ao publicar o app em um endereço novo, inclua-o lá.
+
+## Várias paróquias
+
+O app atende várias paróquias. Quem entra vê só a paróquia dele: nome, diocese, cidade,
+DDD, contatos da coordenação, valor do carnê, taxa de inscrição e termo de compromisso vêm
+da API (tela **Configurações**, só coordenação). O cabeçalho dos PDFs e planilhas, o DDD dos
+telefones e o termo da ficha impressa usam esses dados (`src/utils/parish.ts`).
+
+A inscrição pública fica em `/inscricao/<slug-da-paróquia>`. O endereço antigo
+`/inscricao` (sem slug) redireciona para a paróquia padrão.
 
 ## Deploy
 

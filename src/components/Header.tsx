@@ -11,6 +11,8 @@ import { useState } from 'react'
 import { List } from '@phosphor-icons/react'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { useParish } from '@/hooks/useParish'
+import { APP_NAME } from '@/lib/config'
 import User from './User'
 
 const menuItems = [
@@ -38,6 +40,7 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
 
 export function Header() {
   const { user } = useAuth()
+  const { parish } = useParish()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   if (!user) {
@@ -73,8 +76,11 @@ export function Header() {
             className="flex items-center gap-3 rounded-lg duration-150 hover:opacity-80"
           >
             <img className="w-11" src={catequeseLogo} alt="" />
-            <span className="hidden text-sm font-semibold tracking-wide text-white xl:block">
-              Catequese
+            <span
+              title={parish?.name ?? APP_NAME}
+              className="hidden max-w-52 truncate text-sm font-semibold tracking-wide text-white 2xl:block"
+            >
+              {parish?.name ?? APP_NAME}
             </span>
           </Link>
         </NavbarBrand>

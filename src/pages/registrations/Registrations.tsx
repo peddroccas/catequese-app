@@ -2,6 +2,7 @@ import { ConfirmModal } from '@/components/ConfirmModal'
 import { PageHeader } from '@/components/PageHeader'
 import { SearchInput } from '@/components/SearchInput'
 import { surfaceClassName } from '@/components/tableStyles'
+import { useParish } from '@/hooks/useParish'
 import { getErrorMessage } from '@/services/api'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import {
@@ -49,7 +50,8 @@ export function Registrations() {
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState('')
 
-  const formUrl = `${window.location.origin}/inscricao`
+  const { parish } = useParish()
+  const formUrl = `${window.location.origin}/inscricao/${parish?.slug ?? ''}`
 
   const load = useCallback(() => {
     Promise.all([

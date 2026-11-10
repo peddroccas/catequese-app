@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getErrorMessage } from '@/services/api'
 import { toast } from '@/lib/toast'
+import { APP_NAME } from '@/lib/config'
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -65,7 +66,7 @@ export function Login() {
       <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
         <img className="w-11" src={catequeseLogo} alt="" />
         <span className="text-sm font-semibold tracking-wide text-white">
-          Catequese
+          {APP_NAME}
         </span>
       </header>
       <main className="flex flex-1 items-center justify-center px-4 py-12">

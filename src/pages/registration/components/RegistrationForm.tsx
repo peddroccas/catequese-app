@@ -2,6 +2,7 @@ import { PhoneInput } from '@/components/PhoneInput'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
 import { documentKind, registrationSegment } from '@/Types'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
+import { CommitmentTerms } from './CommitmentTerms'
 import { calculateAge, fromCalendarDate, toCalendarDate } from '@/utils/date'
 import {
   ageRangeLabel,
@@ -263,12 +264,17 @@ function describeError(error: unknown) {
 }
 
 interface RegistrationFormProps {
+  // Paróquia da inscrição (vem do endereço) e o termo de compromisso dela
+  slug: string
+  terms: string | null
   segment: registrationSegment
   onBack: () => void
   onDone: (protocol: string) => void
 }
 
 export function RegistrationForm({
+  slug,
+  terms,
   segment,
   onBack,
   onDone,
@@ -388,6 +394,7 @@ export function RegistrationForm({
 
     try {
       const { protocol } = await RegistrationRepository.submit(
+        slug,
         data,
         files,
         fileNames,
@@ -818,29 +825,12 @@ export function RegistrationForm({
         <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
           Termo de compromisso
         </h3>
-        <p>
-          Estou ciente do horário da catequese: todos os domingos, das 8h às
-          11h30, iniciando com a Santa Missa, e da obrigatoriedade da presença
-          nos encontros e na Missa.
-        </p>
-        <p>
-          Eu, <strong>{signerName || '______________'}</strong>,{' '}
-          {info.isAdult ? (
-            'catequizando(a) adulto(a),'
-          ) : (
-            <>
-              responsável por{' '}
-              <strong>{watch('name') || '______________'}</strong>,
-            </>
-          )}{' '}
-          assumo o reto compromisso com a assídua presença nos encontros
-          catequéticos aos domingos, iniciados às 8h com a Santa Missa e
-          finalizando às 11h30. Me comprometo a estar presente nos dias de festa
-          de preceito e nos eventos, assim como com a presença nas reuniões com
-          os catequistas. Tenho conhecimento que a ausência e falta de preparo
-          inviabilizará o recebimento dos sacramentos no tempo oportuno e
-          declaro que concordo com o seguinte termo.
-        </p>
+        <CommitmentTerms
+          template={terms}
+          signerName={signerName}
+          isAdult={info.isAdult}
+          catechizingName={watch('name')}
+        />
         <Controller
           name="acceptedTerms"
           control={control}

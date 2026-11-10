@@ -1,5 +1,3 @@
-export const DEFAULT_AREA_CODE = '61'
-
 // Formata enquanto digita: (61) 99999-9999 ou (61) 3333-4444
 export function maskPhone(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 11)

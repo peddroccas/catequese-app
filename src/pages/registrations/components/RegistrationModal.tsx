@@ -5,6 +5,7 @@ import { getErrorMessage } from '@/services/api'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { classroom, registration } from '@/Types'
 import { calculateAge, formatDate, formatTimestamp } from '@/utils/date'
+import { getCurrentParish } from '@/utils/parish'
 import { maskPhone } from '@/utils/phone'
 import {
   ageRangeLabel,
@@ -161,7 +162,7 @@ export function RegistrationModal({
             registration.name,
             registration.protocol,
             result.reason,
-            `${window.location.origin}/inscricao`,
+            `${window.location.origin}/inscricao/${getCurrentParish()?.slug ?? ''}`,
           )
     window.open(whatsappChatUrl(contactNumber, message), '_blank', 'noopener')
   }

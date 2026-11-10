@@ -1,5 +1,6 @@
 import { ComponentType, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { DEFAULT_PARISH_SLUG } from './lib/config'
 import { PageFallback } from './components/PageFallback'
 import { DefaultLayout } from './layouts/DefaultLayout'
 import { Login } from './pages/login/Login'
@@ -45,6 +46,10 @@ const Classrooms = page(
   () => import('./pages/classrooms/Classrooms'),
   'Classrooms',
 )
+const ParishSettings = page(
+  () => import('./pages/parish/ParishSettings'),
+  'ParishSettings',
+)
 const Profile = page(() => import('./pages/profile/Profile'), 'Profile')
 const Archive = page(() => import('./pages/archive/Archive'), 'Archive')
 const Registration = page(
@@ -59,7 +64,14 @@ export function Router() {
         <Route path="" element={<Navigate to={'/login'} />} />
         <Route path="/login" element={<Login />} />
         {/* Formulário público: não precisa de login */}
-        <Route path="/inscricao" element={<Registration />} />
+        <Route path="/inscricao/:slug" element={<Registration />} />
+        {/* Endereço antigo (sem slug): vai para a paróquia padrão */}
+        <Route
+          path="/inscricao"
+          element={
+            <Navigate to={`/inscricao/${DEFAULT_PARISH_SLUG}`} replace />
+          }
+        />
         {/* Telas internas: só com login (e, para catequista, só as permitidas) */}
         <Route element={<RequireAuth />}>
           <Route element={<DefaultLayout />}>
@@ -74,6 +86,7 @@ export function Router() {
             <Route path="meeting-themes" element={<MeetingThemes />} />
             <Route path="rites" element={<Rites />} />
             <Route path="classrooms" element={<Classrooms />} />
+            <Route path="parish" element={<ParishSettings />} />
             <Route path="profile" element={<Profile />} />
             <Route path="archive" element={<Archive />} />
           </Route>

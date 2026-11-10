@@ -9,7 +9,8 @@ import { RegistrationRepository } from '@/services/repositories/registrationRepo
 import { calculateAge, formatDate } from './date'
 import { mergeIntoOnePdf, sortZipEntries } from './pdfPackage'
 import { maskPhone } from './phone'
-import { parishHeaderLines } from './parish'
+import { fillTermPlain, termParagraphs, termRoleText } from './commitmentTerms'
+import { getCurrentParish, parishHeaderLines } from './parish'
 import { getRegistrationSegment } from './registration'
 
 // Ano da catequese da ficha de inscrição (muda a cada ciclo de inscrições)
@@ -149,16 +150,14 @@ function buildFichaPdf(data: ficha) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9.5)
 
-  // Se o termo já foi aceito online as respostas saem marcadas; senão, em branco
-  const sim = data.termsAcceptedAt ? '(X)' : '( )'
+  // O termo é o da paróquia (com quem assina e o vínculo preenchidos)
   const signer = data.isAdult
     ? data.name
     : (data.parents[0]?.name ?? '______________________')
-  const term = [
-    `Você está ciente do horário da catequese: todos os domingos das 8h às 11h30, iniciando com a Santa Missa?  ${sim} Sim  ( ) Não`,
-    `Você está ciente da obrigatoriedade da presença nos encontros e na Missa?  ${sim} Sim  ( ) Não`,
-    `Eu, ${signer}, ${data.isAdult ? 'catequizando(a) adulto(a)' : `responsável por ${data.name}`}, assumo o reto compromisso com a assídua presença nos encontros catequéticos aos domingos, iniciados às 8h com a Santa Missa e finalizando às 11h30. Me comprometo a estar presente nos dias de festa de preceito e nos eventos, assim como com a presença nas reuniões com os catequistas. Tenho conhecimento que a ausência e falta de preparo inviabilizará o recebimento dos sacramentos no tempo oportuno e assino declarando que concordo com o seguinte termo.`,
-  ]
+  const roleText = termRoleText(data.isAdult, data.name)
+  const term = termParagraphs(getCurrentParish()?.commitmentTerms).map(
+    (paragraph) => fillTermPlain(paragraph, signer, roleText),
+  )
   let y = finalY + 20
   for (const paragraph of term) {
     const lines = doc.splitTextToSize(paragraph, pageWidth - 28) as string[]

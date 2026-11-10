@@ -4,7 +4,15 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      // Troca %APP_NAME% no index.html pelo nome do produto (VITE_APP_NAME)
+      name: 'app-name',
+      transformIndexHtml: (html) =>
+        html.replace(/%APP_NAME%/g, process.env.VITE_APP_NAME || 'Catequese'),
+    },
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

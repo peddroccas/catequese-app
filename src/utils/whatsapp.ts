@@ -1,5 +1,5 @@
 import { classroom, parent } from '@/Types'
-import { DEFAULT_AREA_CODE } from './phone'
+import { getAreaCode } from './parish'
 
 export const WHATSAPP_GROUP_LINK = /^https:\/\/chat\.whatsapp\.com\/\S+$/
 
@@ -7,7 +7,7 @@ export const WHATSAPP_GROUP_LINK = /^https:\/\/chat\.whatsapp\.com\/\S+$/
 export function toWhatsappNumber(phone: string) {
   const digits = phone.replace(/\D/g, '')
   if (digits.length === 8 || digits.length === 9) {
-    return `55${DEFAULT_AREA_CODE}${digits}`
+    return `55${getAreaCode()}${digits}`
   }
   if (digits.length === 10 || digits.length === 11) {
     return `55${digits}`

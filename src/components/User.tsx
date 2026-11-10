@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Avatar,
 } from '@nextui-org/react'
-import { SignOut, UserCircle } from '@phosphor-icons/react'
+import { Gear, SignOut, UserCircle } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 
 export default function User() {
@@ -37,6 +37,14 @@ export default function User() {
           onPress={() => navigate('/profile')}
         >
           Meu perfil
+        </DropdownItem>
+        <DropdownItem
+          key="parish"
+          className={user?.role === 'COORDINATOR' ? '' : 'hidden'}
+          startContent={<Gear size={20} />}
+          onPress={() => navigate('/parish')}
+        >
+          Configurações da paróquia
         </DropdownItem>
         <DropdownItem
           key="logout"

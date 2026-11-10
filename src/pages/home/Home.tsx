@@ -9,6 +9,7 @@ import {
   CalendarCheck,
   CheckSquare,
   Cake,
+  Gear,
   ChalkboardTeacher,
   Chalkboard,
   ClipboardText,
@@ -81,6 +82,12 @@ const coordinatorShortcuts: shortcut[] = [
     title: 'Arquivo',
     description: 'Turmas e pessoas arquivadas',
     icon: <Archive size={24} />,
+  },
+  {
+    link: '/parish',
+    title: 'Configurações',
+    description: 'Dados da paróquia, contatos, carnê e termo',
+    icon: <Gear size={24} />,
   },
   {
     link: '/profile',

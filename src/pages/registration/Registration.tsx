@@ -1,36 +1,63 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
-import { registrationSegment } from '@/Types'
+import { APP_NAME } from '@/lib/config'
+import { publicParish, registrationSegment } from '@/Types'
+import { ParishRepository } from '@/services/repositories/parishRepository'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
+import { formatCurrency } from '@/utils/currency'
+import { setCurrentParish } from '@/utils/parish'
 import { registrationSegments } from '@/utils/registration'
 import { Button, CircularProgress } from '@nextui-org/react'
-import { CheckCircle, LockSimple, WarningCircle } from '@phosphor-icons/react'
+import {
+  CheckCircle,
+  LockSimple,
+  MapPinLine,
+  WarningCircle,
+} from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { CoordinationContacts } from './components/CoordinationContacts'
 import { RegistrationForm } from './components/RegistrationForm'
 
-type pageState = 'loading' | 'error' | 'closed' | 'open'
+type pageState = 'loading' | 'error' | 'notFound' | 'closed' | 'open'
 
 const cardClassName =
   'rounded-2xl border border-bunker-200/70 bg-white p-6 shadow-lg shadow-bunker-900/5 sm:p-8'
 
-// Formulário público de inscrição na catequese: não precisa de login
+// Formulário público de inscrição na catequese de uma paróquia (o endereço traz
+// o slug: /inscricao/<paroquia>). Não precisa de login
 export function Registration() {
+  const { slug = '' } = useParams()
   const [state, setState] = useState<pageState>('loading')
+  const [parish, setParish] = useState<publicParish | null>(null)
   const [segment, setSegment] = useState<registrationSegment | null>(null)
   const [openSegments, setOpenSegments] = useState<registrationSegment[]>([])
   const [protocol, setProtocol] = useState<string | null>(null)
 
-  function loadStatus() {
+  function load() {
     setState('loading')
-    RegistrationRepository.getPublicStatus()
-      .then((settings) => {
+    Promise.all([
+      ParishRepository.getPublic(slug),
+      RegistrationRepository.getPublicStatus(slug),
+    ])
+      .then(([publicParish, settings]) => {
+        setParish(publicParish)
+        // Telefones e mensagens da página usam o DDD desta paróquia
+        setCurrentParish(publicParish)
+        document.title = `${publicParish.name} · ${APP_NAME}`
         setOpenSegments(settings.openSegments)
         setState(settings.isOpen ? 'open' : 'closed')
       })
-      .catch(() => setState('error'))
+      .catch((error) => {
+        // Paróquia que não existe (ou suspensa) responde 404
+        setState(error?.response?.status === 404 ? 'notFound' : 'error')
+      })
   }
 
-  useEffect(loadStatus, [])
+  useEffect(() => {
+    load()
+    return () => setCurrentParish(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug])
 
   function changeStep(next: registrationSegment | null) {
     setSegment(next)
@@ -45,14 +72,14 @@ export function Registration() {
   return (
     <div className="flex min-h-screen flex-col bg-bunker-50">
       <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
-        <img className="w-11" src={catequeseLogo} alt="" />
+        <img className="w-11" src={parish?.logoUrl ?? catequeseLogo} alt="" />
         <div className="flex flex-col leading-tight">
           <span className="text-sm font-semibold tracking-wide text-white">
-            Catequese
+            {APP_NAME}
           </span>
-          <span className="text-xs text-bunker-300">
-            Paróquia Nossa Senhora Aparecida do Gama
-          </span>
+          {parish && (
+            <span className="text-xs text-bunker-300">{parish.name}</span>
+          )}
         </div>
       </header>
 
@@ -60,6 +87,21 @@ export function Registration() {
         {state === 'loading' && (
           <div className="flex flex-1 items-center justify-center">
             <CircularProgress aria-label="Carregando" />
+          </div>
+        )}
+
+        {state === 'notFound' && (
+          <div
+            className={`${cardClassName} flex flex-col items-center gap-3 text-center`}
+          >
+            <MapPinLine size={40} className="text-bunker-500" />
+            <h1 className="text-xl font-semibold text-bunker-900">
+              Paróquia não encontrada
+            </h1>
+            <p className="text-sm text-bunker-500">
+              Confira o endereço que você recebeu da paróquia. Se o problema
+              continuar, fale com a coordenação.
+            </p>
           </div>
         )}
 
@@ -74,7 +116,7 @@ export function Registration() {
             <p className="text-sm text-bunker-500">
               Verifique a internet e tente novamente.
             </p>
-            <Button color="primary" onPress={loadStatus}>
+            <Button color="primary" onPress={load}>
               Tentar de novo
             </Button>
           </div>
@@ -122,7 +164,7 @@ export function Registration() {
           </div>
         )}
 
-        {state === 'open' && !protocol && !segment && (
+        {state === 'open' && parish && !protocol && !segment && (
           <>
             <div className="flex flex-col gap-1">
               <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
@@ -162,16 +204,21 @@ export function Registration() {
                 )
               })}
             </div>
-            <p className="text-sm text-bunker-500">
-              Taxa de inscrição: R$ 20,00.
-            </p>
+            {parish.registrationFeeCents ? (
+              <p className="text-sm text-bunker-500">
+                Taxa de inscrição: {formatCurrency(parish.registrationFeeCents)}
+                .
+              </p>
+            ) : null}
           </>
         )}
 
-        {state === 'open' && !protocol && segment && (
+        {state === 'open' && parish && !protocol && segment && (
           <div className={cardClassName}>
             <RegistrationForm
               key={segment}
+              slug={slug}
+              terms={parish.commitmentTerms}
               segment={segment}
               onBack={() => changeStep(null)}
               onDone={handleDone}
@@ -181,7 +228,8 @@ export function Registration() {
       </main>
 
       <footer className="px-4 pb-8 text-center text-xs text-bunker-500">
-        Dúvidas: <CoordinationContacts />
+        Dúvidas:{' '}
+        <CoordinationContacts contacts={parish?.coordinationContacts ?? []} />
       </footer>
     </div>
   )

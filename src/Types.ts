@@ -340,3 +340,54 @@ export interface registration {
   termsAcceptedAt: string
   createdAt: string
 }
+
+// Paróquia (cliente do sistema). O que qualquer pessoa pode ver, sem login,
+// e o que a coordenação vê e edita
+export interface coordinationContact {
+  name: string
+  phone: string
+}
+
+export interface publicParish {
+  slug: string
+  name: string
+  dioceseName: string
+  city: string
+  // UF
+  state: string
+  // DDD usado para completar telefones sem ele
+  areaCode: string
+  logoUrl: string | null
+  primaryColor: string | null
+  coordinationContacts: coordinationContact[]
+  // Taxa de inscrição em centavos; null = sem taxa
+  registrationFeeCents: number | null
+  // Termo de compromisso; null = termo padrão do sistema
+  commitmentTerms: string | null
+}
+
+export interface parish extends publicParish {
+  id: string
+  // Valor total do carnê de cada catequizando, em centavos
+  carneAmountCents: number
+  status: 'ACTIVE' | 'SUSPENDED'
+  plan: string
+  paidUntil: string | null
+  customDomain: string | null
+}
+
+// O que a coordenação pode alterar
+export type parishChanges = Pick<
+  parish,
+  | 'name'
+  | 'dioceseName'
+  | 'city'
+  | 'state'
+  | 'areaCode'
+  | 'logoUrl'
+  | 'primaryColor'
+  | 'coordinationContacts'
+  | 'carneAmountCents'
+  | 'registrationFeeCents'
+  | 'commitmentTerms'
+>

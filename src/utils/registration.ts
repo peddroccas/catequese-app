@@ -162,12 +162,6 @@ export const registrationMaritalStatuses = [
   'Casado(a) no religioso',
 ]
 
-// Contatos da coordenação, mostrados quando a família tem dúvida ou falta documento
-export const coordinationContacts = [
-  { name: 'Andressa', phone: '(61) 9 9153-4184' },
-  { name: 'Luiz', phone: '(61) 9 8214-2359' },
-]
-
 // Documentos de sacramentos: quem não os tem precisa falar com a coordenação
 export const sacramentDocuments: documentKind[] = [
   'BAPTISM',

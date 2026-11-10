@@ -10,13 +10,16 @@ export class RegistrationRepository {
   // --- Público (sem login)
 
   // Aberto e quais etapas recebem inscrição (fechado = nenhuma etapa)
-  static async getPublicStatus(): Promise<registrationSettings> {
-    const response = await publicApi.get('/public/registrations/status')
+  static async getPublicStatus(slug: string): Promise<registrationSettings> {
+    const response = await publicApi.get(
+      `/public/parishes/${encodeURIComponent(slug)}/registrations/status`,
+    )
     return response.data
   }
 
   // Dados da ficha em JSON + um arquivo por documento (campo = nome do documento)
   static async submit(
+    slug: string,
     data: Record<string, unknown>,
     files: Record<string, File | Blob>,
     fileNames: Record<string, string>,
@@ -27,10 +30,14 @@ export class RegistrationRepository {
       form.append(field, file, fileNames[field])
     }
     // Content-Type undefined deixa o axios montar o multipart com o boundary
-    const response = await publicApi.post('/public/registrations', form, {
-      headers: { 'Content-Type': undefined },
-      timeout: 120_000,
-    })
+    const response = await publicApi.post(
+      `/public/parishes/${encodeURIComponent(slug)}/registrations`,
+      form,
+      {
+        headers: { 'Content-Type': undefined },
+        timeout: 120_000,
+      },
+    )
     return response.data
   }
 

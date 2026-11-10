@@ -1,4 +1,5 @@
-import { DEFAULT_AREA_CODE, maskPhone } from '@/utils/phone'
+import { getAreaCode } from '@/utils/parish'
+import { maskPhone } from '@/utils/phone'
 import { Input, InputProps } from '@nextui-org/react'
 import { forwardRef } from 'react'
 
@@ -7,24 +8,26 @@ interface PhoneInputProps extends Omit<InputProps, 'onChange' | 'value'> {
   onChange: (value: string) => void
 }
 
-// Ao focar o campo vazio já preenche o DDD 61; o resto é formatado ao digitar
+// Ao focar o campo vazio já preenche o DDD da paróquia; o resto é formatado ao digitar
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   function PhoneInput({ value, onChange, ...props }, ref) {
+    const areaCode = getAreaCode()
+
     return (
       <Input
         ref={ref}
         type="tel"
         inputMode="numeric"
-        placeholder={`(${DEFAULT_AREA_CODE}) 99999-9999`}
+        placeholder={`(${areaCode}) 99999-9999`}
         {...props}
         value={maskPhone(value)}
         onFocus={() => {
           if (!value) {
-            onChange(`(${DEFAULT_AREA_CODE}) `)
+            onChange(`(${areaCode}) `)
           }
         }}
         onBlur={() => {
-          if (value.replace(/\D/g, '') === DEFAULT_AREA_CODE) {
+          if (value.replace(/\D/g, '') === areaCode) {
             onChange('')
           }
         }}
