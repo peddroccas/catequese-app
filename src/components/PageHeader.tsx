@@ -15,7 +15,7 @@ export function PageHeader({ title, description, children }: PageHeaderProps) {
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-bunker-500">{description}</p>
+          <div className="text-sm text-bunker-500">{description}</div>
         )}
       </div>
       {children && (
