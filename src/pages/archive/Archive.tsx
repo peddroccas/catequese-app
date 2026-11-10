@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { PageHeader } from '@/components/PageHeader'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { getErrorMessage } from '@/services/api'
@@ -35,7 +36,7 @@ export function Archive() {
       ])
       setArchive({ classrooms, catechizings, catechists })
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     }
   }, [])
 

@@ -1,6 +1,7 @@
 import { classroom } from '@/Types'
-import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
+import { semesterLabel } from './date'
+import { parishHeaderLines } from './parish'
 
 interface DownloadCallListProps {
   classroom: classroom
@@ -17,6 +18,9 @@ export async function downloadCallList({
   }
 
   try {
+    // A biblioteca de planilhas é pesada: só é carregada neste momento
+    const { default: ExcelJS } = await import('exceljs')
+
     // Criar uma nova pasta de trabalho
     const workbook = new ExcelJS.Workbook()
 
@@ -32,7 +36,7 @@ export async function downloadCallList({
 
     // Verifica se já existe algum texto na célula e adiciona o nome do catequista ao final
 
-    mergedCell.value = `ARQUIDIOCESE DE BRASÍLIA\nPARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF\nFREQUÊNCIA ${classroom.segment?.toUpperCase()} (1º SEMESTRE - 2025)\nCATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' E ')}` // Adiciona o nome do catequista ao texto existente
+    mergedCell.value = `${parishHeaderLines().join('\n')}\nFREQUÊNCIA ${classroom.segment?.toUpperCase()} (${semesterLabel()})\nCATEQUISTA:  ${catechists?.map((catechist) => catechist.name.split(' ')[0].toUpperCase()).join(' E ')}` // Adiciona o nome do catequista ao texto existente
 
     mergedCell.alignment = {
       horizontal: 'center',

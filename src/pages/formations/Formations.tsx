@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { DragScroll } from '@/components/DragScroll'
 import { getErrorMessage } from '@/services/api'
@@ -42,7 +43,7 @@ export function Formations() {
   const loadFormations = useCallback(() => {
     FormationRepository.getAllFormations()
       .then(setFormations)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export function Formations() {
       setDeleting(undefined)
       loadFormations()
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     }
   }
 

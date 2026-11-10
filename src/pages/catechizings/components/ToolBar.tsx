@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { catechizing } from '@/Types'
 import {
   ArrowsLeftRight,
@@ -46,10 +47,10 @@ export default function ToolBar({ catechizing, isReadOnly }: ToolBarProps) {
         ),
       )
       if (result.skipped.length) {
-        alert(describeSkipped(result.skipped))
+        toast.info(describeSkipped(result.skipped))
       }
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     } finally {
       setIsExporting(false)
     }

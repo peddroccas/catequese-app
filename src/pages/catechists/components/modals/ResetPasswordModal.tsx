@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { getErrorMessage } from '@/services/api'
 import { catechist } from '@/Types'
@@ -35,7 +36,7 @@ export function ResetPasswordModal({
       const response = await CatechistRepository.resetPassword(data.id!)
       setTemporaryPassword(response.temporaryPassword)
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     } finally {
       setIsResetting(false)
     }

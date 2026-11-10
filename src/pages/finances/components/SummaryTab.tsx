@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { surfaceClassName } from '@/components/tableStyles'
 import { getErrorMessage } from '@/services/api'
 import { FinanceRepository } from '@/services/repositories/financeRepository'
@@ -67,10 +68,10 @@ export function SummaryTab() {
   useEffect(() => {
     FinanceRepository.getEntries()
       .then(setEntries)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
     FinanceRepository.getExpenses()
       .then(setExpenses)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   if (!entries || !expenses) {

@@ -1,3 +1,6 @@
+import axios from 'axios'
+import { getErrorMessage } from '@/services/api'
+import { toast } from '@/lib/toast'
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -47,7 +50,12 @@ export function Login() {
       await login(email, password)
     } catch (error) {
       setHasUserSubmittedForm(false)
-      alert('Email ou senha inválidos')
+      // Limite de tentativas: o servidor diz que é preciso esperar
+      toast.error(
+        axios.isAxiosError(error) && error.response?.status === 429
+          ? getErrorMessage(error)
+          : 'Email ou senha inválidos',
+      )
       reset({ email: '', password: '' })
     }
   }

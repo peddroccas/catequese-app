@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { DragScroll } from '@/components/DragScroll'
 import { RowAction } from '@/components/IconButton'
@@ -63,7 +64,7 @@ export function CarneTab() {
   const loadCarne = useCallback(() => {
     FinanceRepository.getCarne()
       .then(setCarne)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   useEffect(() => {

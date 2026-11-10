@@ -15,6 +15,12 @@ export function formatDate(date?: string | null) {
   return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`
 }
 
+// "1º SEMESTRE - 2026": o semestre da data (padrão: hoje) para cabeçalhos de documentos
+export function semesterLabel(date: Date = new Date()) {
+  const semester = date.getMonth() < 6 ? 1 : 2
+  return `${semester}º SEMESTRE - ${date.getFullYear()}`
+}
+
 // Para datas com horário (ex.: quando algo foi arquivado), no fuso local
 export function formatTimestamp(timestamp?: string | null) {
   return timestamp ? new Date(timestamp).toLocaleDateString('pt-BR') : ''

@@ -9,12 +9,8 @@ import {
 } from '@/Types'
 import { attendanceRate, buildAttendanceMatrix } from './attendanceMatrix'
 import { calculateAge, formatDate } from './date'
+import { parishHeaderLines } from './parish'
 import { maskPhone } from './phone'
-
-const PARISH_HEADER = [
-  'ARQUIDIOCESE DE BRASÍLIA',
-  'PARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF',
-]
 
 const headStyles = { fillColor: [46, 59, 76] as [number, number, number] }
 
@@ -29,7 +25,7 @@ function writeHeader(doc: JsPDF, lines: string[]) {
   const pageWidth = doc.internal.pageSize.getWidth()
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
-  PARISH_HEADER.forEach((line, index) => {
+  parishHeaderLines().forEach((line, index) => {
     doc.text(line, pageWidth / 2, 12 + index * 5, { align: 'center' })
   })
   doc.setFont('helvetica', 'normal')

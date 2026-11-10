@@ -6,7 +6,7 @@ import { ClassroomList } from '@/components/ClassroomList'
 import { ClassroomView } from '../classrooms/components/ClassroomView'
 
 // Turmas do catequista logado (pode estar em mais de uma)
-export default function Classroom() {
+export function Classroom() {
   const { user } = useAuth()
   const { classrooms } = useContext(ClassroomContext)
   const myClassrooms = classrooms.filter((classroom) =>

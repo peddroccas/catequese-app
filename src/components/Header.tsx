@@ -7,9 +7,9 @@ import {
   NavbarMenuItem,
 } from '@nextui-org/react'
 import catequeseLogo from '../assets/catequese-logo.svg'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { List } from '@phosphor-icons/react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import User from './User'
 
@@ -29,16 +29,6 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Arquivo', link: '/archive' },
 ]
 
-const memberPaths = [
-  '/inicio',
-  '/classroom',
-  '/meetings',
-  '/catechizing',
-  '/rites',
-  '/finances',
-  '/profile',
-]
-
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${
     isActive
@@ -47,28 +37,8 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   }`
 
 export function Header() {
-  const { user, isCheckingLocalStorage, mustChangePassword } = useAuth()
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
+  const { user } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  useEffect(() => {
-    if (!user && !isCheckingLocalStorage) {
-      navigate('/login')
-      return
-    }
-    if (!user) {
-      return
-    }
-    // Enquanto usar a senha padrão, só pode ficar no perfil
-    if (mustChangePassword && pathname !== '/profile') {
-      navigate('/profile')
-      return
-    }
-    if (user.role === 'MEMBER' && !memberPaths.includes(pathname)) {
-      navigate('/classroom')
-    }
-  }, [user, isCheckingLocalStorage, mustChangePassword, pathname, navigate])
 
   if (!user) {
     return <></>

@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { DragScroll } from '@/components/DragScroll'
 import { RowAction } from '@/components/IconButton'
@@ -42,7 +43,7 @@ export function EntriesTab() {
   const loadEntries = useCallback(() => {
     FinanceRepository.getEntries()
       .then(setEntries)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { PageHeader } from '@/components/PageHeader'
 import { RowAction } from '@/components/IconButton'
 import { SearchInput } from '@/components/SearchInput'
@@ -45,7 +46,7 @@ export function MeetingThemes() {
   const loadThemes = useCallback(() => {
     MeetingRepository.getThemes()
       .then(setThemes)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export function MeetingThemes() {
       setDeleting(undefined)
       loadThemes()
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     }
   }
 

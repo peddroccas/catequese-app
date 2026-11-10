@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { RowAction } from '@/components/IconButton'
 import { PageHeader } from '@/components/PageHeader'
@@ -27,7 +28,7 @@ export function Rites() {
   const loadRites = useCallback(() => {
     RiteRepository.getRites()
       .then(setRites)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [])
 
   useEffect(() => {

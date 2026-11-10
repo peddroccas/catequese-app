@@ -9,15 +9,11 @@ import { RegistrationRepository } from '@/services/repositories/registrationRepo
 import { calculateAge, formatDate } from './date'
 import { mergeIntoOnePdf, sortZipEntries } from './pdfPackage'
 import { maskPhone } from './phone'
+import { parishHeaderLines } from './parish'
 import { getRegistrationSegment } from './registration'
 
 // Ano da catequese da ficha de inscrição (muda a cada ciclo de inscrições)
 const CATECHESIS_YEAR = 2027
-
-const PARISH_HEADER = [
-  'ARQUIDIOCESE DE BRASÍLIA',
-  'PARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF',
-]
 
 function yesOrNo(value: boolean | null) {
   if (value === null) {
@@ -71,7 +67,7 @@ function buildFichaPdf(data: ficha) {
 
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
-  PARISH_HEADER.forEach((line, index) => {
+  parishHeaderLines().forEach((line, index) => {
     doc.text(line, pageWidth / 2, 14 + index * 5, { align: 'center' })
   })
   doc.setFontSize(12)

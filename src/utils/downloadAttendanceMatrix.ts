@@ -1,8 +1,8 @@
 import { classroom, meeting } from '@/Types'
-import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 import { attendanceRate, buildAttendanceMatrix } from './attendanceMatrix'
 import { formatDate } from './date'
+import { parishHeaderLines } from './parish'
 
 function fileName(text: string) {
   return text
@@ -27,12 +27,14 @@ export async function downloadAttendanceMatrixExcel(
   const { columns, rows } = buildAttendanceMatrix(classroom, meetings)
   const title = classroom.name ?? classroom.location
 
+  // A biblioteca de planilhas é pesada: só é carregada neste momento
+  const { default: ExcelJS } = await import('exceljs')
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('Frequência')
   const lastColumn = 2 + columns.length + 2
 
   sheet.addRow([
-    `ARQUIDIOCESE DE BRASÍLIA\nPARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF\nMAPA DE FREQUÊNCIA – ${title} (${classroom.segment})`,
+    `${parishHeaderLines().join('\n')}\nMAPA DE FREQUÊNCIA – ${title} (${classroom.segment})`,
   ])
   sheet.mergeCells(1, 1, 1, lastColumn)
   sheet.getRow(1).height = 62

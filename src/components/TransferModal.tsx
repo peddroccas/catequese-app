@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { catechizing, classroom } from '@/Types'
 import {
@@ -42,7 +43,7 @@ export function TransferModal({ data, isOpen, onClose }: TransferModalProps) {
       throwClassroomUpdate()
       onClose()
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     } finally {
       setIsTransferring(false)
     }

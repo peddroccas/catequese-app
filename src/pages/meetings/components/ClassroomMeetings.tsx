@@ -1,3 +1,4 @@
+import { toast } from '@/lib/toast'
 import { DragScroll } from '@/components/DragScroll'
 import { RowAction } from '@/components/IconButton'
 import { PageHeader } from '@/components/PageHeader'
@@ -55,7 +56,7 @@ export function ClassroomMeetings({ classroom }: ClassroomMeetingsProps) {
   const loadMeetings = useCallback(() => {
     MeetingRepository.getClassroomMeetings(classroom.id!)
       .then(setMeetings)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [classroom.id])
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export function ClassroomMeetings({ classroom }: ClassroomMeetingsProps) {
     }
     MeetingRepository.getThemes(itinerary)
       .then(setThemes)
-      .catch((error) => alert(getErrorMessage(error)))
+      .catch((error) => toast.error(getErrorMessage(error)))
   }, [itinerary])
 
   // Temas já trabalhados (sem contar o encontro que está sendo editado)
@@ -130,7 +131,7 @@ export function ClassroomMeetings({ classroom }: ClassroomMeetingsProps) {
       setDeleting(undefined)
       loadMeetings()
     } catch (error) {
-      alert(getErrorMessage(error))
+      toast.error(getErrorMessage(error))
     }
   }
 
