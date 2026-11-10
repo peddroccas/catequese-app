@@ -1,5 +1,5 @@
 import catequeseLogo from '@/assets/catequese-logo.svg'
-import { APP_NAME } from '@/lib/config'
+import { APP_NAME, PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
@@ -43,12 +43,25 @@ export function ForgotPassword() {
             <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
               Esqueci minha senha
             </h1>
-            <p className="text-sm text-bunker-500">
-              Informe o e-mail do seu cadastro e enviaremos um link para criar
-              uma senha nova.
-            </p>
+            {PASSWORD_RESET_BY_EMAIL && (
+              <p className="text-sm text-bunker-500">
+                Informe o e-mail do seu cadastro e enviaremos um link para criar
+                uma senha nova.
+              </p>
+            )}
           </div>
-          {isSent ? (
+          {!PASSWORD_RESET_BY_EMAIL ? (
+            <div className="flex flex-col gap-3 rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700">
+              <p>
+                <strong>Catequista:</strong> peça uma senha temporária à
+                coordenação da sua paróquia. Ela cria uma senha nova para você,
+                que será trocada no primeiro acesso.
+              </p>
+              <p>
+                <strong>Coordenador:</strong> fale com o suporte do sistema.
+              </p>
+            </div>
+          ) : isSent ? (
             <p className="rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700">
               Se existir uma conta com esse e-mail, o link já está a caminho.
               Ele vale por 1 hora. Confira também a caixa de spam.

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getErrorMessage } from '@/services/api'
 import { toast } from '@/lib/toast'
-import { APP_NAME } from '@/lib/config'
+import { APP_NAME, PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
 import catequeseLogo from '@/assets/catequese-logo.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { useHostParish } from '@/hooks/useHostParish'
@@ -134,12 +134,15 @@ export function Login() {
           >
             Entrar
           </Button>
-          <Link
-            to="/esqueci-senha"
-            className="text-center text-sm text-primary hover:underline"
-          >
-            Esqueci minha senha
-          </Link>
+          {/* Só aparece com o envio de e-mail ligado (VITE_PASSWORD_RESET_EMAIL) */}
+          {PASSWORD_RESET_BY_EMAIL && (
+            <Link
+              to="/esqueci-senha"
+              className="text-center text-sm text-primary hover:underline"
+            >
+              Esqueci minha senha
+            </Link>
+          )}
         </form>
       </main>
     </div>
