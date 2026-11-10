@@ -39,20 +39,20 @@ telefones e o termo da ficha impressa usam esses dados (`src/utils/parish.ts`).
 A inscrição pública fica em `/inscricao/<slug-da-paróquia>`. O endereço antigo
 `/inscricao` (sem slug) redireciona para a paróquia padrão.
 
-## Administração do sistema ()
+## Administração do sistema (`/admin`)
 
-Login próprio, separado dos catequistas (). Lista as paróquias com totais,
+Login próprio, separado dos catequistas (`/admin/login`). Lista as paróquias com totais,
 cria paróquia + primeiro coordenador, suspende/reativa, define plano, vencimento e domínio
 próprio, redefine a senha do coordenador, exporta e apaga os dados da paróquia. O usuário
-administrador é criado na API com  (veja o README do ).
+administrador é criado na API com `npm run admin:create` (veja o README do `catequese-nest`).
 
-Outros fluxos:  e  (recuperação por e-mail),
+Outros fluxos: `/esqueci-senha` e `/redefinir-senha?token=` (recuperação por e-mail),
 **Importar planilha** na tela de catequizandos (modelo .xlsx, até 500 linhas por envio, erros
 listados linha a linha), **Registro de acessos** no menu do coordenador (quem abriu documentos).
 
 Em endereço de paróquia (domínio próprio ou subdomínio) o app descobre a paróquia por
- ();  leva à dela e o
-login só aceita contas dela. Em  e  não há essa consulta.
+`GET /public/parishes/resolve?host=` (`src/utils/hostParish.ts`); `/inscricao` leva à dela e o
+login só aceita contas dela. Em `localhost` e `*.vercel.app` não há essa consulta.
 
 ## Deploy
 
