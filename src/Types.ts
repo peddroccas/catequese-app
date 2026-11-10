@@ -434,13 +434,3 @@ export interface createAdminParish {
   coordinatorEmail: string
   coordinatorPhone?: string
 }
-
-export interface auditLogEntry {
-  id: string
-  actorName: string
-  action: string
-  targetType: string
-  targetId: string | null
-  detail: string | null
-  createdAt: string
-}

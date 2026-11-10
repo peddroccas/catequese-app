@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Avatar,
 } from '@nextui-org/react'
-import { Gear, ShieldCheck, SignOut, UserCircle } from '@phosphor-icons/react'
+import { Gear, SignOut, UserCircle } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
 
 export default function User() {
@@ -45,14 +45,6 @@ export default function User() {
           onPress={() => navigate('/parish')}
         >
           Configurações da paróquia
-        </DropdownItem>
-        <DropdownItem
-          key="access-log"
-          className={user?.role === 'COORDINATOR' ? '' : 'hidden'}
-          startContent={<ShieldCheck size={20} />}
-          onPress={() => navigate('/acessos')}
-        >
-          Registro de acessos
         </DropdownItem>
         <DropdownItem
           key="logout"

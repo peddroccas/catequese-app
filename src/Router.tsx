@@ -51,7 +51,6 @@ const ParishSettings = page(
   () => import('./pages/parish/ParishSettings'),
   'ParishSettings',
 )
-const AccessLog = page(() => import('./pages/parish/AccessLog'), 'AccessLog')
 const Profile = page(() => import('./pages/profile/Profile'), 'Profile')
 const Archive = page(() => import('./pages/archive/Archive'), 'Archive')
 const Registration = page(
@@ -105,7 +104,6 @@ export function Router() {
             <Route path="rites" element={<Rites />} />
             <Route path="classrooms" element={<Classrooms />} />
             <Route path="parish" element={<ParishSettings />} />
-            <Route path="acessos" element={<AccessLog />} />
             <Route path="profile" element={<Profile />} />
             <Route path="archive" element={<Archive />} />
           </Route>
