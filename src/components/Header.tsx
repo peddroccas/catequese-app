@@ -85,7 +85,7 @@ export function Header() {
             <img className="w-11" src={catequeseLogo} alt="" />
             <span
               title={parish?.name ?? APP_NAME}
-              className="hidden max-w-52 truncate text-sm font-semibold tracking-wide text-white 2xl:block"
+              className="hidden max-w-44 whitespace-normal text-sm font-semibold leading-tight tracking-wide text-white 2xl:block"
             >
               {parish?.name ?? APP_NAME}
             </span>
