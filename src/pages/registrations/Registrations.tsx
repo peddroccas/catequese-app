@@ -257,11 +257,13 @@ export function Registrations() {
             <h2 className="font-semibold text-bunker-900">
               Pagamento da inscrição
             </h2>
-            {parish.pixKey ? (
+            {!parish.registrationFeeCents ? (
+              <p className="text-sm text-bunker-500">
+                Sem taxa de inscrição: o formulário não mostra valor nem PIX.
+              </p>
+            ) : parish.pixKey ? (
               <p className="text-sm text-bunker-600">
-                {parish.registrationFeeCents
-                  ? `${formatCurrency(parish.registrationFeeCents)} pelo PIX `
-                  : 'PIX '}
+                {`${formatCurrency(parish.registrationFeeCents)} pelo PIX `}
                 <strong className="break-all text-bunker-900">
                   {parish.pixKey}
                 </strong>

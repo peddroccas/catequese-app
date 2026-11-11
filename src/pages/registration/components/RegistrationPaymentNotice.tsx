@@ -1,11 +1,11 @@
 import { formatCurrency } from '@/utils/currency'
 import { maskPhone } from '@/utils/phone'
 import { toWhatsappNumber, whatsappChatUrl } from '@/utils/whatsapp'
-import { Check, Copy, Money, QrCode, WhatsappLogo } from '@phosphor-icons/react'
+import { Check, Copy, Money, WhatsappLogo } from '@phosphor-icons/react'
 import { useState } from 'react'
 
 interface RegistrationPaymentNoticeProps {
-  // Taxa de inscrição em centavos; sem taxa e sem PIX, nada aparece
+  // Taxa de inscrição em centavos; sem taxa, nada aparece (nem o PIX)
   feeCents: number | null | undefined
   pixKey: string | null | undefined
   pixHolderName: string | null | undefined
@@ -34,7 +34,8 @@ export function RegistrationPaymentNotice({
 }: RegistrationPaymentNoticeProps) {
   const [copied, setCopied] = useState(false)
 
-  if (!feeCents && !pixKey) {
+  // Sem taxa não há o que pagar: nem o valor nem o PIX aparecem
+  if (!feeCents) {
     return null
   }
 
@@ -59,25 +60,15 @@ export function RegistrationPaymentNotice({
     >
       <div className="flex items-center gap-4">
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-          {feeCents ? (
-            <Money size={26} weight="duotone" />
-          ) : (
-            <QrCode size={26} weight="duotone" />
-          )}
+          <Money size={26} weight="duotone" />
         </span>
         <div className="flex flex-col leading-tight">
           <span className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
-            {feeCents ? 'Taxa de inscrição' : 'Pagamento da inscrição'}
+            Taxa de inscrição
           </span>
-          {feeCents ? (
-            <span className="text-3xl font-semibold tabular-nums text-emerald-900">
-              {formatCurrency(feeCents)}
-            </span>
-          ) : (
-            <span className="text-lg font-semibold text-emerald-900">
-              Pague pelo PIX
-            </span>
-          )}
+          <span className="text-3xl font-semibold tabular-nums text-emerald-900">
+            {formatCurrency(feeCents)}
+          </span>
           {!pixKey && (
             <span className="mt-1 text-sm text-emerald-800">
               Dúvidas sobre o pagamento? Fale com a coordenação.

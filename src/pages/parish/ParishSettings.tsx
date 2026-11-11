@@ -20,6 +20,11 @@ import { RegistrationPaymentNotice } from '../registration/components/Registrati
 
 const MAX_CONTACTS = 5
 
+// '', '0', '0,00', 'R$ 0' = sem taxa de inscrição
+function isZeroOrEmpty(value: string) {
+  return /^[\sR$0.,]*$/.test(value)
+}
+
 const settingsSchema = z.object({
   name: requiredText(120).pipe(z.string().min(3, 'Muito curto')),
   dioceseName: requiredText(120).pipe(z.string().min(3, 'Muito curto')),
@@ -46,12 +51,12 @@ const settingsSchema = z.object({
     )
     .max(MAX_CONTACTS),
   carneAmount: moneyAmount(),
-  // Vazio = sem taxa
+  // Vazio ou zero = sem taxa
   registrationFee: z
     .string()
     .trim()
     .refine(
-      (value) => value === '' || parseCurrencyToCents(value) !== null,
+      (value) => isZeroOrEmpty(value) || parseCurrencyToCents(value) !== null,
       'Valor inválido. Use apenas números, ex.: 20,00',
     ),
   pixKey: z.string().trim().max(140, 'Chave muito longa'),
@@ -127,6 +132,10 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
     defaultValues: toForm(parish),
   })
   const contacts = useFieldArray({ control, name: 'contacts' })
+  // Taxa que o formulário vai mostrar (null = sem taxa, nem PIX)
+  const feeCents = isZeroOrEmpty(watch('registrationFee'))
+    ? null
+    : parseCurrencyToCents(watch('registrationFee'))
 
   // Vindo de “Inscrições” (/parish#pix), já mostra o PIX
   useEffect(() => {
@@ -152,9 +161,9 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
           phone: contact.phone.replace(/\D/g, ''),
         })),
         carneAmountCents: parseCurrencyToCents(form.carneAmount) ?? 0,
-        registrationFeeCents: form.registrationFee
-          ? parseCurrencyToCents(form.registrationFee)
-          : null,
+        registrationFeeCents: isZeroOrEmpty(form.registrationFee)
+          ? null
+          : parseCurrencyToCents(form.registrationFee),
         pixKey: form.pixKey.trim() || null,
         pixHolderName: form.pixHolderName.trim() || null,
         paymentReceiptPhone:
@@ -413,7 +422,7 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
                       <span className="text-sm text-bunker-500">R$</span>
                     }
                     variant="bordered"
-                    description="Vazio = sem taxa no formulário"
+                    description="Vazio ou 0 = sem taxa (o formulário não mostra valor nem PIX)"
                     isInvalid={Boolean(errors.registrationFee)}
                     errorMessage={errors.registrationFee?.message}
                   />
@@ -433,9 +442,9 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
             PIX da inscrição
           </h2>
           <p className="text-sm text-bunker-500">
-            Aparece no formulário de inscrição, junto com o pedido para a
-            família mandar o comprovante pelo WhatsApp. Sem chave, o formulário
-            não mostra PIX.
+            Aparece no formulário de inscrição junto com a taxa e o pedido para
+            a família mandar o comprovante pelo WhatsApp. Sem taxa ou sem chave,
+            o formulário não mostra PIX.
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Controller
@@ -483,17 +492,19 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
               )}
             />
           </div>
-          {watch('pixKey').trim() && (
+          {watch('pixKey').trim() && !feeCents && (
+            <p className="text-sm text-amber-700">
+              Sem taxa de inscrição em “Valores”, o PIX não aparece no
+              formulário.
+            </p>
+          )}
+          {watch('pixKey').trim() && Boolean(feeCents) && (
             <div className="flex flex-col gap-2 rounded-xl border border-bunker-200 bg-bunker-50 p-4">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
                 Como a família vai ver
               </h3>
               <RegistrationPaymentNotice
-                feeCents={
-                  watch('registrationFee')
-                    ? parseCurrencyToCents(watch('registrationFee'))
-                    : null
-                }
+                feeCents={feeCents}
                 pixKey={watch('pixKey').trim()}
                 pixHolderName={watch('pixHolderName').trim() || null}
                 receiptPhone={
