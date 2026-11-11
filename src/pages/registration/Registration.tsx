@@ -5,6 +5,7 @@ import { ParishRepository } from '@/services/repositories/parishRepository'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { setCurrentParish } from '@/utils/parish'
 import { registrationSegments } from '@/utils/registration'
+import { paymentNoticePropsOf } from '@/utils/registrationPayment'
 import { Button, CircularProgress } from '@nextui-org/react'
 import {
   CheckCircle,
@@ -15,8 +16,8 @@ import {
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CoordinationContactsCard } from './components/CoordinationContactsCard'
-import { RegistrationFeeNotice } from './components/RegistrationFeeNotice'
 import { RegistrationForm } from './components/RegistrationForm'
+import { RegistrationPaymentNotice } from './components/RegistrationPaymentNotice'
 
 type pageState = 'loading' | 'error' | 'notFound' | 'closed' | 'open'
 
@@ -172,7 +173,10 @@ export function Registration() {
 
         {protocol && (
           <>
-            <RegistrationFeeNotice feeCents={parish?.registrationFeeCents} />
+            <RegistrationPaymentNotice
+              {...paymentNoticePropsOf(parish)}
+              protocol={protocol}
+            />
             <CoordinationContactsCard
               contacts={parish?.coordinationContacts ?? []}
             />
@@ -190,7 +194,7 @@ export function Registration() {
                 todos os documentos.
               </p>
             </div>
-            <RegistrationFeeNotice feeCents={parish.registrationFeeCents} />
+            <RegistrationPaymentNotice {...paymentNoticePropsOf(parish)} />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {registrationSegments.map((item) => {
                 const isSegmentOpen = openSegments.includes(item.key)
@@ -230,7 +234,7 @@ export function Registration() {
               key={segment}
               slug={slug}
               terms={parish.commitmentTerms}
-              feeCents={parish.registrationFeeCents}
+              payment={paymentNoticePropsOf(parish)}
               contacts={parish.coordinationContacts}
               segment={segment}
               onBack={() => changeStep(null)}

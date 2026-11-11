@@ -11,6 +11,7 @@ import {
   registrationSettings,
   registrationStatus,
 } from '@/Types'
+import { formatCurrency } from '@/utils/currency'
 import { calculateAge, formatTimestamp } from '@/utils/date'
 import { maskPhone } from '@/utils/phone'
 import {
@@ -18,10 +19,12 @@ import {
   isAgeOutOfRange,
   registrationSegments,
 } from '@/utils/registration'
+import { receiptPhoneOf } from '@/utils/registrationPayment'
 import { matchesSearch } from '@/utils/search'
 import { Button, Chip, Switch, Tab, Tabs } from '@nextui-org/react'
-import { Copy, LinkSimple, Warning } from '@phosphor-icons/react'
+import { Copy, LinkSimple, PencilSimple, Warning } from '@phosphor-icons/react'
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { RegistrationModal } from './components/RegistrationModal'
 
 const tabs: { key: registrationStatus; label: string; empty: string }[] = [
@@ -245,6 +248,46 @@ export function Registrations() {
           })}
         </div>
       </section>
+
+      {parish && (
+        <section
+          className={`${surfaceClassName} flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between`}
+        >
+          <div className="flex flex-col gap-1">
+            <h2 className="font-semibold text-bunker-900">
+              Pagamento da inscrição
+            </h2>
+            {parish.pixKey ? (
+              <p className="text-sm text-bunker-600">
+                {parish.registrationFeeCents
+                  ? `${formatCurrency(parish.registrationFeeCents)} pelo PIX `
+                  : 'PIX '}
+                <strong className="break-all text-bunker-900">
+                  {parish.pixKey}
+                </strong>
+                {parish.pixHolderName && ` (${parish.pixHolderName})`}.{' '}
+                {receiptPhoneOf(parish)
+                  ? `Comprovante pelo WhatsApp ${maskPhone(receiptPhoneOf(parish) ?? '')}.`
+                  : 'Cadastre um WhatsApp para o comprovante.'}
+              </p>
+            ) : (
+              <p className="text-sm text-bunker-500">
+                Nenhuma chave PIX cadastrada: o formulário não mostra como
+                pagar.
+              </p>
+            )}
+          </div>
+          <Button
+            as={Link}
+            to="/parish#pix"
+            size="sm"
+            variant="flat"
+            startContent={<PencilSimple size={16} />}
+          >
+            {parish.pixKey ? 'Alterar PIX' : 'Cadastrar PIX'}
+          </Button>
+        </section>
+      )}
 
       {error && <p className="text-sm text-danger">{error}</p>}
 

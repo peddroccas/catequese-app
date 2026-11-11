@@ -371,6 +371,11 @@ export interface publicParish {
   coordinationContacts: coordinationContact[]
   // Taxa de inscrição em centavos; null = sem taxa
   registrationFeeCents: number | null
+  // PIX da taxa de inscrição (chave e nome de quem recebe); null = sem PIX
+  pixKey: string | null
+  pixHolderName: string | null
+  // WhatsApp para o comprovante (só números); null = primeiro contato da coordenação
+  paymentReceiptPhone: string | null
   // Termo de compromisso; null = termo padrão do sistema
   commitmentTerms: string | null
 }
@@ -400,6 +405,9 @@ export type parishChanges = Pick<
   | 'coordinationContacts'
   | 'carneAmountCents'
   | 'registrationFeeCents'
+  | 'pixKey'
+  | 'pixHolderName'
+  | 'paymentReceiptPhone'
   | 'commitmentTerms'
 >
 

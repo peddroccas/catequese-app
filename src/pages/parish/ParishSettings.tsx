@@ -12,10 +12,11 @@ import { moneyAmount, requiredText } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CircularProgress, Input, Textarea } from '@nextui-org/react'
 import { Copy, LinkSimple, Plus, Trash } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { CommitmentTerms } from '../registration/components/CommitmentTerms'
+import { RegistrationPaymentNotice } from '../registration/components/RegistrationPaymentNotice'
 
 const MAX_CONTACTS = 5
 
@@ -53,6 +54,15 @@ const settingsSchema = z.object({
       (value) => value === '' || parseCurrencyToCents(value) !== null,
       'Valor inválido. Use apenas números, ex.: 20,00',
     ),
+  pixKey: z.string().trim().max(140, 'Chave muito longa'),
+  pixHolderName: z.string().trim().max(120, 'Nome muito longo'),
+  // Vazio = usa o primeiro contato da coordenação
+  paymentReceiptPhone: z
+    .string()
+    .refine(
+      (value) => value === '' || /^\d{10,11}$/.test(value.replace(/\D/g, '')),
+      'Telefone com DDD (10 ou 11 números)',
+    ),
   commitmentTerms: z
     .string()
     .max(4000, 'O termo pode ter no máximo 4000 caracteres'),
@@ -75,11 +85,16 @@ function toForm(parish: parish): SettingsForm {
     registrationFee: parish.registrationFeeCents
       ? centsToInput(parish.registrationFeeCents)
       : '',
+    pixKey: parish.pixKey ?? '',
+    pixHolderName: parish.pixHolderName ?? '',
+    paymentReceiptPhone: parish.paymentReceiptPhone
+      ? maskPhone(parish.paymentReceiptPhone)
+      : '',
     commitmentTerms: parish.commitmentTerms ?? '',
   }
 }
 
-// Dados da paróquia (só a coordenação): nome, contatos, carnê, taxa e termo
+// Dados da paróquia (só a coordenação): nome, contatos, carnê, taxa, PIX e termo
 export function ParishSettings() {
   const { parish, updateParish } = useParish()
 
@@ -112,6 +127,13 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
     defaultValues: toForm(parish),
   })
   const contacts = useFieldArray({ control, name: 'contacts' })
+
+  // Vindo de “Inscrições” (/parish#pix), já mostra o PIX
+  useEffect(() => {
+    if (window.location.hash === '#pix') {
+      document.getElementById('pix')?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
   const formUrl = `${window.location.origin}/inscricao/${parish.slug}`
   // Abas que o administrador desligou: o que é só delas some desta tela
   const hasFinances = isModuleEnabled(parish, 'finances')
@@ -133,6 +155,10 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
         registrationFeeCents: form.registrationFee
           ? parseCurrencyToCents(form.registrationFee)
           : null,
+        pixKey: form.pixKey.trim() || null,
+        pixHolderName: form.pixHolderName.trim() || null,
+        paymentReceiptPhone:
+          form.paymentReceiptPhone.replace(/\D/g, '') || null,
         commitmentTerms: form.commitmentTerms.trim() || null,
         // Ainda sem tela própria: mantém o que já está salvo
         logoUrl: parish.logoUrl,
@@ -395,6 +421,89 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
               />
             )}
           </div>
+        </section>
+      )}
+
+      {hasRegistrations && (
+        <section
+          id="pix"
+          className={`${surfaceClassName} flex scroll-mt-24 flex-col gap-4 p-5`}
+        >
+          <h2 className="text-lg font-semibold text-bunker-900">
+            PIX da inscrição
+          </h2>
+          <p className="text-sm text-bunker-500">
+            Aparece no formulário de inscrição, junto com o pedido para a
+            família mandar o comprovante pelo WhatsApp. Sem chave, o formulário
+            não mostra PIX.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Controller
+              name="pixKey"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Chave PIX"
+                  description="CPF, CNPJ, e-mail, telefone ou chave aleatória"
+                  variant="bordered"
+                  isInvalid={Boolean(errors.pixKey)}
+                  errorMessage={errors.pixKey?.message}
+                />
+              )}
+            />
+            <Controller
+              name="pixHolderName"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Nome de quem recebe (opcional)"
+                  description="Para a família conferir antes de pagar"
+                  variant="bordered"
+                  isInvalid={Boolean(errors.pixHolderName)}
+                  errorMessage={errors.pixHolderName?.message}
+                />
+              )}
+            />
+            <Controller
+              name="paymentReceiptPhone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  label="WhatsApp para o comprovante (opcional)"
+                  description="Vazio = primeiro contato da coordenação"
+                  variant="bordered"
+                  isInvalid={Boolean(errors.paymentReceiptPhone)}
+                  errorMessage={errors.paymentReceiptPhone?.message}
+                />
+              )}
+            />
+          </div>
+          {watch('pixKey').trim() && (
+            <div className="flex flex-col gap-2 rounded-xl border border-bunker-200 bg-bunker-50 p-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
+                Como a família vai ver
+              </h3>
+              <RegistrationPaymentNotice
+                feeCents={
+                  watch('registrationFee')
+                    ? parseCurrencyToCents(watch('registrationFee'))
+                    : null
+                }
+                pixKey={watch('pixKey').trim()}
+                pixHolderName={watch('pixHolderName').trim() || null}
+                receiptPhone={
+                  watch('paymentReceiptPhone').replace(/\D/g, '') ||
+                  watch('contacts')[0]?.phone.replace(/\D/g, '') ||
+                  null
+                }
+              />
+            </div>
+          )}
         </section>
       )}
 

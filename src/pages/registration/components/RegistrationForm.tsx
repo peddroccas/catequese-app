@@ -15,6 +15,7 @@ import {
   shirtSizes,
   sacramentDocuments,
 } from '@/utils/registration'
+import { paymentNoticePropsOf } from '@/utils/registrationPayment'
 import {
   birthDate,
   optionalPersonName,
@@ -37,7 +38,7 @@ import {
 } from '@nextui-org/react'
 import { Warning } from '@phosphor-icons/react'
 import { CoordinationContactsCard } from './CoordinationContactsCard'
-import { RegistrationFeeNotice } from './RegistrationFeeNotice'
+import { RegistrationPaymentNotice } from './RegistrationPaymentNotice'
 import { I18nProvider } from '@react-aria/i18n'
 import { AxiosError } from 'axios'
 import { useState } from 'react'
@@ -269,8 +270,8 @@ interface RegistrationFormProps {
   // Paróquia da inscrição (vem do endereço) e o termo de compromisso dela
   slug: string
   terms: string | null
-  // Taxa de inscrição (centavos) e contatos da coordenação, mostrados no formulário
-  feeCents: number | null
+  // Taxa de inscrição, PIX e contatos da coordenação, mostrados no formulário
+  payment: ReturnType<typeof paymentNoticePropsOf>
   contacts: coordinationContact[]
   segment: registrationSegment
   onBack: () => void
@@ -280,7 +281,7 @@ interface RegistrationFormProps {
 export function RegistrationForm({
   slug,
   terms,
-  feeCents,
+  payment,
   contacts,
   segment,
   onBack,
@@ -449,7 +450,7 @@ export function RegistrationForm({
         </Button>
       </div>
 
-      <RegistrationFeeNotice feeCents={feeCents} />
+      <RegistrationPaymentNotice {...payment} />
 
       <fieldset className={fieldsetClassName}>
         <legend className={legendClassName}>
@@ -908,7 +909,7 @@ export function RegistrationForm({
         </div>
       )}
 
-      <RegistrationFeeNotice feeCents={feeCents} />
+      <RegistrationPaymentNotice {...payment} />
       <CoordinationContactsCard contacts={contacts} />
 
       <Button
