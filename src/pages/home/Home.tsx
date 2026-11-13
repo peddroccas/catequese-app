@@ -119,12 +119,6 @@ const memberShortcuts: shortcut[] = [
     icon: <HandCoins size={24} />,
   },
   {
-    link: '/catechizing',
-    title: 'Catequizandos',
-    description: 'Pesquisar catequizandos',
-    icon: <Student size={24} />,
-  },
-  {
     link: '/rites',
     title: 'Ritos',
     description: 'Roteiros dos ritos em PDF',
@@ -233,6 +227,7 @@ export function Home() {
     <div className="flex flex-grow flex-col gap-6">
       <PageHeader
         title={`Olá, ${firstName}!`}
+        // A paróquia aparece na faixa abaixo do cabeçalho (ParishBar)
         description={today.toLocaleDateString('pt-BR', {
           weekday: 'long',
           day: 'numeric',

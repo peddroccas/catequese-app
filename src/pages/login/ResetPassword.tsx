@@ -1,4 +1,4 @@
-import catequeseLogo from '@/assets/catequese-logo.svg'
+import { BrandLogo } from '@/components/BrandLogo'
 import { APP_NAME } from '@/lib/config'
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
@@ -35,12 +35,9 @@ export function ResetPassword() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-50">
-      <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
-        <img className="w-11" src={catequeseLogo} alt="" />
-        <span className="text-sm font-semibold tracking-wide text-white">
-          {APP_NAME}
-        </span>
+    <div className="flex min-h-screen flex-col bg-creme-100">
+      <header className="flex h-[4.5rem] items-center gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
+        <BrandLogo />
       </header>
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <form

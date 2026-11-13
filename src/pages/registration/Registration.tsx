@@ -1,10 +1,11 @@
-import catequeseLogo from '@/assets/catequese-logo.svg'
+import { BrandLogo } from '@/components/BrandLogo'
 import { APP_NAME } from '@/lib/config'
 import { publicParish, registrationSegment } from '@/Types'
 import { ParishRepository } from '@/services/repositories/parishRepository'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
-import { setCurrentParish } from '@/utils/parish'
+import { parishPlace, setCurrentParish } from '@/utils/parish'
 import { registrationSegments } from '@/utils/registration'
+import { registrationSegmentTone } from '@/utils/segmentTone'
 import { paymentNoticePropsOf } from '@/utils/registrationPayment'
 import { Button, CircularProgress } from '@nextui-org/react'
 import {
@@ -71,17 +72,32 @@ export function Registration() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-50">
-      <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
-        <img className="w-11" src={parish?.logoUrl ?? catequeseLogo} alt="" />
-        <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold tracking-wide text-white">
-            {APP_NAME}
-          </span>
-          {parish && (
-            <span className="text-xs text-bunker-300">{parish.name}</span>
-          )}
-        </div>
+    <div className="flex min-h-screen flex-col bg-creme-100">
+      <header className="flex h-[4.5rem] items-center gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
+        {/* Paróquia com logo própria mostra a dela; sem logo, vai a do produto */}
+        {parish?.logoUrl ? (
+          <>
+            <img className="w-11" src={parish.logoUrl} alt="" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-sm font-semibold tracking-wide text-bunker-900">
+                {APP_NAME}
+              </span>
+              <span className="text-xs text-bunker-500">
+                {parish.name} · {parishPlace(parish)}
+              </span>
+            </div>
+          </>
+        ) : (
+          <>
+            <BrandLogo />
+            {parish && (
+              <span className="flex flex-col border-l border-bunker-200 pl-3 text-xs leading-tight text-bunker-500">
+                <span>{parish.name}</span>
+                <span className="text-bunker-400">{parishPlace(parish)}</span>
+              </span>
+            )}
+          </>
+        )}
       </header>
 
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-8 sm:py-12">
@@ -208,8 +224,12 @@ export function Registration() {
                     className="flex flex-col gap-1 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 enabled:hover:-translate-y-0.5 enabled:hover:border-bunker-300 enabled:hover:shadow-md disabled:cursor-not-allowed disabled:bg-bunker-100/60 disabled:shadow-none"
                   >
                     <span
-                      className={`text-lg font-semibold ${isSegmentOpen ? 'text-bunker-900' : 'text-bunker-400'}`}
+                      className={`flex items-center gap-2 text-lg font-semibold ${isSegmentOpen ? 'text-bunker-900' : 'text-bunker-400'}`}
                     >
+                      <span
+                        aria-hidden
+                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${isSegmentOpen ? registrationSegmentTone(item.key).dot : 'bg-bunker-300'}`}
+                      />
                       {item.title}
                     </span>
                     <span className="text-sm text-bunker-500">

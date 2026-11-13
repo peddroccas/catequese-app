@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 120 120">
+  <style>
+    .tile { fill: #3A4F6A; }
+    .cross { stroke: #FFFFFF; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #EAEEF4; }
+      .cross { stroke: #3A4F6A; }
+    }
+  </style>
+  <rect class="tile" width="120" height="120" rx="26"/>
+  <path class="cross" d="M60 22V98M32 50H88" stroke-width="11" stroke-linecap="round" fill="none"/>
+</svg>

@@ -1,6 +1,8 @@
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { PageHeader } from '@/components/PageHeader'
 import { SearchInput } from '@/components/SearchInput'
+import { SegmentChip } from '@/components/SegmentChip'
+import { registrationSegmentTone } from '@/utils/segmentTone'
 import { surfaceClassName } from '@/components/tableStyles'
 import { useParish } from '@/hooks/useParish'
 import { getErrorMessage } from '@/services/api'
@@ -335,9 +337,10 @@ export function Registrations() {
                     <span className="font-semibold text-bunker-900">
                       {item.name}
                     </span>
-                    <Chip size="sm" variant="flat">
-                      {info.title}
-                    </Chip>
+                    <SegmentChip
+                      label={info.title}
+                      tone={registrationSegmentTone(info.key)}
+                    />
                     {isAgeOutOfRange(info, age) && (
                       <Chip
                         size="sm"

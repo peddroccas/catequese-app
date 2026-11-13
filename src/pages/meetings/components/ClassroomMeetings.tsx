@@ -10,7 +10,6 @@ import { formatDate } from '@/utils/date'
 import { downloadMeetingPdf } from '@/utils/pdf'
 import {
   Button,
-  Chip,
   Modal,
   ModalBody,
   ModalContent,
@@ -26,6 +25,7 @@ import {
   Tabs,
 } from '@nextui-org/react'
 import { FilePdf, PencilSimple, Plus, Trash } from '@phosphor-icons/react'
+import { SegmentChip } from '@/components/SegmentChip'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AttendanceMatrix } from './AttendanceMatrix'
 import { MeetingModal } from './MeetingModal'
@@ -180,16 +180,7 @@ export function ClassroomMeetings({ classroom }: ClassroomMeetingsProps) {
         title={`Chamadas · ${classroom.name ?? classroom.location}`}
         description={
           <span className="flex flex-wrap items-center gap-2">
-            <Chip
-              size="sm"
-              variant="flat"
-              classNames={{
-                base: 'bg-bunker-100',
-                content: 'font-medium text-bunker-700',
-              }}
-            >
-              {classroom.segment}
-            </Chip>
+            <SegmentChip segment={classroom.segment} />
             <span>
               {meetings.length} encontro{meetings.length === 1 ? '' : 's'}
             </span>

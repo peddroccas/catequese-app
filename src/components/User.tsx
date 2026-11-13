@@ -17,15 +17,15 @@ export default function User() {
   return (
     <Dropdown placement="bottom-end">
       <DropdownTrigger>
-        <button className="flex flex-col items-center gap-1 rounded-lg px-2 py-1 duration-150 hover:bg-white/10">
+        <button className="flex flex-col items-center gap-1 rounded-lg px-2 py-1 duration-150 hover:bg-bunker-100">
           <Avatar
             as="span"
             size="sm"
             src={user?.avatarUrl ?? undefined}
             className="transition-transform"
-            classNames={{ base: 'bg-bunker-300', icon: 'text-bunker-800' }}
+            classNames={{ base: 'bg-bunker-200', icon: 'text-bunker-700' }}
           />
-          <span className="max-w-32 truncate text-xs text-bunker-300">
+          <span className="max-w-32 truncate text-xs text-bunker-600">
             Olá, {firstName}
           </span>
         </button>

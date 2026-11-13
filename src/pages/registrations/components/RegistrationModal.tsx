@@ -1,4 +1,6 @@
 import { PackageMenu } from '@/components/PackageMenu'
+import { SegmentChip } from '@/components/SegmentChip'
+import { registrationSegmentTone } from '@/utils/segmentTone'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
 import { ClassroomContext } from '@/contexts/ClassroomContext'
 import { getErrorMessage } from '@/services/api'
@@ -187,9 +189,10 @@ export function RegistrationModal({
         <ModalHeader className="flex flex-col gap-1 text-bunker-900">
           <span className="flex flex-wrap items-center gap-2 text-xl font-semibold">
             {registration.name}
-            <Chip size="sm" variant="flat">
-              {info.title}
-            </Chip>
+            <SegmentChip
+              label={info.title}
+              tone={registrationSegmentTone(info.key)}
+            />
             {registration.status === 'APPROVED' && (
               <Chip size="sm" color="success" variant="flat">
                 Aprovada

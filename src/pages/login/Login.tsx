@@ -2,7 +2,8 @@ import axios from 'axios'
 import { getErrorMessage } from '@/services/api'
 import { toast } from '@/lib/toast'
 import { APP_NAME, PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
-import catequeseLogo from '@/assets/catequese-logo.svg'
+import { BrandLogo } from '@/components/BrandLogo'
+import catequeseHubSymbol from '@/assets/catequese-hub-simbolo-cruz.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { useHostParish } from '@/hooks/useHostParish'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -65,12 +66,9 @@ export function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-50">
-      <header className="flex h-[4.5rem] items-center gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
-        <img className="w-11" src={catequeseLogo} alt="" />
-        <span className="text-sm font-semibold tracking-wide text-white">
-          {APP_NAME}
-        </span>
+    <div className="flex min-h-screen flex-col bg-creme-100">
+      <header className="flex h-[4.5rem] items-center gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
+        <BrandLogo />
       </header>
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <form
@@ -78,7 +76,7 @@ export function Login() {
           className="flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-bunker-200/70 bg-white p-8 shadow-lg shadow-bunker-900/5"
         >
           <div className="flex flex-col items-center gap-3 text-center">
-            <img className="w-16" src={catequeseLogo} alt="" />
+            <img className="w-14" src={catequeseHubSymbol} alt="" />
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
                 Bem-vindo(a)

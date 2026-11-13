@@ -1,4 +1,4 @@
-import catequeseLogo from '@/assets/catequese-logo.svg'
+import { BrandLogo } from '@/components/BrandLogo'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { surfaceClassName, tableClassNames } from '@/components/tableStyles'
 import { APP_NAME } from '@/lib/config'
@@ -119,20 +119,18 @@ export function AdminParishes() {
   const statusParish = dialog?.kind === 'status' ? dialog.parish : null
 
   return (
-    <div className="flex min-h-screen flex-col bg-bunker-50">
-      <header className="flex h-[4.5rem] items-center justify-between gap-3 border-b border-white/5 bg-bunker-950 px-4 sm:px-8">
+    <div className="flex min-h-screen flex-col bg-creme-100">
+      <header className="flex h-[4.5rem] items-center justify-between gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
         <div className="flex items-center gap-3">
-          <img className="w-11" src={catequeseLogo} alt="" />
-          <span className="text-base font-semibold tracking-wide text-white">
-            {APP_NAME} · Administração
+          <BrandLogo />
+          <span className="border-l border-bunker-200 pl-3 text-sm font-medium tracking-wide text-bunker-500">
+            Administração
           </span>
         </div>
-        {/* Cabeçalho escuro: botão claro sobre fundo escuro (o "flat" padrão
-            ficava cinza com letra escura e sumia) */}
         <Button
           size="md"
           variant="bordered"
-          className="border-white/30 font-medium text-white hover:bg-white/10"
+          className="border-bunker-300 font-medium text-bunker-700 hover:bg-bunker-50"
           onPress={handleLogout}
         >
           Sair

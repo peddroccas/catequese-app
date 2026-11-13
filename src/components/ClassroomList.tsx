@@ -1,5 +1,6 @@
 import { classroom, segmentGroups } from '@/Types'
 import { compareNatural, joinNames } from '@/utils/names'
+import { segmentTone } from '@/utils/segmentTone'
 import { surfaceClassName } from './tableStyles'
 
 interface ClassroomListProps {
@@ -63,6 +64,10 @@ export function ClassroomList({
                 }`}
               >
                 <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+                  <span
+                    aria-hidden
+                    className={`h-2 w-2 shrink-0 self-center rounded-full ${segmentTone(classroom.segment).dot}`}
+                  />
                   <span className="text-sm font-medium">
                     {classroom.location}
                   </span>
@@ -94,7 +99,9 @@ export function ClassroomList({
             key={group.label}
             className="flex flex-col gap-0.5 border-t border-bunker-100 pt-3 first:border-none first:pt-0"
           >
-            <h2 className="mb-1 flex items-center justify-between gap-2 rounded-lg bg-bunker-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-bunker-800">
+            <h2
+              className={`mb-1 flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${segmentTone(group.label).chip} ${segmentTone(group.label).text}`}
+            >
               <span className="flex items-center gap-2">{group.label}</span>
               <span className="rounded-full bg-white px-1.5 text-[11px] font-semibold text-bunker-600">
                 {group.classrooms.length}
@@ -102,6 +109,7 @@ export function ClassroomList({
             </h2>
             {group.classrooms.map((classroom) => {
               const isSelected = classroom.id === selectedClassroomId
+              const tone = segmentTone(classroom.segment)
               return (
                 <button
                   key={classroom.id}
@@ -110,16 +118,27 @@ export function ClassroomList({
                   onClick={() => onSelect(classroom)}
                   className={`relative flex flex-col rounded-lg px-3 py-2 text-left transition-colors duration-150 ${
                     isSelected
-                      ? 'bg-bunker-100 text-bunker-900 before:absolute before:inset-y-2 before:left-0 before:w-1 before:rounded-full before:bg-bunker-700'
-                      : 'text-bunker-700 hover:bg-bunker-50'
+                      ? 'bg-creme-100 text-bunker-900'
+                      : 'text-bunker-700 hover:bg-creme-50'
                   }`}
                 >
+                  {/* Faixa da etapa na turma aberta, na cor litúrgica */}
+                  {isSelected && (
+                    <span
+                      aria-hidden
+                      className={`absolute inset-y-2 left-0 w-1 rounded-full ${tone.dot}`}
+                    />
+                  )}
                   <span
-                    className={`text-sm ${isSelected ? 'font-semibold' : 'font-medium'}`}
+                    className={`flex items-center gap-2 text-sm ${isSelected ? 'font-semibold' : 'font-medium'}`}
                   >
+                    <span
+                      aria-hidden
+                      className={`h-2 w-2 shrink-0 rounded-full ${tone.dot}`}
+                    />
                     {classroom.location}
                   </span>
-                  <span className="truncate text-xs text-bunker-500">
+                  <span className="truncate pl-4 text-xs text-bunker-500">
                     {joinNames(
                       classroom.catechists?.map(
                         (catechist) => catechist.nickname,

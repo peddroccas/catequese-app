@@ -7,10 +7,17 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      // Troca %APP_NAME% no index.html pelo nome do produto (VITE_APP_NAME)
+      // Troca %APP_NAME% no index.html pelo nome do produto (VITE_APP_NAME) e
+      // %SITE_URL% pelo endereço público (VITE_SITE_URL), que a prévia de link
+      // precisa completo para achar a imagem
       name: 'app-name',
       transformIndexHtml: (html) =>
-        html.replace(/%APP_NAME%/g, process.env.VITE_APP_NAME || 'Catequese'),
+        html
+          .replace(/%APP_NAME%/g, process.env.VITE_APP_NAME || 'Catequese')
+          .replace(
+            /%SITE_URL%/g,
+            (process.env.VITE_SITE_URL || '').replace(/\/+$/, ''),
+          ),
     },
   ],
   resolve: {

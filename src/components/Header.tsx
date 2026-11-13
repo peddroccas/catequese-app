@@ -6,7 +6,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from '@nextui-org/react'
-import catequeseLogo from '../assets/catequese-logo.svg'
+import { BrandLogo } from '@/components/BrandLogo'
 import { useState } from 'react'
 import { List } from '@phosphor-icons/react'
 import { Link, NavLink } from 'react-router-dom'
@@ -22,7 +22,8 @@ const menuItems = [
   { permission: 'COORDINATOR', name: 'Turmas', link: '/classrooms' },
   { permission: 'COORDINATOR', name: 'Finanças', link: '/finances' },
   { permission: 'ALL', name: 'Chamadas', link: '/meetings' },
-  { permission: 'ALL', name: 'Catequizandos', link: '/catechizing' },
+  // Catequista vê os catequizandos dele em "Minhas turmas"
+  { permission: 'COORDINATOR', name: 'Catequizandos', link: '/catechizing' },
   { permission: 'COORDINATOR', name: 'Inscrições', link: '/inscricoes' },
   { permission: 'COORDINATOR', name: 'Catequistas', link: '/catechist' },
   { permission: 'COORDINATOR', name: 'Formações', link: '/formations' },
@@ -35,15 +36,15 @@ const menuItems = [
 const mobileNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex w-full items-center rounded-xl px-4 py-3 text-xl font-medium transition-colors duration-150 ${
     isActive
-      ? 'bg-white/15 text-white'
-      : 'text-bunker-300 hover:bg-white/5 hover:text-white'
+      ? 'bg-ouro-100 text-ouro-700'
+      : 'text-bunker-500 hover:bg-creme-100 hover:text-bunker-900'
   }`
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-150 ${
     isActive
-      ? 'bg-white/15 text-white'
-      : 'text-bunker-300 hover:bg-white/5 hover:text-white'
+      ? 'bg-ouro-100 text-ouro-700'
+      : 'text-bunker-500 hover:bg-creme-100 hover:text-bunker-900'
   }`
 
 export function Header() {
@@ -65,33 +66,30 @@ export function Header() {
     <Navbar
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
+      // Sem o desfoque: o backdrop-filter prendia o menu do celular à altura
+      // da barra e ele não rolava quando passava do fim da tela
+      isBlurred={false}
       maxWidth="full"
       height="4.5rem"
-      className="border-b border-white/5 bg-bunker-950"
+      className="border-b border-creme-200 bg-white shadow-sm shadow-bunker-900/5"
       classNames={{ wrapper: 'max-w-screen-2xl px-4 sm:px-8' }}
     >
       <NavbarContent>
         <NavbarBrand className="gap-4">
           <button
-            className="rounded-full p-2 duration-300 hover:bg-white/10 sm:hidden"
+            className="rounded-full p-2 duration-300 hover:bg-bunker-100 sm:hidden"
             aria-label="Abrir menu"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <List color="#d1dae6" size={28} />
+            <List color="#3a4f6a" size={28} />
           </button>
-          {/* O símbolo leva para a página inicial */}
+          {/* A logo leva para a página inicial */}
           <Link
             to="/inicio"
             aria-label="Ir para a página inicial"
             className="flex items-center gap-3 rounded-lg duration-150 hover:opacity-80"
           >
-            <img className="w-11" src={catequeseLogo} alt="" />
-            <span
-              title={parish?.name ?? APP_NAME}
-              className="hidden max-w-44 whitespace-normal text-sm font-semibold leading-tight tracking-wide text-white 2xl:block"
-            >
-              {parish?.name ?? APP_NAME}
-            </span>
+            <BrandLogo alt="" title={parish?.name ?? APP_NAME} />
           </Link>
         </NavbarBrand>
       </NavbarContent>
@@ -110,7 +108,7 @@ export function Header() {
           <User />
         </NavbarItem>
       </NavbarContent>
-      <NavbarMenu className="gap-1 bg-bunker-950/95 pt-4">
+      <NavbarMenu className="gap-1 overflow-y-auto overscroll-contain bg-white pb-10 pt-4">
         {visibleItems.map((item) => (
           <NavbarMenuItem key={item.link}>
             <NavLink

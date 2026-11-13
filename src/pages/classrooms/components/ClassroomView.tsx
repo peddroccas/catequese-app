@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { matchesSearch } from '@/utils/search'
 import { CatechizingsTable } from '@/pages/catechizings/components/CatechizingsTable'
 import { classroom, isAdultSegment } from '@/Types'
-import { Chip } from '@nextui-org/react'
+import { SegmentChip } from '@/components/SegmentChip'
 import { useState } from 'react'
 import { ToolBar } from './ToolBar'
 
@@ -25,16 +25,7 @@ export function ClassroomView({ classroom }: ClassroomViewProps) {
         title={classroom.name ?? classroom.location}
         description={
           <span className="flex flex-wrap items-center gap-2">
-            <Chip
-              size="sm"
-              variant="flat"
-              classNames={{
-                base: 'bg-bunker-100',
-                content: 'font-medium text-bunker-700',
-              }}
-            >
-              {classroom.segment}
-            </Chip>
+            <SegmentChip segment={classroom.segment} />
             <span>Início em {classroom.startedAt}</span>
             <span aria-hidden>·</span>
             <span>{classroom.catechizings?.length ?? 0} catequizandos</span>

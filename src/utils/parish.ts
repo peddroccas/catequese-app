@@ -21,6 +21,13 @@ export function getAreaCode(): string {
   return current?.areaCode ?? '61'
 }
 
+// Cidade e UF da paróquia ("Gama/DF"), para diferenciar paróquias de mesmo nome
+export function parishPlace(
+  parish: Pick<publicParish, 'city' | 'state'>,
+): string {
+  return [parish.city?.trim(), parish.state?.trim()].filter(Boolean).join('/')
+}
+
 // Linhas do cabeçalho de todo documento, em maiúsculas:
 // "ARQUIDIOCESE DE BRASÍLIA" e "PARÓQUIA NOSSA SENHORA APARECIDA – GAMA / DF"
 export function parishHeaderLines(): string[] {

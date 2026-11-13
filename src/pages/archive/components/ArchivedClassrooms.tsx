@@ -10,7 +10,8 @@ import { classroom, isAdultSegment } from '@/Types'
 import { formatTimestamp } from '@/utils/date'
 import { downloadClassroomPdf } from '@/utils/pdf'
 import { matchesSearch } from '@/utils/search'
-import { Button, Chip } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { SegmentChip } from '@/components/SegmentChip'
 import { ArrowCounterClockwise, FilePdf, Trash } from '@phosphor-icons/react'
 import { useState } from 'react'
 
@@ -92,16 +93,7 @@ export function ArchivedClassrooms({
             title={classroom.name ?? classroom.location}
             description={
               <span className="flex flex-wrap items-center gap-2">
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  classNames={{
-                    base: 'bg-bunker-100',
-                    content: 'font-medium text-bunker-700',
-                  }}
-                >
-                  {classroom.segment}
-                </Chip>
+                <SegmentChip segment={classroom.segment} />
                 <span>Início em {classroom.startedAt}</span>
                 <span aria-hidden>·</span>
                 <span>

@@ -24,6 +24,8 @@ npm run dev              # http://localhost:5173
 ## Variáveis de ambiente
 
 - `VITE_APP_NAME` (opcional, padrão `Catequese`): nome do produto no menu e na aba do navegador.
+- `VITE_SITE_URL` (recomendado em produção): endereço público do app, sem barra no fim. Entra
+  na prévia de link (`og:image`); sem ele, WhatsApp e redes podem não mostrar a imagem.
 - `VITE_DEFAULT_PARISH_SLUG` (opcional, padrão `aparecida-gama`): para onde vai o endereço antigo `/inscricao`, sem a paróquia.
 - `VITE_PASSWORD_RESET_EMAIL` (opcional, padrão desligado): com `true`, "Esqueci minha senha" pede o e-mail e a API manda o link. Desligada, a tela manda pedir a senha temporária à coordenação (a API precisa de e-mail configurado para ligar).
 - `VITE_API_URL`: endereço da API. É lida no **build**, então trocar exige novo deploy.
