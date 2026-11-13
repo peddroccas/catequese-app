@@ -1,5 +1,5 @@
 import { BrandLogo } from '@/components/BrandLogo'
-import { APP_NAME, PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
+import { PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
@@ -15,6 +15,7 @@ export function ForgotPassword() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (isSending) return
     setIsSending(true)
     try {
       await CatechistRepository.requestPasswordReset(email.trim())
@@ -59,7 +60,10 @@ export function ForgotPassword() {
               </p>
             </div>
           ) : isSent ? (
-            <p className="rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700">
+            <p
+              role="status"
+              className="rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700"
+            >
               Se existir uma conta com esse e-mail, o link já está a caminho.
               Ele vale por 1 hora. Confira também a caixa de spam.
             </p>

@@ -1,34 +1,53 @@
 import { BrandLogo } from '@/components/BrandLogo'
-import { APP_NAME } from '@/lib/config'
+import { useAuth } from '@/hooks/useAuth'
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { CatechistRepository } from '@/services/repositories/catechistRepository'
 import { Button, Input } from '@nextui-org/react'
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import axios from 'axios'
 
 // Destino do link do e-mail: /redefinir-senha?token=...
 export function ResetPassword() {
   const navigate = useNavigate()
+  const { logout } = useAuth()
   const [params] = useSearchParams()
   const token = params.get('token') ?? ''
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [linkError, setLinkError] = useState('')
 
   const tooShort = password.length > 0 && password.length < 8
   const mismatch = confirmation.length > 0 && confirmation !== password
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    if (password.length < 8 || password !== confirmation) return
+    if (
+      isSaving ||
+      password.length < 8 ||
+      password.length > 72 ||
+      password !== confirmation
+    )
+      return
     setIsSaving(true)
     try {
       await CatechistRepository.resetPasswordWithToken(token, password)
+      logout()
       toast.success('Senha alterada. Entre com a senha nova.')
       navigate('/login', { replace: true })
     } catch (error) {
-      toast.error(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.status === 400 &&
+        message.includes('link')
+      ) {
+        setLinkError(message)
+      } else {
+        toast.error(message)
+      }
     } finally {
       setIsSaving(false)
     }
@@ -52,12 +71,13 @@ export function ResetPassword() {
               Use pelo menos 8 caracteres.
             </p>
           </div>
-          {token ? (
+          {token && !linkError ? (
             <>
               <Input
                 type="password"
                 label="Senha nova"
                 autoComplete="new-password"
+                maxLength={72}
                 value={password}
                 onValueChange={setPassword}
                 isInvalid={tooShort}
@@ -68,6 +88,7 @@ export function ResetPassword() {
                 type="password"
                 label="Repita a senha"
                 autoComplete="new-password"
+                maxLength={72}
                 value={confirmation}
                 onValueChange={setConfirmation}
                 isInvalid={mismatch}
@@ -85,10 +106,20 @@ export function ResetPassword() {
               </Button>
             </>
           ) : (
-            <p className="rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700">
-              Este link está incompleto. Peça um novo em “Esqueci minha senha”.
+            <p
+              role="alert"
+              className="rounded-lg bg-bunker-50 p-4 text-sm text-bunker-700"
+            >
+              {linkError ||
+                'Este link está incompleto. Peça um novo em “Esqueci minha senha”.'}
             </p>
           )}
+          <Link
+            to="/esqueci-senha"
+            className="text-center text-sm text-primary hover:underline"
+          >
+            Pedir novo link
+          </Link>
           <Link
             to="/login"
             className="text-center text-sm text-primary hover:underline"

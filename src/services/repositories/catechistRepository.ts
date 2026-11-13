@@ -1,5 +1,5 @@
 import { catechist } from '@/Types'
-import { api } from '../api'
+import { api, publicApi } from '../api'
 
 export class CatechistRepository {
   static async getAllCatechists(): Promise<catechist[]> {
@@ -78,10 +78,10 @@ export class CatechistRepository {
 
   // A resposta é a mesma exista ou não a conta (não revela quem tem cadastro)
   static async requestPasswordReset(email: string) {
-    await api.post('/catechists/forgot-password', { email })
+    await publicApi.post('/catechists/forgot-password', { email })
   }
 
   static async resetPasswordWithToken(token: string, password: string) {
-    await api.post('/catechists/reset-password', { token, password })
+    await publicApi.post('/catechists/reset-password', { token, password })
   }
 }
