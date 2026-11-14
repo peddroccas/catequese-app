@@ -73,37 +73,43 @@ export function Registration() {
     window.scrollTo({ top: 0 })
   }
 
+  const place = parish ? parishPlace(parish) : ''
+  const parishIdentity = parish && (
+    <div className="flex min-w-0 flex-col gap-0.5 border-l-2 border-ouro-500 pl-3">
+      <p className="break-words text-[15px] font-semibold leading-normal text-bunker-900">
+        {parish.name}
+      </p>
+      {place && (
+        <p className="break-words text-[13px] text-bunker-500">{place}</p>
+      )}
+    </div>
+  )
+
   return (
     <div className="flex min-h-screen flex-col bg-creme-100">
       <header className="flex h-[4.5rem] items-center gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
         {/* Paróquia com logo própria mostra a dela; sem logo, vai a do produto */}
         {parish?.logoUrl ? (
           <>
-            <img className="w-11" src={parish.logoUrl} alt="" />
-            <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold tracking-wide text-bunker-900">
-                {APP_NAME}
-              </span>
-              <span className="text-xs text-bunker-500">
-                {parish.name} · {parishPlace(parish)}
-              </span>
-            </div>
+            <img
+              className="h-11 w-11 shrink-0 object-contain"
+              src={parish.logoUrl}
+              alt=""
+            />
+            <span className="text-sm font-semibold tracking-wide text-bunker-900">
+              {APP_NAME}
+            </span>
           </>
         ) : (
-          <>
-            <BrandLogo />
-            {parish && (
-              <span className="flex flex-col border-l border-bunker-200 pl-3 text-xs leading-tight text-bunker-500">
-                <span>{parish.name}</span>
-                <span className="text-bunker-400">{parishPlace(parish)}</span>
-              </span>
-            )}
-          </>
+          <BrandLogo />
         )}
       </header>
 
       {/* pb-24: o botão fixo "Dúvidas?" não cobre o fim da página */}
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pb-24 pt-8 sm:pt-12">
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-5 pb-24 pt-8 sm:pt-12">
+        {(state === 'closed' || (state === 'open' && (segment || protocol))) &&
+          parishIdentity}
+
         {state === 'loading' && (
           <div className="flex flex-1 items-center justify-center">
             <CircularProgress aria-label="Carregando" />
@@ -204,10 +210,11 @@ export function Registration() {
 
         {state === 'open' && parish && !protocol && !segment && (
           <>
-            <div className="flex flex-col gap-1">
-              <h1 className="text-3xl font-semibold tracking-tight text-bunker-900 sm:text-4xl">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-[26px] font-semibold leading-tight tracking-tight text-bunker-900 sm:text-4xl">
                 Inscrição para a catequese
               </h1>
+              {parishIdentity}
               <p className="text-sm text-bunker-500">
                 Vagas limitadas; só aceitamos inscrições com todos os
                 documentos.
