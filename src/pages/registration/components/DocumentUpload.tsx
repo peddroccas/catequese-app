@@ -85,7 +85,7 @@ export function DocumentUpload({
   return (
     <div
       data-invalid={Boolean(error)}
-      className={`flex flex-col gap-2 rounded-xl border bg-white p-4 ${error ? 'border-danger' : 'border-bunker-200'}`}
+      className={`flex min-w-0 flex-col gap-2 rounded-xl border bg-white p-4 ${error ? 'border-danger' : 'border-bunker-200'}`}
     >
       <div className="flex flex-col gap-0.5">
         <span className="text-sm font-medium text-bunker-900">{label}</span>
@@ -106,15 +106,17 @@ export function DocumentUpload({
           Preparando o arquivo...
         </div>
       ) : value ? (
-        <div className="flex items-center justify-between gap-2 rounded-lg bg-emerald-50 px-3 py-2">
-          <span className="flex min-w-0 items-center gap-2 text-sm text-emerald-800">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 rounded-lg bg-emerald-50 px-3 py-2">
+          <span className="flex min-w-0 flex-1 basis-48 items-center gap-2 text-sm text-emerald-800">
             <CheckCircle size={18} weight="fill" className="shrink-0" />
-            <span className="truncate">{value.name}</span>
+            <span className="truncate" title={value.name}>
+              {value.name}
+            </span>
             <span className="shrink-0 text-xs text-emerald-700">
               {formatFileSize(value.size)}
             </span>
           </span>
-          <span className="flex shrink-0 gap-1">
+          <span className="ml-auto flex shrink-0 gap-1">
             <Button
               size="sm"
               variant="light"

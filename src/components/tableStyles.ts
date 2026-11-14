@@ -27,9 +27,11 @@ export const modalClassNames = {
   footer: 'border-t border-bunker-100',
 }
 
-// Grupo de campos (responsáveis, adultos, chamada)
+// Grupo de campos (responsáveis, adultos, chamada). min-w-0: por padrão o
+// fieldset cresce até caber o conteúdo (min-width: min-content), e um nome de
+// arquivo comprido alargava a página inteira
 export const fieldsetClassName =
-  'flex flex-col gap-3 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4'
+  'flex min-w-0 flex-col gap-3 rounded-xl border border-bunker-200 bg-bunker-50/60 p-4'
 
 export const legendClassName =
   'px-1 text-xs font-semibold uppercase tracking-wide text-bunker-500'
