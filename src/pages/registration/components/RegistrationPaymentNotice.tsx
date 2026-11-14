@@ -13,9 +13,11 @@ interface RegistrationPaymentNoticeProps {
   receiptPhone: string | null | undefined
   // Código da inscrição, quando já foi enviada: vai na mensagem do comprovante
   protocol?: string | null
-  // Uma linha só (valor e chave PIX), para não roubar a atenção da escolha
-  // da etapa nem empurrar o formulário para baixo
+  // Mesmas informações em menos espaço (formulário), para não empurrar os
+  // campos para baixo
   compact?: boolean
+  // Só o valor, numa faixa pequena (escolha da etapa); o PIX fica no formulário
+  feeOnly?: boolean
   className?: string
 }
 
@@ -34,6 +36,7 @@ export function RegistrationPaymentNotice({
   receiptPhone,
   protocol,
   compact = false,
+  feeOnly = false,
   className = '',
 }: RegistrationPaymentNoticeProps) {
   const [copied, setCopied] = useState(false)
@@ -41,6 +44,22 @@ export function RegistrationPaymentNotice({
   // Sem taxa não há o que pagar: nem o valor nem o PIX aparecem
   if (!feeCents) {
     return null
+  }
+
+  if (feeOnly) {
+    return (
+      <p
+        className={`flex w-fit items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm text-emerald-900 ${className}`}
+      >
+        <Money
+          size={16}
+          weight="duotone"
+          className="shrink-0 text-emerald-700"
+        />
+        Taxa de inscrição:
+        <strong className="tabular-nums">{formatCurrency(feeCents)}</strong>
+      </p>
+    )
   }
 
   const whatsapp = receiptPhone ? toWhatsappNumber(receiptPhone) : null

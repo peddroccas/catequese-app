@@ -18,6 +18,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CoordinationContactsCard } from './components/CoordinationContactsCard'
+import { CoordinationHelpButton } from './components/CoordinationHelpButton'
 import { RegistrationForm } from './components/RegistrationForm'
 import { RegistrationPaymentNotice } from './components/RegistrationPaymentNotice'
 
@@ -101,7 +102,8 @@ export function Registration() {
         )}
       </header>
 
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-8 sm:py-12">
+      {/* pb-24: o botão fixo "Dúvidas?" não cobre o fim da página */}
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pb-24 pt-8 sm:pt-12">
         {state === 'loading' && (
           <div className="flex flex-1 items-center justify-center">
             <CircularProgress aria-label="Carregando" />
@@ -211,6 +213,10 @@ export function Registration() {
                 documentos.
               </p>
             </div>
+            <RegistrationPaymentNotice
+              {...paymentNoticePropsOf(parish)}
+              feeOnly
+            />
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-0.5">
                 <h2 className="text-lg font-semibold text-bunker-900">
@@ -265,11 +271,6 @@ export function Registration() {
                 })}
               </div>
             </div>
-            <RegistrationPaymentNotice
-              {...paymentNoticePropsOf(parish)}
-              compact
-            />
-            <CoordinationContactsCard contacts={parish.coordinationContacts} />
           </>
         )}
 
@@ -280,7 +281,6 @@ export function Registration() {
               slug={slug}
               terms={parish.commitmentTerms}
               payment={paymentNoticePropsOf(parish)}
-              contacts={parish.coordinationContacts}
               segment={segment}
               onBack={() => changeStep(null)}
               onDone={handleDone}
@@ -288,6 +288,11 @@ export function Registration() {
           </div>
         )}
       </main>
+
+      {/* Escolha da etapa e formulário: contatos no botão fixo "Dúvidas?" */}
+      {state === 'open' && parish && !protocol && (
+        <CoordinationHelpButton contacts={parish.coordinationContacts} />
+      )}
     </div>
   )
 }

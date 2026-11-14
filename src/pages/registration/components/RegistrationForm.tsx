@@ -1,6 +1,6 @@
 import { PhoneInput } from '@/components/PhoneInput'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
-import { coordinationContact, documentKind, registrationSegment } from '@/Types'
+import { documentKind, registrationSegment } from '@/Types'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { CommitmentTerms } from './CommitmentTerms'
 import { calculateAge, fromCalendarDate, toCalendarDate } from '@/utils/date'
@@ -37,7 +37,6 @@ import {
   Textarea,
 } from '@nextui-org/react'
 import { ArrowLeft, Warning } from '@phosphor-icons/react'
-import { CoordinationContactsCard } from './CoordinationContactsCard'
 import { RegistrationPaymentNotice } from './RegistrationPaymentNotice'
 import { I18nProvider } from '@react-aria/i18n'
 import { AxiosError } from 'axios'
@@ -270,9 +269,9 @@ interface RegistrationFormProps {
   // Paróquia da inscrição (vem do endereço) e o termo de compromisso dela
   slug: string
   terms: string | null
-  // Taxa de inscrição, PIX e contatos da coordenação, mostrados no formulário
+  // Taxa de inscrição e PIX, mostrados no formulário (os contatos da
+  // coordenação ficam no botão fixo "Dúvidas?" da página)
   payment: ReturnType<typeof paymentNoticePropsOf>
-  contacts: coordinationContact[]
   segment: registrationSegment
   onBack: () => void
   onDone: (protocol: string) => void
@@ -282,7 +281,6 @@ export function RegistrationForm({
   slug,
   terms,
   payment,
-  contacts,
   segment,
   onBack,
   onDone,
@@ -915,8 +913,7 @@ export function RegistrationForm({
         </div>
       )}
 
-      <RegistrationPaymentNotice {...payment} />
-      <CoordinationContactsCard contacts={contacts} />
+      <RegistrationPaymentNotice {...payment} compact />
 
       <Button
         color="primary"
