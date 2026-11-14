@@ -28,7 +28,8 @@ export function EditCatechizingModal({
       placement="top"
       size="2xl"
       scrollBehavior="outside"
-      className="py-2"
+      // min-w-0: nome de arquivo comprido não alarga o modal no celular
+      className="min-w-0 py-2"
     >
       <ModalContent>
         <ModalHeader className="text-xl font-semibold text-bunker-900">

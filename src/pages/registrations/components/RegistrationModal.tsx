@@ -184,6 +184,9 @@ export function RegistrationModal({
       placement="top"
       size="3xl"
       scrollBehavior="outside"
+      // min-w-0: sem isso o modal se alarga até caber o nome inteiro de um
+      // arquivo comprido (mesmo truncado) e a tela rola para o lado no celular
+      className="min-w-0"
     >
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1 text-bunker-900">
