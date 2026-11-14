@@ -183,7 +183,8 @@ export function Registrations() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <code className="rounded-lg bg-bunker-50 px-3 py-2 text-xs text-bunker-700">
+          {/* break-all: o link é uma palavra só e alargava a página no celular */}
+          <code className="min-w-0 max-w-full break-all rounded-lg bg-bunker-50 px-3 py-2 text-xs text-bunker-700">
             {formUrl}
           </code>
           <Button
@@ -295,11 +296,19 @@ export function Registrations() {
 
       {error && <p className="text-sm text-danger">{error}</p>}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Tabs
           selectedKey={tab}
           onSelectionChange={(key) => setTab(key as registrationStatus)}
           aria-label="Situação das inscrições"
+          // No celular as abas dividem a largura (e cabem inteiras), sem alargar
+          // a página; do sm em diante voltam ao tamanho do texto
+          fullWidth
+          classNames={{
+            base: 'min-w-0 max-w-full sm:w-auto',
+            tabList: 'max-w-full overflow-x-auto sm:w-auto',
+            tab: 'px-1.5 sm:px-3',
+          }}
         >
           {tabs.map((item) => (
             <Tab key={item.key} title={`${item.label} (${counts[item.key]})`} />
