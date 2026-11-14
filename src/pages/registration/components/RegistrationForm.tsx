@@ -36,7 +36,7 @@ import {
   SelectItem,
   Textarea,
 } from '@nextui-org/react'
-import { Warning } from '@phosphor-icons/react'
+import { ArrowLeft, Warning } from '@phosphor-icons/react'
 import { CoordinationContactsCard } from './CoordinationContactsCard'
 import { RegistrationPaymentNotice } from './RegistrationPaymentNotice'
 import { I18nProvider } from '@react-aria/i18n'
@@ -435,7 +435,16 @@ export function RegistrationForm({
       className="flex flex-col gap-6"
       noValidate
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col items-start gap-2">
+        <Button
+          size="sm"
+          variant="flat"
+          onPress={onBack}
+          startContent={<ArrowLeft size={16} weight="bold" />}
+          className="-ml-1 shrink-0"
+        >
+          Trocar etapa
+        </Button>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-semibold tracking-tight text-bunker-900">
             Inscrição – {info.title}
@@ -445,12 +454,9 @@ export function RegistrationForm({
             marcados como opcionais.
           </p>
         </div>
-        <Button size="sm" variant="light" onPress={onBack}>
-          Trocar etapa
-        </Button>
       </div>
 
-      <RegistrationPaymentNotice {...payment} />
+      <RegistrationPaymentNotice {...payment} compact />
 
       <fieldset className={fieldsetClassName}>
         <legend className={legendClassName}>

@@ -13,6 +13,9 @@ interface RegistrationPaymentNoticeProps {
   receiptPhone: string | null | undefined
   // Código da inscrição, quando já foi enviada: vai na mensagem do comprovante
   protocol?: string | null
+  // Uma linha só (valor e chave PIX), para não roubar a atenção da escolha
+  // da etapa nem empurrar o formulário para baixo
+  compact?: boolean
   className?: string
 }
 
@@ -30,6 +33,7 @@ export function RegistrationPaymentNotice({
   pixHolderName,
   receiptPhone,
   protocol,
+  compact = false,
   className = '',
 }: RegistrationPaymentNoticeProps) {
   const [copied, setCopied] = useState(false)
@@ -52,6 +56,98 @@ export function RegistrationPaymentNotice({
     } catch {
       // Sem acesso à área de transferência: a chave fica selecionável na tela
     }
+  }
+
+  const receiptText = (
+    <>
+      Depois de pagar, mande o comprovante pelo WhatsApp
+      {whatsapp && receiptPhone ? (
+        <>
+          {' '}
+          <strong className="whitespace-nowrap tabular-nums">
+            {maskPhone(receiptPhone)}
+          </strong>
+        </>
+      ) : (
+        ' da coordenação'
+      )}
+      {protocol ? (
+        <>
+          , junto com o código <strong>{protocol}</strong>.
+        </>
+      ) : (
+        ', com o nome do catequizando.'
+      )}
+    </>
+  )
+
+  // Mesmas informações (valor, chave, favorecido e comprovante), em menos espaço
+  if (compact) {
+    return (
+      <div
+        className={`flex flex-col gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 ${className}`}
+      >
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <Money
+            size={18}
+            weight="duotone"
+            className="shrink-0 text-emerald-700"
+          />
+          <span className="font-medium">Taxa de inscrição:</span>
+          <strong className="text-base tabular-nums">
+            {formatCurrency(feeCents)}
+          </strong>
+          {!pixKey && (
+            <span className="text-emerald-800">
+              Dúvidas sobre o pagamento? Fale com a coordenação.
+            </span>
+          )}
+        </div>
+
+        {pixKey && (
+          <>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="text-emerald-800">Chave PIX:</span>
+              <span className="select-all break-all font-semibold text-bunker-900">
+                {pixKey}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full border border-emerald-300 bg-white px-2.5 text-xs font-semibold text-emerald-800 transition-colors duration-150 hover:bg-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+              >
+                {copied ? (
+                  <Check size={14} weight="bold" />
+                ) : (
+                  <Copy size={14} weight="bold" />
+                )}
+                {copied ? 'Copiada' : 'Copiar'}
+              </button>
+              {pixHolderName && (
+                <span className="text-bunker-600">
+                  em nome de <strong>{pixHolderName}</strong>
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="min-w-0 flex-1 basis-56">{receiptText}</p>
+              {whatsapp && (
+                <a
+                  href={whatsappChatUrl(whatsapp, receiptMessage(protocol))}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-emerald-600 px-3 text-xs font-semibold text-white transition-colors duration-150 hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                >
+                  <WhatsappLogo size={16} weight="bold" />
+                  Enviar comprovante
+                </a>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -108,26 +204,7 @@ export function RegistrationPaymentNotice({
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-emerald-900">
-              Depois de pagar, mande o comprovante pelo WhatsApp
-              {whatsapp && receiptPhone ? (
-                <>
-                  {' '}
-                  <strong className="tabular-nums">
-                    {maskPhone(receiptPhone)}
-                  </strong>
-                </>
-              ) : (
-                ' da coordenação'
-              )}
-              {protocol ? (
-                <>
-                  , junto com o código <strong>{protocol}</strong>.
-                </>
-              ) : (
-                ', com o nome do catequizando.'
-              )}
-            </p>
+            <p className="text-sm text-emerald-900">{receiptText}</p>
             {whatsapp && (
               <a
                 href={whatsappChatUrl(whatsapp, receiptMessage(protocol))}

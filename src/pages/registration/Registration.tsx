@@ -9,6 +9,7 @@ import { registrationSegmentTone } from '@/utils/segmentTone'
 import { paymentNoticePropsOf } from '@/utils/registrationPayment'
 import { Button, CircularProgress } from '@nextui-org/react'
 import {
+  CaretRight,
   CheckCircle,
   LockSimple,
   MapPinLine,
@@ -202,48 +203,72 @@ export function Registration() {
         {state === 'open' && parish && !protocol && !segment && (
           <>
             <div className="flex flex-col gap-1">
-              <h1 className="text-2xl font-semibold tracking-tight text-bunker-900">
+              <h1 className="text-3xl font-semibold tracking-tight text-bunker-900 sm:text-4xl">
                 Inscrição para a catequese
               </h1>
               <p className="text-sm text-bunker-500">
-                Escolha a etapa. Vagas limitadas; só aceitamos inscrições com
-                todos os documentos.
+                Vagas limitadas; só aceitamos inscrições com todos os
+                documentos.
               </p>
             </div>
-            <RegistrationPaymentNotice {...paymentNoticePropsOf(parish)} />
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {registrationSegments.map((item) => {
-                const isSegmentOpen = openSegments.includes(item.key)
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-lg font-semibold text-bunker-900">
+                  Para qual etapa é a inscrição?
+                </h2>
+                <p className="text-sm text-bunker-500">
+                  Clique em uma das etapas abaixo para preencher a ficha de
+                  inscrição.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {registrationSegments.map((item) => {
+                  const isSegmentOpen = openSegments.includes(item.key)
 
-                return (
-                  <button
-                    key={item.key}
-                    type="button"
-                    disabled={!isSegmentOpen}
-                    onClick={() => changeStep(item.key)}
-                    className="flex flex-col gap-1 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 enabled:hover:-translate-y-0.5 enabled:hover:border-bunker-300 enabled:hover:shadow-md disabled:cursor-not-allowed disabled:bg-bunker-100/60 disabled:shadow-none"
-                  >
-                    <span
-                      className={`flex items-center gap-2 text-lg font-semibold ${isSegmentOpen ? 'text-bunker-900' : 'text-bunker-400'}`}
+                  return (
+                    <button
+                      key={item.key}
+                      type="button"
+                      disabled={!isSegmentOpen}
+                      onClick={() => changeStep(item.key)}
+                      className="group flex items-center gap-3 rounded-2xl border border-bunker-200/70 bg-white p-5 text-left shadow-sm transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 enabled:hover:-translate-y-0.5 enabled:hover:border-bunker-300 enabled:hover:shadow-md disabled:cursor-not-allowed disabled:bg-bunker-100/60 disabled:shadow-none"
                     >
-                      <span
-                        aria-hidden
-                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${isSegmentOpen ? registrationSegmentTone(item.key).dot : 'bg-bunker-300'}`}
-                      />
-                      {item.title}
-                    </span>
-                    <span className="text-sm text-bunker-500">
-                      {item.description}
-                    </span>
-                    {!isSegmentOpen && (
-                      <span className="mt-1 text-xs font-medium text-bunker-500">
-                        Inscrições encerradas para esta etapa
+                      <span className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span
+                          className={`flex items-center gap-2 text-lg font-semibold ${isSegmentOpen ? 'text-bunker-900' : 'text-bunker-400'}`}
+                        >
+                          <span
+                            aria-hidden
+                            className={`h-2.5 w-2.5 shrink-0 rounded-full ${isSegmentOpen ? registrationSegmentTone(item.key).dot : 'bg-bunker-300'}`}
+                          />
+                          {item.title}
+                        </span>
+                        <span className="text-sm text-bunker-500">
+                          {item.description}
+                        </span>
+                        {!isSegmentOpen && (
+                          <span className="mt-1 text-xs font-medium text-bunker-500">
+                            Inscrições encerradas para esta etapa
+                          </span>
+                        )}
                       </span>
-                    )}
-                  </button>
-                )
-              })}
+                      {isSegmentOpen && (
+                        <span
+                          aria-hidden
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bunker-100 text-bunker-700 transition-colors duration-150 group-hover:bg-bunker-900 group-hover:text-white"
+                        >
+                          <CaretRight size={18} weight="bold" />
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
+            <RegistrationPaymentNotice
+              {...paymentNoticePropsOf(parish)}
+              compact
+            />
             <CoordinationContactsCard contacts={parish.coordinationContacts} />
           </>
         )}
