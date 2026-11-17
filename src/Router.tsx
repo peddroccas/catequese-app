@@ -22,6 +22,11 @@ const PrivacyPolicy = page(
   () => import('./pages/privacy/PrivacyPolicy'),
   'PrivacyPolicy',
 )
+const Contact = page(() => import('./pages/contact/Contact'), 'Contact')
+const AdminSupport = page(
+  () => import('./pages/admin/AdminSupport'),
+  'AdminSupport',
+)
 const Home = page(() => import('./pages/home/Home'), 'Home')
 const Classroom = page(() => import('./pages/classroom/Classroom'), 'Classroom')
 const Catechizings = page(
@@ -82,6 +87,7 @@ export function Router() {
         <Route path="" element={<Navigate to={'/login'} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/privacidade" element={<PrivacyPolicy />} />
+        <Route path="/contato" element={<Contact />} />
         <Route path="/esqueci-senha" element={<ForgotPassword />} />
         <Route path="/redefinir-senha" element={<ResetPassword />} />
         {/* Formulário público: não precisa de login */}
@@ -93,6 +99,8 @@ export function Router() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route element={<RequireAdmin />}>
           <Route path="/admin" element={<AdminParishes />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
+          <Route path="/admin/support/:ticketId" element={<AdminSupport />} />
         </Route>
         {/* Telas internas: só com login (e, para catequista, só as permitidas) */}
         <Route element={<RequireAuth />}>

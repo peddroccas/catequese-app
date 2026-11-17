@@ -1,4 +1,5 @@
 import { PrivacyPolicyLink } from '@/components/PrivacyPolicyLink'
+import { ContactLink } from '@/components/ContactLink'
 import { BrandLogo } from '@/components/BrandLogo'
 import { APP_NAME } from '@/lib/config'
 import { publicParish, registrationPrivacyNotice, registrationSegment } from '@/Types'
@@ -324,6 +325,7 @@ export function Registration() {
               </button>
             )}
           <PrivacyPolicyLink newTab />
+          <ContactLink />
         </div>
       </main>
 

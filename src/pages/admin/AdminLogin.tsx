@@ -6,11 +6,12 @@ import { AdminRepository } from '@/services/repositories/adminRepository'
 import { Button, Input } from '@nextui-org/react'
 import axios from 'axios'
 import { FormEvent, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 // Login do administrador do sistema (não é o login dos catequistas)
 export function AdminLogin() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -20,7 +21,19 @@ export function AdminLogin() {
     setIsSubmitting(true)
     try {
       await AdminRepository.login(email, password)
-      navigate('/admin', { replace: true })
+      const destination: unknown =
+        location.state?.from ??
+        new URLSearchParams(location.search).get('returnTo')
+      navigate(
+        typeof destination === 'string' &&
+          (destination === '/admin' ||
+            destination.startsWith('/admin/') ||
+            destination.startsWith('/admin?')) &&
+          !destination.startsWith('/admin/login')
+          ? destination
+          : '/admin',
+        { replace: true },
+      )
     } catch (error) {
       toast.error(
         axios.isAxiosError(error) && error.response?.status === 429

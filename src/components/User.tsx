@@ -47,6 +47,16 @@ export default function User() {
           Configurações da paróquia
         </DropdownItem>
         <DropdownItem
+          key="contact"
+          onPress={() =>
+            navigate('/contato', {
+              state: { sourcePath: window.location.pathname },
+            })
+          }
+        >
+          Fale conosco
+        </DropdownItem>
+        <DropdownItem
           key="logout"
           color="danger"
           onPress={() => {

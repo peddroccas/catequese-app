@@ -27,7 +27,8 @@ adminApi.interceptors.response.use(
     const isLogin = error.config?.url?.includes('/admin/auth')
     if (error.response?.status === 401 && !isLogin) {
       localStorage.removeItem(ADMIN_TOKEN_KEY)
-      window.location.href = '/admin/login'
+      const returnTo = window.location.pathname + window.location.search
+      window.location.href = `/admin/login?returnTo=${encodeURIComponent(returnTo)}`
     }
     return Promise.reject(error)
   },

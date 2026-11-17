@@ -127,14 +127,19 @@ export function AdminParishes() {
             Administração
           </span>
         </div>
-        <Button
-          size="md"
-          variant="bordered"
-          className="border-bunker-300 font-medium text-bunker-700 hover:bg-bunker-50"
-          onPress={handleLogout}
-        >
-          Sair
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="light" onPress={() => navigate('/admin/support')}>
+            Atendimento
+          </Button>
+          <Button
+            size="md"
+            variant="bordered"
+            className="border-bunker-300 font-medium text-bunker-700 hover:bg-bunker-50"
+            onPress={handleLogout}
+          >
+            Sair
+          </Button>
+        </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col gap-6 px-4 py-8 sm:px-8">

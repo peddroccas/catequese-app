@@ -1,3 +1,4 @@
+import { ContactLink } from '@/components/ContactLink'
 import axios from 'axios'
 import { getErrorMessage } from '@/services/api'
 import { toast } from '@/lib/toast'
@@ -71,7 +72,7 @@ export function Login() {
       <header className="flex h-[4.5rem] items-center gap-3 border-b border-bunker-200/70 bg-white px-4 shadow-sm shadow-bunker-900/5 sm:px-8">
         <BrandLogo />
       </header>
-      <main className="flex flex-1 items-center justify-center px-4 py-12">
+      <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-12">
         <form
           onSubmit={handleSubmit(handlelogin)}
           className="flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-bunker-200/70 bg-white p-8 shadow-lg shadow-bunker-900/5"
@@ -143,8 +144,9 @@ export function Login() {
             </Link>
           )}
         </form>
-        <div className="mt-4 text-center">
+        <div className="mt-4 flex flex-col items-center gap-3 text-center">
           <PrivacyPolicyLink newTab />
+          <ContactLink />
         </div>
       </main>
     </div>
