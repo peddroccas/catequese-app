@@ -294,6 +294,11 @@ export function RegistrationModal({
                   <Field label="Termo de compromisso">
                     Aceito em {formatTimestamp(registration.termsAcceptedAt)}
                   </Field>
+                  {registration.privacyNoticeVersion && (
+                    <Field label="Aviso de privacidade">
+                      Leitura confirmada · {registration.privacyNoticeVersion}
+                    </Field>
+                  )}
                   {info.isAdult && (
                     <>
                       <Field label="Estado civil">

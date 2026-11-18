@@ -3,6 +3,7 @@ import { getErrorMessage } from '@/services/api'
 import { toast } from '@/lib/toast'
 import { APP_NAME, PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
 import { BrandLogo } from '@/components/BrandLogo'
+import { PrivacyPolicyLink } from '@/components/PrivacyPolicyLink'
 import catequeseHubSymbol from '@/assets/catequese-hub-simbolo-cruz.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { useHostParish } from '@/hooks/useHostParish'
@@ -142,6 +143,9 @@ export function Login() {
             </Link>
           )}
         </form>
+        <div className="mt-4 text-center">
+          <PrivacyPolicyLink newTab />
+        </div>
       </main>
     </div>
   )

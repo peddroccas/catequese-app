@@ -5,6 +5,7 @@ import { SegmentChip } from '@/components/SegmentChip'
 import { registrationSegmentTone } from '@/utils/segmentTone'
 import { surfaceClassName } from '@/components/tableStyles'
 import { useParish } from '@/hooks/useParish'
+import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import {
@@ -24,7 +25,7 @@ import {
 import { receiptPhoneOf } from '@/utils/registrationPayment'
 import { matchesSearch } from '@/utils/search'
 import { Button, Chip, Switch, Tab, Tabs } from '@nextui-org/react'
-import { Copy, LinkSimple, PencilSimple, Warning } from '@phosphor-icons/react'
+import { Copy, LinkSimple, PencilSimple, Trash, Warning } from '@phosphor-icons/react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { RegistrationModal } from './components/RegistrationModal'
@@ -50,6 +51,7 @@ export function Registrations() {
   const [tab, setTab] = useState<registrationStatus>('PENDING')
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<registration>()
+  const [deletionTarget, setDeletionTarget] = useState<registration>()
   const [isConfirmingOpen, setIsConfirmingOpen] = useState(false)
   const [isSwitching, setIsSwitching] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -73,6 +75,18 @@ export function Registrations() {
   useEffect(() => {
     load()
   }, [load])
+
+  async function deleteRejected(id: string) {
+    try {
+      await RegistrationRepository.deleteRejected(id)
+      setRegistrations((current) => current?.filter((item) => item.id !== id))
+      toast.success('Inscrição recusada excluída')
+    } catch (error) {
+      // Se alguns anexos já foram removidos, atualiza a lista para a próxima tentativa.
+      load()
+      throw error
+    }
+  }
 
   const isOpen = settings?.isOpen
   const openSegments = settings?.openSegments ?? []
@@ -137,6 +151,20 @@ export function Registrations() {
         O formulário fica disponível para qualquer pessoa que tenha o link. Você
         pode fechar de novo quando quiser.
       </ConfirmModal>
+
+      {deletionTarget && (
+        <ConfirmModal
+          isOpen
+          onClose={() => setDeletionTarget(undefined)}
+          title="Excluir inscrição recusada?"
+          confirmLabel="Excluir inscrição"
+          color="danger"
+          onConfirm={() => deleteRejected(deletionTarget.id)}
+        >
+          A ficha de <strong>{deletionTarget.name}</strong> e os documentos
+          enviados serão excluídos definitivamente do sistema.
+        </ConfirmModal>
+      )}
 
       {selected && (
         <RegistrationModal
@@ -374,14 +402,28 @@ export function Registrations() {
                     </span>
                   )}
                 </div>
-                <Button
-                  size="sm"
-                  color={item.status === 'PENDING' ? 'primary' : 'default'}
-                  variant={item.status === 'PENDING' ? 'solid' : 'flat'}
-                  onPress={() => setSelected(item)}
-                >
-                  {item.status === 'PENDING' ? 'Conferir' : 'Ver'}
-                </Button>
+                <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                  <Button
+                    size="sm"
+                    color={item.status === 'PENDING' ? 'primary' : 'default'}
+                    variant={item.status === 'PENDING' ? 'solid' : 'flat'}
+                    onPress={() => setSelected(item)}
+                  >
+                    {item.status === 'PENDING' ? 'Conferir' : 'Ver'}
+                  </Button>
+                  {item.status === 'REJECTED' && (
+                    <Button
+                      size="sm"
+                      color="danger"
+                      variant="light"
+                      startContent={<Trash size={16} />}
+                      aria-label={`Excluir inscrição de ${item.name}`}
+                      onPress={() => setDeletionTarget(item)}
+                    >
+                      Excluir
+                    </Button>
+                  )}
+                </div>
               </li>
             )
           })}

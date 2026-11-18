@@ -1,6 +1,10 @@
 import { PhoneInput } from '@/components/PhoneInput'
 import { fieldsetClassName, legendClassName } from '@/components/tableStyles'
-import { documentKind, registrationSegment } from '@/Types'
+import {
+  documentKind,
+  registrationPrivacyNotice,
+  registrationSegment,
+} from '@/Types'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { CommitmentTerms } from './CommitmentTerms'
 import { calculateAge, fromCalendarDate, toCalendarDate } from '@/utils/date'
@@ -68,7 +72,7 @@ function hasValidOptionalPhone(value: string) {
 const PHONE_ERROR = 'Telefone inválido. Use DDD + número'
 
 // Cada resposta de sim/não fica como texto ('true' | 'false'), vazio até a pessoa escolher
-function buildSchema(segment: registrationSegment) {
+function buildSchema(segment: registrationSegment, hasPrivacyNotice: boolean) {
   const info = getRegistrationSegment(segment)
 
   return z
@@ -101,9 +105,12 @@ function buildSchema(segment: registrationSegment) {
       website: z.string().max(200),
       acceptedTerms: z
         .boolean()
+        .refine((value) => value, 'É preciso concordar com o termo para enviar'),
+      acknowledgedPrivacyNotice: z
+        .boolean()
         .refine(
-          (value) => value,
-          'É preciso concordar com o termo para enviar',
+          (value) => !hasPrivacyNotice || value,
+          'Confirme a leitura do Aviso de Privacidade para enviar',
         ),
     })
     .superRefine((data, context) => {
@@ -166,6 +173,7 @@ type FormValues = {
   livesWithPartner: string
   website: string
   acceptedTerms: boolean
+  acknowledgedPrivacyNotice: boolean
 }
 
 const defaultValues: FormValues = {
@@ -192,12 +200,13 @@ const defaultValues: FormValues = {
   livesWithPartner: '',
   website: '',
   acceptedTerms: false,
+  acknowledgedPrivacyNotice: false,
 }
 
 interface YesNoFieldProps {
   control: Control<FormValues>
-  // Só campos de texto (as respostas de sim/não); o checkbox do termo é à parte
-  name: Exclude<keyof FormValues, 'acceptedTerms'>
+  // As respostas de sim/não são campos de texto, diferentemente das caixas.
+  name: Exclude<keyof FormValues, 'acceptedTerms' | 'acknowledgedPrivacyNotice'>
   label: string
   errors: FieldErrors<FormValues>
   yesLabel?: string
@@ -269,6 +278,8 @@ interface RegistrationFormProps {
   // Paróquia da inscrição (vem do endereço) e o termo de compromisso dela
   slug: string
   terms: string | null
+  privacyNotice?: registrationPrivacyNotice
+  onOpenPrivacyNotice: () => void
   // Taxa de inscrição e PIX, mostrados no formulário (os contatos da
   // coordenação ficam no botão fixo "Dúvidas?" da página)
   payment: ReturnType<typeof paymentNoticePropsOf>
@@ -280,6 +291,8 @@ interface RegistrationFormProps {
 export function RegistrationForm({
   slug,
   terms,
+  privacyNotice,
+  onOpenPrivacyNotice,
   payment,
   segment,
   onBack,
@@ -293,7 +306,7 @@ export function RegistrationForm({
     register,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(buildSchema(segment)),
+    resolver: zodResolver(buildSchema(segment, Boolean(privacyNotice))),
     defaultValues,
   })
   const [documents, setDocuments] = useState<
@@ -388,6 +401,10 @@ export function RegistrationForm({
       shirtSize: form.shirtSize,
       website: form.website,
       acceptedTerms: form.acceptedTerms,
+      privacyNoticeVersion: privacyNotice?.version,
+      acknowledgedPrivacyNotice: privacyNotice
+        ? form.acknowledgedPrivacyNotice
+        : undefined,
     }
 
     const files: Record<string, Blob> = {}
@@ -426,6 +443,16 @@ export function RegistrationForm({
     listbox: 'text-bunker-800',
     selectorIcon: 'text-bunker-500',
   }
+  const privacyNoticeLink = privacyNotice && (
+    <button
+      type="button"
+      aria-haspopup="dialog"
+      className="w-fit text-left text-sm font-medium text-bunker-800 underline underline-offset-4"
+      onClick={onOpenPrivacyNotice}
+    >
+      Ler o Aviso de Privacidade
+    </button>
+  )
 
   return (
     <form
@@ -451,6 +478,7 @@ export function RegistrationForm({
             {ageRangeLabel(info)}. Todos os campos são obrigatórios, exceto os
             marcados como opcionais.
           </p>
+          {privacyNoticeLink}
         </div>
       </div>
 
@@ -832,6 +860,36 @@ export function RegistrationForm({
         ))}
       </fieldset>
 
+      {privacyNotice && (
+        <section
+          data-invalid={Boolean(errors.acknowledgedPrivacyNotice)}
+          className={`flex flex-col gap-3 rounded-xl border bg-white p-4 ${errors.acknowledgedPrivacyNotice ? 'border-danger' : 'border-bunker-200'}`}
+        >
+          {privacyNoticeLink}
+          <Controller
+            name="acknowledgedPrivacyNotice"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                isSelected={field.value}
+                onValueChange={field.onChange}
+                isRequired
+                isInvalid={Boolean(errors.acknowledgedPrivacyNotice)}
+                aria-describedby={errors.acknowledgedPrivacyNotice ? 'privacy-notice-error' : undefined}
+                classNames={{ label: 'text-sm font-medium text-bunker-900' }}
+              >
+                Li o Aviso de Privacidade
+              </Checkbox>
+            )}
+          />
+          {errors.acknowledgedPrivacyNotice && (
+            <p id="privacy-notice-error" className="text-sm text-danger">
+              {errors.acknowledgedPrivacyNotice.message}
+            </p>
+          )}
+        </section>
+      )}
+
       <section
         data-invalid={Boolean(errors.acceptedTerms)}
         className={`flex flex-col gap-3 rounded-xl border bg-white p-4 text-sm text-bunker-700 ${errors.acceptedTerms ? 'border-danger' : 'border-bunker-200'}`}
@@ -852,15 +910,19 @@ export function RegistrationForm({
             <Checkbox
               isSelected={field.value}
               onValueChange={field.onChange}
+              isRequired
               isInvalid={Boolean(errors.acceptedTerms)}
+              aria-describedby={errors.acceptedTerms ? 'commitment-terms-error' : undefined}
               classNames={{ label: 'text-sm font-medium text-bunker-900' }}
             >
-              Li e concordo com o termo de compromisso
+              Li e concordo com o Termo de Compromisso
             </Checkbox>
           )}
         />
         {errors.acceptedTerms && (
-          <p className="text-sm text-danger">{errors.acceptedTerms.message}</p>
+          <p id="commitment-terms-error" className="text-sm text-danger">
+            {errors.acceptedTerms.message}
+          </p>
         )}
       </section>
 

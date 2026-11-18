@@ -18,6 +18,10 @@ function page<T extends Record<string, unknown>>(
   }))
 }
 
+const PrivacyPolicy = page(
+  () => import('./pages/privacy/PrivacyPolicy'),
+  'PrivacyPolicy',
+)
 const Home = page(() => import('./pages/home/Home'), 'Home')
 const Classroom = page(() => import('./pages/classroom/Classroom'), 'Classroom')
 const Catechizings = page(
@@ -77,6 +81,7 @@ export function Router() {
       <Routes>
         <Route path="" element={<Navigate to={'/login'} />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/privacidade" element={<PrivacyPolicy />} />
         <Route path="/esqueci-senha" element={<ForgotPassword />} />
         <Route path="/redefinir-senha" element={<ResetPassword />} />
         {/* Formulário público: não precisa de login */}

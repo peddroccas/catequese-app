@@ -1,5 +1,6 @@
 import {
   catechizing,
+  publicRegistrationSettings,
   registration,
   registrationSettings,
   registrationStatus,
@@ -10,7 +11,7 @@ export class RegistrationRepository {
   // --- Público (sem login)
 
   // Aberto e quais etapas recebem inscrição (fechado = nenhuma etapa)
-  static async getPublicStatus(slug: string): Promise<registrationSettings> {
+  static async getPublicStatus(slug: string): Promise<publicRegistrationSettings> {
     const response = await publicApi.get(
       `/public/parishes/${encodeURIComponent(slug)}/registrations/status`,
     )
@@ -110,5 +111,9 @@ export class RegistrationRepository {
       `/registrations/${encodeURIComponent(registrationId)}/reject`,
       { reason },
     )
+  }
+
+  static async deleteRejected(registrationId: string): Promise<void> {
+    await api.delete(`/registrations/${encodeURIComponent(registrationId)}`)
   }
 }

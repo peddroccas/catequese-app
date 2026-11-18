@@ -10,7 +10,7 @@ import { isModuleEnabled } from '@/utils/modules'
 import { maskPhone } from '@/utils/phone'
 import { moneyAmount, requiredText } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, CircularProgress, Input, Textarea } from '@nextui-org/react'
+import { Button, Checkbox, CircularProgress, Input, Textarea } from '@nextui-org/react'
 import { Copy, LinkSimple, Plus, Trash } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -71,6 +71,35 @@ const settingsSchema = z.object({
   commitmentTerms: z
     .string()
     .max(4000, 'O termo pode ter no máximo 4000 caracteres'),
+  privacyEnabled: z.boolean(),
+  privacyControllerName: z.string().trim().max(150, 'Nome muito longo'),
+  privacyWhatsapp: z.string(),
+  privacyRetentionText: z.string().trim().max(1500, 'Texto muito longo'),
+  privacyDeliverToParishOffice: z.boolean(),
+}).superRefine((data, context) => {
+  if (!data.privacyEnabled) return
+
+  if (data.privacyControllerName.length < 2) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['privacyControllerName'],
+      message: 'Informe a pessoa ou instituição responsável pelos dados',
+    })
+  }
+  if (!/^\d{10,11}$/.test(data.privacyWhatsapp.replace(/\D/g, ''))) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['privacyWhatsapp'],
+      message: 'Informe um WhatsApp com DDD',
+    })
+  }
+  if (!data.privacyRetentionText) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['privacyRetentionText'],
+      message: 'Informe por quanto tempo a ficha e os anexos são guardados',
+    })
+  }
 })
 
 type SettingsForm = z.infer<typeof settingsSchema>
@@ -96,6 +125,14 @@ function toForm(parish: parish): SettingsForm {
       ? maskPhone(parish.paymentReceiptPhone)
       : '',
     commitmentTerms: parish.commitmentTerms ?? '',
+    privacyEnabled: Boolean(parish.registrationPrivacy),
+    privacyControllerName: parish.registrationPrivacy?.controllerName ?? '',
+    privacyWhatsapp: parish.registrationPrivacy
+      ? maskPhone(parish.registrationPrivacy.whatsappPhone)
+      : '',
+    privacyRetentionText: parish.registrationPrivacy?.retentionText ?? '',
+    privacyDeliverToParishOffice:
+      parish.registrationPrivacy?.deliverToParishOffice ?? false,
   }
 }
 
@@ -169,6 +206,16 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
         paymentReceiptPhone:
           form.paymentReceiptPhone.replace(/\D/g, '') || null,
         commitmentTerms: form.commitmentTerms.trim() || null,
+        ...(hasRegistrations && {
+          registrationPrivacy: form.privacyEnabled
+            ? {
+                controllerName: form.privacyControllerName,
+                whatsappPhone: form.privacyWhatsapp.replace(/\D/g, ''),
+                retentionText: form.privacyRetentionText,
+                deliverToParishOffice: form.privacyDeliverToParishOffice,
+              }
+            : null,
+        }),
         // Ainda sem tela própria: mantém o que já está salvo
         logoUrl: parish.logoUrl,
         primaryColor: parish.primaryColor,
@@ -514,6 +561,83 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
                 }
               />
             </div>
+          )}
+        </section>
+      )}
+
+      {hasRegistrations && (
+        <section className={`${surfaceClassName} flex flex-col gap-4 p-5`}>
+          <h2 className="text-lg font-semibold text-bunker-900">
+            Aviso de privacidade da inscrição
+          </h2>
+          <Controller
+            name="privacyEnabled"
+            control={control}
+            render={({ field }) => (
+              <Checkbox isSelected={field.value} onValueChange={field.onChange}>
+                Mostrar aviso na inscrição pública ao salvar
+              </Checkbox>
+            )}
+          />
+          {watch('privacyEnabled') && (
+            <>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Controller
+                  name="privacyControllerName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      label="Quem responde pelos dados"
+                      description="Nome da pessoa ou instituição responsável"
+                      maxLength={150}
+                      variant="bordered"
+                      isInvalid={Boolean(errors.privacyControllerName)}
+                      errorMessage={errors.privacyControllerName?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="privacyWhatsapp"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      label="WhatsApp público para pedidos de privacidade"
+                      variant="bordered"
+                      isInvalid={Boolean(errors.privacyWhatsapp)}
+                      errorMessage={errors.privacyWhatsapp?.message}
+                    />
+                  )}
+                />
+              </div>
+              <Controller
+                name="privacyRetentionText"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    label="Prazo de guarda das fichas e anexos"
+                    description="Informe o prazo para inscrições aprovadas, recusadas e pendentes."
+                    maxLength={1500}
+                    variant="bordered"
+                    isInvalid={Boolean(errors.privacyRetentionText)}
+                    errorMessage={errors.privacyRetentionText?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="privacyDeliverToParishOffice"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox isSelected={field.value} onValueChange={field.onChange}>
+                    Entregamos os documentos impressos à secretaria ao final da catequese
+                  </Checkbox>
+                )}
+              />
+            </>
           )}
         </section>
       )}

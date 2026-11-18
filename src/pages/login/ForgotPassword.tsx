@@ -1,4 +1,5 @@
 import { BrandLogo } from '@/components/BrandLogo'
+import { PrivacyPolicyLink } from '@/components/PrivacyPolicyLink'
 import { PASSWORD_RESET_BY_EMAIL } from '@/lib/config'
 import { toast } from '@/lib/toast'
 import { getErrorMessage } from '@/services/api'
@@ -95,6 +96,9 @@ export function ForgotPassword() {
             Voltar para o login
           </Link>
         </form>
+        <div className="mt-4 text-center">
+          <PrivacyPolicyLink newTab />
+        </div>
       </main>
     </div>
   )

@@ -282,6 +282,23 @@ export interface registrationSettings {
   openSegments: registrationSegment[]
 }
 
+export interface registrationPrivacyNotice {
+  version: string
+  whatsappPhone: string
+  sections: { title: string; text: string }[]
+}
+
+export interface registrationPrivacySettings {
+  controllerName: string
+  whatsappPhone: string
+  retentionText: string
+  deliverToParishOffice: boolean
+}
+
+export interface publicRegistrationSettings extends registrationSettings {
+  privacyNotice?: registrationPrivacyNotice
+}
+
 export type documentKind =
   | 'PERSON_ID'
   | 'GUARDIAN_ID'
@@ -338,6 +355,7 @@ export interface registration {
   catechizingId: string | null
   // Quando a família concordou com o termo de compromisso
   termsAcceptedAt: string
+  privacyNoticeVersion?: string | null
   createdAt: string
 }
 
@@ -382,6 +400,7 @@ export interface publicParish {
 
 export interface parish extends publicParish {
   id: string
+  registrationPrivacy?: registrationPrivacySettings | null
   // Valor total do carnê de cada catequizando, em centavos
   carneAmountCents: number
   status: 'ACTIVE' | 'SUSPENDED'
@@ -409,6 +428,7 @@ export type parishChanges = Pick<
   | 'pixHolderName'
   | 'paymentReceiptPhone'
   | 'commitmentTerms'
+  | 'registrationPrivacy'
 >
 
 // Painel do administrador do sistema

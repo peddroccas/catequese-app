@@ -1,13 +1,14 @@
+import { PrivacyPolicyLink } from '@/components/PrivacyPolicyLink'
 import { BrandLogo } from '@/components/BrandLogo'
 import { APP_NAME } from '@/lib/config'
-import { publicParish, registrationSegment } from '@/Types'
+import { publicParish, registrationPrivacyNotice, registrationSegment } from '@/Types'
 import { ParishRepository } from '@/services/repositories/parishRepository'
 import { RegistrationRepository } from '@/services/repositories/registrationRepository'
 import { parishPlace, setCurrentParish } from '@/utils/parish'
 import { registrationSegments } from '@/utils/registration'
 import { registrationSegmentTone } from '@/utils/segmentTone'
 import { paymentNoticePropsOf } from '@/utils/registrationPayment'
-import { Button, CircularProgress } from '@nextui-org/react'
+import { Button, CircularProgress, useDisclosure } from '@nextui-org/react'
 import {
   CaretRight,
   CheckCircle,
@@ -15,12 +16,13 @@ import {
   MapPinLine,
   WarningCircle,
 } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CoordinationContactsCard } from './components/CoordinationContactsCard'
 import { CoordinationHelpButton } from './components/CoordinationHelpButton'
 import { RegistrationForm } from './components/RegistrationForm'
 import { RegistrationPaymentNotice } from './components/RegistrationPaymentNotice'
+import { RegistrationPrivacyNoticeDialog } from './components/RegistrationPrivacyNoticeDialog'
 
 type pageState = 'loading' | 'error' | 'notFound' | 'closed' | 'open'
 
@@ -35,31 +37,44 @@ export function Registration() {
   const [parish, setParish] = useState<publicParish | null>(null)
   const [segment, setSegment] = useState<registrationSegment | null>(null)
   const [openSegments, setOpenSegments] = useState<registrationSegment[]>([])
+  const [privacyNotice, setPrivacyNotice] = useState<registrationPrivacyNotice>()
+  const privacyDialog = useDisclosure()
+  const loadRequest = useRef(0)
   const [protocol, setProtocol] = useState<string | null>(null)
 
   function load() {
+    const request = ++loadRequest.current
     setState('loading')
     Promise.all([
       ParishRepository.getPublic(slug),
       RegistrationRepository.getPublicStatus(slug),
     ])
       .then(([publicParish, settings]) => {
+        if (request !== loadRequest.current) return
         setParish(publicParish)
         // Telefones e mensagens da página usam o DDD desta paróquia
         setCurrentParish(publicParish)
         document.title = `${publicParish.name} · ${APP_NAME}`
         setOpenSegments(settings.openSegments)
+        setPrivacyNotice(settings.privacyNotice)
         setState(settings.isOpen ? 'open' : 'closed')
       })
       .catch((error) => {
+        if (request !== loadRequest.current) return
         // Paróquia que não existe (ou suspensa) responde 404
         setState(error?.response?.status === 404 ? 'notFound' : 'error')
       })
   }
 
   useEffect(() => {
+    setSegment(null)
+    setProtocol(null)
+    privacyDialog.onClose()
     load()
-    return () => setCurrentParish(null)
+    return () => {
+      loadRequest.current++
+      setCurrentParish(null)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
@@ -284,9 +299,11 @@ export function Registration() {
         {state === 'open' && parish && !protocol && segment && (
           <div className={cardClassName}>
             <RegistrationForm
-              key={segment}
+              key={`${slug}-${segment}-${privacyNotice?.version ?? ''}`}
               slug={slug}
               terms={parish.commitmentTerms}
+              privacyNotice={privacyNotice}
+              onOpenPrivacyNotice={privacyDialog.onOpen}
               payment={paymentNoticePropsOf(parish)}
               segment={segment}
               onBack={() => changeStep(null)}
@@ -294,7 +311,29 @@ export function Registration() {
             />
           </div>
         )}
+        <div className="mt-4 flex flex-col items-center gap-3 text-center">
+          {privacyNotice &&
+            (state === 'closed' || (state === 'open' && (!segment || protocol))) && (
+              <button
+                type="button"
+                aria-haspopup="dialog"
+                className="text-sm font-medium text-bunker-800 underline underline-offset-4"
+                onClick={privacyDialog.onOpen}
+              >
+                Ler o Aviso de Privacidade
+              </button>
+            )}
+          <PrivacyPolicyLink newTab />
+        </div>
       </main>
+
+      {privacyNotice && (state === 'closed' || state === 'open') && (
+        <RegistrationPrivacyNoticeDialog
+          notice={privacyNotice}
+          isOpen={privacyDialog.isOpen}
+          onOpenChange={privacyDialog.onOpenChange}
+        />
+      )}
 
       {/* Escolha da etapa e formulário: contatos no botão fixo "Dúvidas?" */}
       {state === 'open' && parish && !protocol && (
