@@ -8,6 +8,7 @@ import { parish } from '@/Types'
 import { centsToInput, parseCurrencyToCents } from '@/utils/currency'
 import { isModuleEnabled } from '@/utils/modules'
 import { maskPhone } from '@/utils/phone'
+import { paymentNoticePropsOf } from '@/utils/registrationPayment'
 import { moneyAmount, requiredText } from '@/utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CircularProgress, Input, Textarea } from '@nextui-org/react'
@@ -75,6 +76,34 @@ const settingsSchema = z.object({
 
 type SettingsForm = z.infer<typeof settingsSchema>
 
+function paymentSettingsFromForm({
+  contacts,
+  registrationFee,
+  pixKey,
+  pixHolderName,
+  paymentReceiptPhone,
+}: Pick<
+  SettingsForm,
+  | 'contacts'
+  | 'registrationFee'
+  | 'pixKey'
+  | 'pixHolderName'
+  | 'paymentReceiptPhone'
+>) {
+  return {
+    coordinationContacts: contacts.map(({ name, phone }) => ({
+      name,
+      phone: phone.replace(/\D/g, ''),
+    })),
+    registrationFeeCents: isZeroOrEmpty(registrationFee)
+      ? null
+      : parseCurrencyToCents(registrationFee),
+    pixKey: pixKey.trim() || null,
+    pixHolderName: pixHolderName.trim() || null,
+    paymentReceiptPhone: paymentReceiptPhone.replace(/\D/g, '') || null,
+  }
+}
+
 function toForm(parish: parish): SettingsForm {
   return {
     name: parish.name,
@@ -132,10 +161,15 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
     defaultValues: toForm(parish),
   })
   const contacts = useFieldArray({ control, name: 'contacts' })
-  // Taxa que o formulário vai mostrar (null = sem taxa, nem PIX)
-  const feeCents = isZeroOrEmpty(watch('registrationFee'))
-    ? null
-    : parseCurrencyToCents(watch('registrationFee'))
+  const paymentPreview = paymentNoticePropsOf(
+    paymentSettingsFromForm({
+      contacts: watch('contacts'),
+      registrationFee: watch('registrationFee'),
+      pixKey: watch('pixKey'),
+      pixHolderName: watch('pixHolderName'),
+      paymentReceiptPhone: watch('paymentReceiptPhone'),
+    }),
+  )
 
   // Vindo de “Inscrições” (/parish#pix), já mostra o PIX
   useEffect(() => {
@@ -156,21 +190,9 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
         city: form.city,
         state: form.state.toUpperCase(),
         areaCode: form.areaCode,
-        coordinationContacts: form.contacts.map((contact) => ({
-          name: contact.name,
-          phone: contact.phone.replace(/\D/g, ''),
-        })),
+        ...paymentSettingsFromForm(form),
         carneAmountCents: parseCurrencyToCents(form.carneAmount) ?? 0,
-        registrationFeeCents: isZeroOrEmpty(form.registrationFee)
-          ? null
-          : parseCurrencyToCents(form.registrationFee),
-        pixKey: form.pixKey.trim() || null,
-        pixHolderName: form.pixHolderName.trim() || null,
-        paymentReceiptPhone:
-          form.paymentReceiptPhone.replace(/\D/g, '') || null,
         commitmentTerms: form.commitmentTerms.trim() || null,
-        ...(hasRegistrations && {
-        }),
         // Ainda sem tela própria: mantém o que já está salvo
         logoUrl: parish.logoUrl,
         primaryColor: parish.primaryColor,
@@ -494,27 +516,18 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
               )}
             />
           </div>
-          {watch('pixKey').trim() && !feeCents && (
+          {paymentPreview.pixKey && !paymentPreview.feeCents && (
             <p className="text-sm text-amber-700">
               Sem taxa de inscrição em “Valores”, o PIX não aparece no
               formulário.
             </p>
           )}
-          {watch('pixKey').trim() && Boolean(feeCents) && (
+          {Boolean(paymentPreview.feeCents) && (
             <div className="flex flex-col gap-2 rounded-xl border border-bunker-200 bg-bunker-50 p-4">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
                 Como a família vai ver
               </h3>
-              <RegistrationPaymentNotice
-                feeCents={feeCents}
-                pixKey={watch('pixKey').trim()}
-                pixHolderName={watch('pixHolderName').trim() || null}
-                receiptPhone={
-                  watch('paymentReceiptPhone').replace(/\D/g, '') ||
-                  watch('contacts')[0]?.phone.replace(/\D/g, '') ||
-                  null
-                }
-              />
+              <RegistrationPaymentNotice {...paymentPreview} compact />
             </div>
           )}
         </section>
@@ -552,9 +565,7 @@ function SettingsView({ parish, onSave }: SettingsViewProps) {
           </h3>
           <CommitmentTerms
             template={watch('commitmentTerms')}
-            signerName="Maria da Silva"
             isAdult={false}
-            catechizingName="João"
           />
         </div>
       </section>

@@ -105,7 +105,10 @@ function buildSchema(segment: registrationSegment, hasPrivacyNotice: boolean) {
       website: z.string().max(200),
       acceptedTerms: z
         .boolean()
-        .refine((value) => value, 'É preciso concordar com o termo para enviar'),
+        .refine(
+          (value) => value,
+          'É preciso concordar com o termo para enviar',
+        ),
       acknowledgedPrivacyNotice: z
         .boolean()
         .refine(
@@ -875,7 +878,11 @@ export function RegistrationForm({
                 onValueChange={field.onChange}
                 isRequired
                 isInvalid={Boolean(errors.acknowledgedPrivacyNotice)}
-                aria-describedby={errors.acknowledgedPrivacyNotice ? 'privacy-notice-error' : undefined}
+                aria-describedby={
+                  errors.acknowledgedPrivacyNotice
+                    ? 'privacy-notice-error'
+                    : undefined
+                }
                 classNames={{ label: 'text-sm font-medium text-bunker-900' }}
               >
                 Li o Aviso de Privacidade
@@ -890,41 +897,21 @@ export function RegistrationForm({
         </section>
       )}
 
-      <section
-        data-invalid={Boolean(errors.acceptedTerms)}
-        className={`flex flex-col gap-3 rounded-xl border bg-white p-4 text-sm text-bunker-700 ${errors.acceptedTerms ? 'border-danger' : 'border-bunker-200'}`}
-      >
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-bunker-500">
-          Termo de compromisso
-        </h3>
-        <CommitmentTerms
-          template={terms}
-          signerName={signerName}
-          isAdult={info.isAdult}
-          catechizingName={watch('name')}
-        />
-        <Controller
-          name="acceptedTerms"
-          control={control}
-          render={({ field }) => (
-            <Checkbox
-              isSelected={field.value}
-              onValueChange={field.onChange}
-              isRequired
-              isInvalid={Boolean(errors.acceptedTerms)}
-              aria-describedby={errors.acceptedTerms ? 'commitment-terms-error' : undefined}
-              classNames={{ label: 'text-sm font-medium text-bunker-900' }}
-            >
-              Li e concordo com o Termo de Compromisso
-            </Checkbox>
-          )}
-        />
-        {errors.acceptedTerms && (
-          <p id="commitment-terms-error" className="text-sm text-danger">
-            {errors.acceptedTerms.message}
-          </p>
+      <Controller
+        name="acceptedTerms"
+        control={control}
+        render={({ field }) => (
+          <CommitmentTerms
+            template={terms}
+            signerName={signerName}
+            isAdult={info.isAdult}
+            catechizingName={watch('name')}
+            accepted={field.value}
+            onAcceptanceChange={field.onChange}
+            error={errors.acceptedTerms?.message}
+          />
         )}
-      </section>
+      />
 
       {/* Campo-armadilha: fora da tela e fora da navegação por teclado */}
       <div
