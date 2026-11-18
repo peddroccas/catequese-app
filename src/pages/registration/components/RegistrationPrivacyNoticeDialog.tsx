@@ -41,7 +41,7 @@ export function RegistrationPrivacyNoticeDialog({
                   <p className="whitespace-pre-line">{text}</p>
                 </section>
               ))}
-              {whatsapp && (
+              {whatsapp ? (
                 <a
                   href={whatsappChatUrl(
                     whatsapp,
@@ -52,6 +52,13 @@ export function RegistrationPrivacyNoticeDialog({
                   className="w-fit font-medium underline underline-offset-4"
                 >
                   Falar com a coordenação pelo WhatsApp
+                </a>
+              ) : (
+                <a
+                  href="mailto:contato@catequesehub.com.br"
+                  className="w-fit font-medium underline underline-offset-4"
+                >
+                  Falar com o Catequese Hub sobre privacidade
                 </a>
               )}
               <div>

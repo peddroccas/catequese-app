@@ -288,13 +288,6 @@ export interface registrationPrivacyNotice {
   sections: { title: string; text: string }[]
 }
 
-export interface registrationPrivacySettings {
-  controllerName: string
-  whatsappPhone: string
-  retentionText: string
-  deliverToParishOffice: boolean
-}
-
 export interface publicRegistrationSettings extends registrationSettings {
   privacyNotice?: registrationPrivacyNotice
 }
@@ -400,7 +393,6 @@ export interface publicParish {
 
 export interface parish extends publicParish {
   id: string
-  registrationPrivacy?: registrationPrivacySettings | null
   // Valor total do carnê de cada catequizando, em centavos
   carneAmountCents: number
   status: 'ACTIVE' | 'SUSPENDED'
@@ -428,7 +420,6 @@ export type parishChanges = Pick<
   | 'pixHolderName'
   | 'paymentReceiptPhone'
   | 'commitmentTerms'
-  | 'registrationPrivacy'
 >
 
 // Painel do administrador do sistema
